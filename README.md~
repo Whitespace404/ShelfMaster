@@ -109,7 +109,7 @@ You can enter the virtual environment created in
 the last step using the following command
 
 ```
-env\Scripts\Activate.bat
+.\env\Scripts\Activate.bat
 ```
 
 This will add a header that says `(env)` before 
