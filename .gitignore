@@ -1,16 +1,6 @@
 __pycache__/
-*.py[cod]
-*$py.class
-.Python
 build/
 dist/
 *.log
-local_settings.py
 db.sqlite3
-db.sqlite3-journal
-instance/
-.webassets-cache
-.env
-.venv
 env/
-venv/
