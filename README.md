@@ -162,3 +162,5 @@ python run.py
 
 Once you have run the code, visit `localhost:5000` 
 on a web browser to view it.
+
+<hr>

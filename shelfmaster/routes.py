@@ -1,6 +1,8 @@
 from shelfmaster import app
 from flask import render_template, redirect, url_for, flash
+from flask_sqlalchemy import SQLAlchemy
 from . import forms
+
 
 @app.route("/")
 def home():
@@ -20,8 +22,3 @@ def borrow():
 @app.route("/return", methods=["GET", "POST"])
 def return_():
     return render_template("return.html")
-
-
-@app.route("/success")
-def success():
-    return render_template("success.html")
