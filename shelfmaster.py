@@ -19,7 +19,7 @@ class User(db.Model):
     borrowed_book_id = sa.Column(sa.String(25))
 
     def __repr__(self):
-        return self.id + self.username
+        return str(self.id) + self.username + self.borrowed_book_id
 
 
 @app.route("/")
@@ -32,6 +32,11 @@ def borrow():
     form = BorrowForm()
 
     if form.validate_on_submit():
+        u = User(
+            username=form.usn.data, password="test", borrowed_book_id=form.book_id.data
+        )
+        db.session.add(u)
+        db.session.commit()
         flash(f"Book {form.book_id.data} borrowed successfully.")
         return redirect(url_for("home"))
     return render_template("borrow.html", form=form)
@@ -43,14 +48,21 @@ def return_():
 
 
 @app.route("/add_user/<u>")
-def add_user(u="sup"):
+def add_user(u=None):
     user = User(username=u, password="sup")
     db.session.add(user)
     db.session.commit()
 
     print(user.id)
 
-    return render_template("success.html", id=user.id)
+    return render_template("success.html", user=user)
+
+
+@app.route("/view_user/<u>")
+def view_user(u=None):
+    u = User.query.filter_by(username=u).first()
+
+    return render_template("success.html", user=u)
 
 
 if __name__ == "__main__":
