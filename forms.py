@@ -14,7 +14,11 @@ class LoginForm(FlaskForm):
 
 class BorrowForm(FlaskForm):
     usn = StringField(
-        "USN", validators=[DataRequired(), Regexp("^\d{2}[01][NLU123456789]?\d{3}$")]
+        "USN",
+        validators=[
+            DataRequired(),
+            Regexp("^\d{2}[01][NLU123456789]?\d{3}$", message="Invalid USN"),
+        ],
     )
     book_id = StringField("Book ID:", validators=[DataRequired()])
 

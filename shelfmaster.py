@@ -2,7 +2,7 @@ from flask import Flask, render_template, flash, redirect, url_for
 from flask_login import LoginManager
 from flask_sqlalchemy import SQLAlchemy
 from forms import BorrowForm
-
+import sqlalchemy as sa
 
 app = Flask(__name__)
 app.config["SECRET_KEY"] = "28679ae72d9d4c7b0e93b1db218426a6"
@@ -13,25 +13,13 @@ db = SQLAlchemy(app)
 
 
 class User(db.Model):
-    id = db.Column(db.Integer, primary_key=True)
-    username = db.Column(db.String(20), unique=True, nullable=False)
-    password = db.Column(db.String(64), nullable=False)
-
-    borrowed_book = db.relationship("Book", backref="borrower", lazy=True)
+    id = sa.Column(sa.Integer, primary_key=True)
+    username = sa.Column(sa.String(20), unique=True, nullable=False)
+    password = sa.Column(sa.String(64), nullable=False)
+    borrowed_book_id = sa.Column(sa.String(25))
 
     def __repr__(self):
         return self.id + self.username
-
-
-class Book(db.Model):
-    id = db.Column(db.Integer, primary_key=True)
-    book_id = db.Column(db.String(20), unique=True)
-    title = db.Column(db.String(50))
-
-    user_id = db.Column(db.Integer, db.ForeignKey("user.id"))
-
-    def __repr__(self):
-        return self.title + " borrowed by " + self.user_id
 
 
 @app.route("/")
@@ -44,7 +32,7 @@ def borrow():
     form = BorrowForm()
 
     if form.validate_on_submit():
-        flash("Book borrowed successfully.")
+        flash(f"Book {form.book_id.data} borrowed successfully.")
         return redirect(url_for("home"))
     return render_template("borrow.html", form=form)
 
@@ -54,4 +42,16 @@ def return_():
     return render_template("return.html")
 
 
-app.run(debug=True)
+@app.route("/add_user/<u>")
+def add_user(u="sup"):
+    user = User(username=u, password="sup")
+    db.session.add(user)
+    db.session.commit()
+
+    print(user.id)
+
+    return render_template("success.html", id=user.id)
+
+
+if __name__ == "__main__":
+    app.run(debug=True)

@@ -11,8 +11,8 @@
 <body>
     {% with messages = get_flashed_messages(with_categories=true) %}
         {% if messages %}
-            {% for message in messages %}
-                {{ message }}
+            {% for category, message in messages %}
+                <span class="{{ category }}">{{ message }}</span>
             {% endfor %}
         {% endif %}
     {% endwith %}
