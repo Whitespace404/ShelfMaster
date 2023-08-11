@@ -1,4 +1,4 @@
-# Contributor's Guide
+# Guidelines
 
 ## 1. When you want to make changes
 Before you can do this you must have the 
