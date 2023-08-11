@@ -2,6 +2,5 @@ __pycache__/
 build/
 dist/
 *.log
-db.sqlite3
 env/
 bin.txt

@@ -9,23 +9,23 @@
         {{ form.usn }}
         
         {% for error in form.usn.errors %}
-            {{ error }}
+            <span>{{ error }}</span>
         {% endfor %}
     {% else %}
         {{ form.usn }}
     {% endif %}
-
+    <br>
     {{ form.book_id.label }}
     {% if form.book_id.errors %}
         {{ form.book_id }}
         
         {% for error in form.book_id.errors %}
-            {{ error }}
+            <p>{{ error }}</p>
         {% endfor %}
     {% else %}
         {{ form.book_id }}
     {% endif %}
-
+    <br>
     {{ form.submit }}
 </form>
 {% endblock content %}

@@ -4,13 +4,8 @@ from wtforms.validators import DataRequired, Regexp
 
 
 class LoginForm(FlaskForm):
-    username = StringField(
-        "Username", Regexp("^\d{2}[01][NLU0123456789]?\d{3}$")
-    )  # USN for students, 'admin' for librarian
-    
-    password = (
-        PasswordField()
-    )  # Password is roll number for all students, admin password is provisionally 'admin'
+    username = StringField("Username", Regexp("^\d{2}[01][NLU0123456789]?\d{3}$"))
+    password = PasswordField()
 
 
 class BorrowForm(FlaskForm):
@@ -18,7 +13,7 @@ class BorrowForm(FlaskForm):
         "USN",
         validators=[
             DataRequired(),
-            Regexp("^\d{2}[01][NLU0123456789]?\d{3}$", message="Invalid USN"),
+            Regexp("^[123]\d{1}[01][NLU0123456789]?\d{3}$", message="Invalid USN"),
         ],
     )
     book_id = StringField("Book ID:", validators=[DataRequired()])

@@ -1,0 +1,10 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+{% for book in books %}
+    <h2>{{ book }} is borrowed by {{ books[book] }}</h2>
+    <br><hr>
+{% endfor %}
+
+{% endblock %}

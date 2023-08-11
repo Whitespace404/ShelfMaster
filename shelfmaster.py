@@ -20,7 +20,7 @@ class User(db.Model):
     borrowed_book_id = relationship("Book", backref="user", lazy=True)
 
     def __repr__(self):
-        return str(self.id) + self.username + self.borrowed_book_id
+        return f"ID: {str(self.id)} --- {self.username}"
 
 
 class Book(db.Model):
@@ -29,7 +29,7 @@ class Book(db.Model):
     user_id = sa.Column(sa.Integer, sa.ForeignKey("user.id"), nullable=False)
 
     def __repr__(self):
-        return str(self.id) + str(self.book_id) + "borrowed by" + str(self.user_id)
+        return f"#{str(self.id)} -- BOOK: {str(self.book_id)} is borrowed by USER: {str(self.user_id)}"
 
 
 @app.route("/")
@@ -42,10 +42,11 @@ def borrow():
     form = BorrowForm()
 
     if form.validate_on_submit():
-        u = User(
-            username=form.usn.data, password="test"
-        )
+        u = User.query.filter_by(username=form.usn.data).first()
+        b = Book(book_id=form.book_id.data, user_id=u.id)
         db.session.add(u)
+        db.session.commit()
+        db.session.add(b)
         db.session.commit()
         flash(f"Book {form.book_id.data} borrowed successfully.")
         return redirect(url_for("home"))
@@ -75,39 +76,49 @@ def view_user(u=None):
     return render_template("success.html", user=u)
 
 
-@app.route('/add_book/<book_id>')
-def add_book(book_id=55):
-    b = Book(book_id=int(book_id))
-    db.session.add(b)
-    db.session.commit()
+@app.route("/view_book/<id>")
+def view_book(id=None):
+    b = Book.query.filter_by(book_id=id).first()
+    usn = User.query.filter_by(id=b.user_id).first()
 
-    flash('Book borrowed succesfully')
-    return redirect('home.html')
+    borrower = usn
+    this = borrower
+    return render_template("show_this.html", this=this)
 
 
-# Initialise the database
+@app.route("/view_books")
+def view_books():
+    books = Book.query.filter_by().all()
+    d = dict()
+    for book in books:
+        borrower = User.query.filter_by(id=book.user_id).first()
+        d[book.book_id] = borrower.username
+    print(d)
+    return render_template("books.html", books=d)
+
+
 # with app.app_context():
+#     db.drop_all()
+#     db.session.commit()
 #     db.create_all()
 
 
-'''
-with app.app_context():
-    u = User(
-        username="100N006",
-        password="ter",
-    )
+# with app.app_context():
+#     u = User(
+#         username="100N006",
+#         password="ter",
+#     )
 
-    db.session.add(u)
-    db.session.commit()
+#     db.session.add(u)
+#     db.session.commit()
 
-    print(u.id)
+#     print(u.id)
 
-    b = Book(book_id=50, user_id=u.id)
-    db.session.add(b)
-    db.session.commit()
+#     b = Book(book_id=50, user_id=u.id)
+#     db.session.add(b)
+#     db.session.commit()
 
-    print(u.borrowed_book_id)
-'''
+#     print(u.borrowed_book_id)
 
 if __name__ == "__main__":
     app.run(debug=True)
