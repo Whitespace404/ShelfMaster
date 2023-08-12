@@ -75,9 +75,6 @@ def return_():
     return render_template("return.html", form=form)
 
 
-
-
-
 @app.route("/add_user/<u>")
 def add_user(u=None):
     user = User(username=u, password="test")
@@ -115,13 +112,15 @@ def view_books():
         try:
             d[book.book_id] = borrower.username
         except AttributeError:
-            d[book.book_id] = "NONE" # TODO Make this actually be NONE in the database if it is not borrowed
+            d[
+                book.book_id
+            ] = "NONE"  # TODO Make this actually be NONE in the database if it is not borrowed
     print(d)
     return render_template("books.html", books=d)
 
 
-with app.app_context():
-    db.create_all()
+# with app.app_context():
+#     db.create_all()
 
 
 # with app.app_context():
