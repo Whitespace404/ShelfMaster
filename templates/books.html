@@ -3,8 +3,7 @@
 {% block content %}
 
 {% for book in books %}
-    <h2>{{ book }} is borrowed by {{ books[book] }}</h2>
-    <br><hr>
+    <p>{{ book }} is borrowed by {{ books[book] }}</p>
 {% endfor %}
 
 {% endblock %}
