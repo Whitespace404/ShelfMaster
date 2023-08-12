@@ -1,7 +1,7 @@
 from flask import Flask, render_template, flash, redirect, url_for
 from flask_login import LoginManager
 from flask_sqlalchemy import SQLAlchemy
-from forms import BorrowForm
+from forms import BorrowForm, ReturnForm
 import sqlalchemy as sa
 from sqlalchemy.orm import relationship
 
@@ -26,7 +26,7 @@ class User(db.Model):
 class Book(db.Model):
     id = sa.Column(sa.Integer, primary_key=True, unique=True)
     book_id = sa.Column(sa.Integer)
-    user_id = sa.Column(sa.Integer, sa.ForeignKey("user.id"), nullable=False)
+    user_id = sa.Column(sa.Integer, sa.ForeignKey("user.id"))
 
     def __repr__(self):
         return f"#{str(self.id)} -- BOOK: {str(self.book_id)} is borrowed by USER: {str(self.user_id)}"
@@ -43,6 +43,10 @@ def borrow():
 
     if form.validate_on_submit():
         u = User.query.filter_by(username=form.usn.data).first()
+        if not u:
+            u = User(username=form.usn.data, password="test")
+            db.session.add(u)
+            db.session.commit()
         b = Book(book_id=form.book_id.data, user_id=u.id)
         db.session.add(u)
         db.session.commit()
@@ -55,7 +59,23 @@ def borrow():
 
 @app.route("/return", methods=["GET", "POST"])
 def return_():
-    return render_template("return.html")
+    form = ReturnForm()
+
+    if form.validate_on_submit():
+        b = Book.query.filter_by(book_id=form.book_id.data).first()
+        u = User.query.filter_by(id=b.user_id).first()
+        b.user_id = None
+
+        db.session.add(b)
+        db.session.commit()
+
+        flash(f"Book taken by {u.username} was returned successfully.")
+        return redirect(url_for("home"))
+
+    return render_template("return.html", form=form)
+
+
+
 
 
 @app.route("/add_user/<u>")
@@ -92,15 +112,16 @@ def view_books():
     d = dict()
     for book in books:
         borrower = User.query.filter_by(id=book.user_id).first()
-        d[book.book_id] = borrower.username
+        try:
+            d[book.book_id] = borrower.username
+        except AttributeError:
+            d[book.book_id] = "NONE" # TODO Make this actually be NONE in the database if it is not borrowed
     print(d)
     return render_template("books.html", books=d)
 
 
-# with app.app_context():
-#     db.drop_all()
-#     db.session.commit()
-#     db.create_all()
+with app.app_context():
+    db.create_all()
 
 
 # with app.app_context():
