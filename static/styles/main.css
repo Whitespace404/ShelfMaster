@@ -1,5 +1,11 @@
 * {
-    font-family: 'Consolas', 'Courier New', Courier, monospace;
+    font-family: serif;
+    font-size: 42px;
+}
+
+/* F8C300 */
+h1 {
+    font-size: 50px;
 }
 
 a {
@@ -9,12 +15,13 @@ a {
 }
 
 body {
-    background-color: sandybrown;
+    background-color: white;
     text-align: center;
 }
 
 hr {
-    border: 1px solid green;
+    margin: 0;
+    border: 2px solid #0a46cb;
 }
 
 li {
@@ -26,23 +33,45 @@ form {
 }
 
 div.wrapper {
+    margin-top: 0;
+    padding: 20px;
+    padding-left: 10px;
+    background-color: #F8C300;
+    padding-right: 10px;
     display: flex;
     justify-content: space-between;
 }
 
-div.wrapper>a {
-    font-size: 20px;
+div.wrapper>a,
+span.logo {
+    font-size: 35px;
     text-decoration: none;
     color: black;
+    display: inline-block;
+    position: relative;
+    transition: 0.1s ease-in-out;
 }
 
-span.logo {
-    font-size: 20px;
+div.wrapper>a:after {
+    content: '';
+    position: absolute;
+    width: 100%;
+    transform: scaleX(0);
+    height: 4px;
+    bottom: 0;
+    left: 0;
+    background-color: #0a46cb;
+    transform-origin: bottom right;
+    transition: transform 0.25s ease-out;
+}
+
+div.wrapper>a:hover:after {
+    transform: scaleX(1);
+    transform-origin: bottom left;
 }
 
 #submit {
-    background-color: red;
-    font-family: Consolas;
+    background-color: white;
     letter-spacing: 2px;
     border: none;
     padding: 5%;
@@ -51,6 +80,18 @@ span.logo {
     border-radius: 10px;
     margin-top: 30px;
     font-size: 25px;
+    transition: 0.6s;
+}
+
+#submit:hover {
+    background-color: #F8C300;
+    color: black;
+    transform: scale(1.1);
+    box-shadow: 0 12px 16px 0 rgba(0, 0, 0, 0.24), 0 17px 35px 0 rgba(0, 0, 0, 0.19);
+}
+
+#submit:active {
+    transform: scale(1);
 }
 
 form {
@@ -58,24 +99,53 @@ form {
     border-width: 10px;
 }
 
-a:hover {
-    text-decoration: underline;
-}
-
 div>a:hover {
-    text-decoration: underline;
+    transform: scale(1.07);
 }
 
 a.footer-link {
-    color: sandybrown;
+    color: white;
     font-size: 20px;
     transition: 0.2s ease-in;
+}
+
+.submit-btn {
+    text-align: center;
+}
+
+fieldset>input {
+    margin: 15px;
+    display: block;
+    width: 400px;
+    font-size: 32px;
+    border-radius: 25px;
+    border: 1px solid silver;
+    transition: 0.4s ease-in-out;
+    padding: 20px;
+}
+
+fieldset>input:focus {
+    border: 2px solid greenyellow;
+    transform: scaleX(1.04);
+    font-size: 34px;
+    background-color: #F8C300;
 }
 
 a.footer-link:hover {
     visibility: visible;
     color: black;
-    font-size: 25px;
+    font-size: 50px;
     text-decoration: none;
     font-weight: bold;
+}
+
+.form {
+    display: flex;
+    justify-content: center;
+    text-align: left;
+}
+
+span.form-error {
+    color: red;
+    font-size: smaller;
 }

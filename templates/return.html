@@ -1,23 +1,28 @@
 {% extends 'base.html' %}
 
 {% block content %}
-<h1>Return A Book</h1>
+
 
 <form action="" method="POST" class="return-form">
-    {{ form.hidden_tag() }}
 
-    {{ form.book_id.label }}
-    {% if form.book_id.errors %}
-        {{ form.book_id(autocomplete="off") }}
-        
-        {% for error in form.book_id.errors %}
-            <span>{{ error }}</span>
-        {% endfor %}
-    {% else %}
-        {{ form.book_id }}
-    {% endif %}
-    <br>
-    {{ form.submit }}
+    <fieldset>
+        <legend>Return A Book</legend>
+        {{ form.hidden_tag() }}
+
+        {{ form.book_id.label }}
+        {% if form.book_id.errors %}
+            {{ form.book_id(autocomplete='off') }}
+            
+            {% for error in form.book_id.errors %}
+                <span>{{ error }}</span>
+            {% endfor %}
+        {% else %}
+            {{ form.book_id(autocomplete='off') }}
+        {% endif %}
+        <br>
+        <div class="submit-btn">{{ form.submit }}</div>
+    </fieldset>
+    
 </form>
 
 {% endblock content %}

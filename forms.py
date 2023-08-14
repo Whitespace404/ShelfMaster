@@ -9,8 +9,17 @@ class LoginForm(FlaskForm):
 
 
 class BorrowForm(FlaskForm):
-    usn = StringField("USN",validators=[DataRequired()])
-    book_id = StringField("Book ID:", validators=[DataRequired()])
+    usn = StringField(
+        "USN",
+        validators=[
+            DataRequired(),
+            Regexp(
+                "^[0123]\d{1}[01][NLU0123456789]?\d{3}$",
+                message="That is not a real USN.",
+            ),
+        ],
+    )
+    book_id = StringField("Book ID", validators=[DataRequired()])
 
     submit = SubmitField("Borrow")
 
