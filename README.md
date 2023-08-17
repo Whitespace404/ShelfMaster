@@ -1,4 +1,4 @@
-# Contributor's Guide
+# Guidelines
 
 ## 1. When you want to make changes
 Before you can do this you must have the 
@@ -162,3 +162,5 @@ python run.py
 
 Once you have run the code, visit `localhost:5000` 
 on a web browser to view it.
+
+<hr>
