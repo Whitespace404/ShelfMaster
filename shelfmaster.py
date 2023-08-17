@@ -16,10 +16,10 @@ app = Flask(__name__)
 app.config["SECRET_KEY"] = "28679ae72d9d4c7b0e93b1db218426a6"
 app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///main.db"
 
-
 db = SQLAlchemy(app)
 login_manager = LoginManager()
 login_manager.init_app(app)
+login_manager.login_view = "admin_login"
 
 
 class User(db.Model, UserMixin):
@@ -90,6 +90,7 @@ def return_():
 
 
 @app.route("/add_user/<u>")
+@login_required
 def add_user(u=None):
     user = User(username=u, password="test")
     db.session.add(user)
@@ -101,6 +102,7 @@ def add_user(u=None):
 
 
 @app.route("/view_user/<u>")
+@login_required
 def view_user(u=None):
     u = User.query.filter_by(username=u).first()
 
@@ -108,6 +110,7 @@ def view_user(u=None):
 
 
 @app.route("/view_book/<id>")
+@login_required
 def view_book(id=None):
     b = Book.query.filter_by(book_id=id).first()
     usn = User.query.filter_by(id=b.user_id).first()
@@ -149,6 +152,7 @@ def admin_login():
 
 
 @app.route("/logout")
+@login_required
 def logout():
     logout_user()
     flash("Logged out")

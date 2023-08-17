@@ -157,3 +157,17 @@ td {
     border: 3px solid silver;
     padding: 20px;
 }
+
+.flash-message {
+    margin-bottom: 5px;
+    margin-top: 0;
+    padding: 20px;
+}
+
+.message {
+    background: rgb(84, 157, 222);
+}
+
+.alert {
+    background: red;
+}
