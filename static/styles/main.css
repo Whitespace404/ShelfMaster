@@ -104,7 +104,6 @@ div>a:hover {
 }
 
 a.footer-link {
-    color: white;
     font-size: 20px;
     transition: 0.2s ease-in;
 }
@@ -132,9 +131,8 @@ fieldset>input:focus {
 }
 
 a.footer-link:hover {
-    visibility: visible;
     color: black;
-    font-size: 50px;
+    font-size: 25px;
     text-decoration: none;
     font-weight: bold;
 }
@@ -148,4 +146,14 @@ a.footer-link:hover {
 span.form-error {
     color: red;
     font-size: smaller;
+}
+
+table {
+    border: 3px solid silver;
+    margin: 10px;
+}
+
+td {
+    border: 3px solid silver;
+    padding: 20px;
 }

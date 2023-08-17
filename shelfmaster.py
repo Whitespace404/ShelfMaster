@@ -1,7 +1,14 @@
 from flask import Flask, render_template, flash, redirect, url_for
-from flask_login import LoginManager
+from flask_login import (
+    LoginManager,
+    login_user,
+    UserMixin,
+    login_required,
+    logout_user,
+    current_user,
+)
 from flask_sqlalchemy import SQLAlchemy
-from forms import BorrowForm, ReturnForm
+from forms import BorrowForm, ReturnForm, LoginForm
 import sqlalchemy as sa
 from sqlalchemy.orm import relationship
 
@@ -11,9 +18,11 @@ app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///main.db"
 
 
 db = SQLAlchemy(app)
+login_manager = LoginManager()
+login_manager.init_app(app)
 
 
-class User(db.Model):
+class User(db.Model, UserMixin):
     id = sa.Column(sa.Integer, primary_key=True, unique=True)
     username = sa.Column(sa.String(20), nullable=False)
     password = sa.Column(sa.String(64), nullable=False)
@@ -30,6 +39,11 @@ class Book(db.Model):
 
     def __repr__(self):
         return f"#{str(self.id)} -- BOOK: {str(self.book_id)} is borrowed by USER: {str(self.user_id)}"
+
+
+@login_manager.user_loader
+def load_user(user_id):
+    return User.query.get(int(user_id))
 
 
 @app.route("/")
@@ -104,6 +118,7 @@ def view_book(id=None):
 
 
 @app.route("/view_books")
+@login_required
 def view_books():
     books = Book.query.filter_by().all()
     d = dict()
@@ -114,31 +129,35 @@ def view_books():
         except AttributeError:
             d[
                 book.book_id
-            ] = "NONE"  # TODO Make this actually be NONE in the database if it is not borrowed
+            ] = ""  # TODO Make this actually be NONE in the database if it is not borrowed
     print(d)
     return render_template("books.html", books=d)
+
+
+@app.route("/admin_login", methods=["GET", "POST"])
+def admin_login():
+    if current_user.is_authenticated:
+        return redirect(url_for("home"))
+    form = LoginForm()
+    if form.validate_on_submit():
+        if form.password.data == "test":
+            admin = User.query.filter_by(username="ADMIN").first()
+            login_user(admin)
+            flash("Logged in.")
+            return redirect(url_for("home"))
+    return render_template("admin_login.html", form=form)
+
+
+@app.route("/logout")
+def logout():
+    logout_user()
+    flash("Logged out")
+    return redirect(url_for("home"))
 
 
 # with app.app_context():
 #     db.create_all()
 
-
-# with app.app_context():
-#     u = User(
-#         username="100N006",
-#         password="ter",
-#     )
-
-#     db.session.add(u)
-#     db.session.commit()
-
-#     print(u.id)
-
-#     b = Book(book_id=50, user_id=u.id)
-#     db.session.add(b)
-#     db.session.commit()
-
-#     print(u.borrowed_book_id)
 
 if __name__ == "__main__":
     app.run(debug=True)
