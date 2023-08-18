@@ -78,16 +78,15 @@ def borrow():
 
     if form.validate_on_submit():
         u = User.query.filter_by(username=form.usn.data).first()
-        if not u:
-            u = User(username=form.usn.data, password="test")
-            db.session.add(u)
-            db.session.commit()
+        if u is None:
+            form.usn.errors.append("USN does not exist")
+            return render_template("borrow.html", form=form)
+
         b = Book(book_id=form.book_id.data, user_id=u.id)
-        db.session.add(u)
-        db.session.commit()
         db.session.add(b)
         db.session.commit()
-        flash(f"Book {form.book_id.data} borrowed successfully.")
+
+        flash("Book borrowed successfully")
         return redirect(url_for("home"))
     return render_template("borrow.html", form=form)
 
@@ -101,7 +100,6 @@ def return_():
         u = User.query.filter_by(id=b.user_id).first()
         b.user_id = None
 
-        db.session.add(b)
         db.session.commit()
 
         flash(f"Book taken by {u.username} was returned successfully.")
@@ -113,7 +111,7 @@ def return_():
 @app.route("/add_user/<u>")
 @login_required
 def add_user(u=None):
-    user = User(username=u, password="test")
+    user = User(username=u)
     db.session.add(user)
     db.session.commit()
 
@@ -156,6 +154,7 @@ def view_books():
     book_borrower = dict()
     for book in books:
         borrower = User.query.filter_by(id=book.user_id).first()
+        print(borrower)
         if borrower:
             book_borrower[book.book_id] = borrower.username
         else:
@@ -194,8 +193,8 @@ def logout():
     return redirect(url_for("home"))
 
 
-with app.app_context():
-    db.create_all()
+# with app.app_context():
+#     db.create_all()
 
 
 if __name__ == "__main__":
