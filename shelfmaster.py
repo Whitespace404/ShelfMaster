@@ -149,25 +149,6 @@ def view_admin_log():
     return render_template("admin_log.html", logs=logs)
 
 
-@app.route("/view_user/<u>")
-@login_required
-def view_user(u=None):
-    u = User.query.filter_by(username=u).first()
-
-    return render_template("success.html", user=u)
-
-
-@app.route("/view_book/<id>")
-@login_required
-def view_book(id=None):
-    b = Book.query.filter_by(book_id=id).first()
-    usn = User.query.filter_by(id=b.user_id).first()
-
-    borrower = usn
-    this = borrower
-    return render_template("show_this.html", this=this)
-
-
 @app.route("/view_books")
 @login_required
 def view_books():
