@@ -1,0 +1,39 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<div class="form">
+    <form action="" method="POST" class="borrow-form">
+        <fieldset>
+            <legend>Add an Admin</legend>
+            {{ form.hidden_tag() }}
+    
+            {{ form.username.label }}
+            {% if form.username.errors %}
+                {{ form.username(autocomplete='off') }}
+                
+                {% for error in form.username.errors %}
+                    <span class="form-error">{{ error }}</span>
+                {% endfor %}
+            {% else %}
+                {{ form.username(autocomplete='off') }}
+            {% endif %}
+            <br>
+            {{ form.password.label }}
+            {% if form.password.errors %}
+                {{ form.password(autocomplete='off') }}
+                
+                {% for error in form.password.errors %}
+                    <p>{{ error }}</p>
+                {% endfor %}
+            {% else %}
+                {{ form.password(autocomplete='off') }}
+            {% endif %}
+            <br>
+            <div class="submit-btn">{{ form.submit }}</div>
+            
+        </fieldset>
+
+    </form>
+</div>
+{% endblock content %}

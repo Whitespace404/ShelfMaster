@@ -99,14 +99,10 @@ form {
     border-width: 10px;
 }
 
-div>a:hover {
+.wrapper>a:hover {
     transform: scale(1.07);
 }
 
-a.footer-link {
-    font-size: 20px;
-    transition: 0.2s ease-in;
-}
 
 .submit-btn {
     text-align: center;
@@ -128,13 +124,6 @@ fieldset>input:focus {
     transform: scaleX(1.04);
     font-size: 34px;
     background-color: #F8C300;
-}
-
-a.footer-link:hover {
-    color: black;
-    font-size: 25px;
-    text-decoration: none;
-    font-weight: bold;
 }
 
 .form {
@@ -170,4 +159,32 @@ td {
 
 .alert {
     background: red;
+}
+
+.admin-tools-panel>a {
+    display: inline-block;
+    padding: 15px;
+    font-size: 25px;
+    text-align: left;
+    background-color: #1498c8;
+    border-radius: 15px;
+    transition: 0.2s ease;
+    margin: 15px;
+}
+
+.admin-tools-panel>a:hover {
+    transform: scale(1.1);
+}
+
+.admin-tools-panel>a:active {
+    border: 3px solid silver;
+}
+
+
+.admin-tools-panel {
+    text-align: left;
+}
+
+h3 {
+    text-align: left;
 }

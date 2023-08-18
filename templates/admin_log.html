@@ -1,0 +1,25 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<table class="admin-logs">
+    <tr>
+        <td>Sl no</td>
+        <td>Action</td>
+        <td>Performed by</td>
+        <td>Date performed</td>
+        <td>Time performed</td>
+    </tr>
+    {% for log in logs %}
+    <tr>
+        <td>{{ log.id }}</td>
+        <td>{{ log.action }}</td>
+        <td>{{ log.username }}</td>
+        {% set time = log.time %}
+        <td>{{ time.strftime("%m/%d/%Y") }}</td>
+        <td>{{ time.strftime("%I:%M %p") }}</td>
+    </tr>
+    {% endfor %}
+</table>
+
+{% endblock %}

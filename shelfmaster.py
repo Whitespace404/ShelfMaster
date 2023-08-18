@@ -9,8 +9,10 @@ from flask_login import (
 )
 from flask_sqlalchemy import SQLAlchemy
 from forms import BorrowForm, ReturnForm, LoginForm
+from admin_forms import AddAdminsForm
 import sqlalchemy as sa
 from sqlalchemy.orm import relationship
+from datetime import datetime
 
 app = Flask(__name__)
 app.config["SECRET_KEY"] = "28679ae72d9d4c7b0e93b1db218426a6"
@@ -25,16 +27,17 @@ login_manager.login_view = "admin_login"
 class User(db.Model):
     id = sa.Column(sa.Integer, primary_key=True, unique=True)
     username = sa.Column(sa.String(20), nullable=False)
-    password = sa.Column(sa.String(64), nullable=False)
+    is_teacher = sa.Column(sa.Boolean)
+    class_section = sa.Column(sa.String(10))
     borrowed_book_id = relationship("Book", backref="user", lazy=True)
 
     def __repr__(self):
-        return f"ID: {str(self.id)} --- {self.username}"
+        return f"ID: {str(self.id)}; {self.username}"
 
 
 class Admin(db.Model, UserMixin):
     id = sa.Column(sa.Integer, primary_key=True, unique=True)
-    username = sa.Column(sa.String(20), nullable=False)
+    username = sa.Column(sa.String(40), nullable=False)
     password = sa.Column(sa.String(64), nullable=False)
 
     def __repr__(self):
@@ -48,6 +51,13 @@ class Book(db.Model):
 
     def __repr__(self):
         return f"#{str(self.id)} -- BOOK: {str(self.book_id)} is borrowed by USER: {str(self.user_id)}"
+
+
+class AdminActionsLog(db.Model):
+    id = sa.Column(sa.Integer, primary_key=True)
+    username = sa.Column(sa.String(20))
+    action = sa.Column(sa.String(120))
+    time = sa.Column(sa.DateTime, default=datetime.now)
 
 
 @login_manager.user_loader
@@ -112,6 +122,33 @@ def add_user(u=None):
     return render_template("success.html", user=user)
 
 
+@app.route("/add_admin", methods=["GET", "POST"])
+@login_required
+def add_admin():
+    form = AddAdminsForm()
+    if form.validate_on_submit():
+        admin = Admin(username=form.username.data, password=form.password.data)
+        db.session.add(admin)
+        db.session.commit()
+
+        performed_action = f"Added a new admin with username '{form.username.data}'"
+        action = AdminActionsLog(
+            username=current_user.username, action=performed_action
+        )
+        db.session.add(action)
+        db.session.commit()
+        flash(f"Admin {admin.username} added successfully.")
+        return redirect(url_for("home"))
+    return render_template("add_admin.html", form=form)
+
+
+@app.route("/view_admin_log")
+@login_required
+def view_admin_log():
+    logs = AdminActionsLog.query.filter_by().all()
+    return render_template("admin_log.html", logs=logs)
+
+
 @app.route("/view_user/<u>")
 @login_required
 def view_user(u=None):
@@ -135,17 +172,15 @@ def view_book(id=None):
 @login_required
 def view_books():
     books = Book.query.filter_by().all()
-    d = dict()
+    book_borrower = dict()
     for book in books:
         borrower = User.query.filter_by(id=book.user_id).first()
-        try:
-            d[book.book_id] = borrower.username
-        except AttributeError:
-            d[
-                book.book_id
-            ] = ""  # TODO Make this actually be NONE in the database if it is not borrowed
-    print(d)
-    return render_template("books.html", books=d)
+        if borrower:
+            book_borrower[book.book_id] = borrower.username
+        else:
+            book_borrower[book.book_id] = ""
+
+    return render_template("books.html", books=book_borrower)
 
 
 @app.route("/admin_login", methods=["GET", "POST"])
@@ -159,22 +194,20 @@ def admin_login():
             flash("Incorrect username/password", "alert")
         elif form.password.data == admin.password:
             login_user(admin)
-            flash("Logged in.")
+            log = AdminActionsLog(username=form.username.data, action="Logged in")
+            db.session.add(log)
+            db.session.commit()
+            flash(f"Logged in")
             return redirect(url_for("home"))
     return render_template("admin_login.html", form=form)
 
 
-@app.route("/add_admin/<a>/<p>")
-def add_admin(a=None, p=None):
-    a = Admin(username=a, password=p)
-    db.session.add(a)
-    db.session.commit()
-    flash("Admin user {a.username} added successfully.")
-    return redirect(url_for("home"))
-
 @app.route("/logout")
 @login_required
 def logout():
+    log = AdminActionsLog(username=current_user.username, action="Logged out")
+    db.session.add(log)
+    db.session.commit()
     logout_user()
     flash("Logged out")
     return redirect(url_for("home"))

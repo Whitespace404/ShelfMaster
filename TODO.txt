@@ -1,0 +1,11 @@
+admins can change other admins passwords
+DELETE admins feature
+add favicon
+admins can add book
+admins can add user
+
+check if user exists before borrowing
+reading log
+transaction log
+
+css spelling error property :>

@@ -3,6 +3,10 @@
 {% block content %}
 
 <h3>Admin Tools</h3>
-<a href="{{ url_for('view_books')}}" class="footer-link">View all books</a>
+<div class="admin-tools-panel">
+    <a href="{{ url_for('view_books')}}">View all books</a>
+    <a href="{{ url_for('add_admin' )}}"> Add An Admin </a>
+    <a href="{{ url_for('view_admin_log')}}">View Admin Log</a>
+</div>
 
 {% endblock %}
