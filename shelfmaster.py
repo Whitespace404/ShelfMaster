@@ -22,7 +22,7 @@ login_manager.init_app(app)
 login_manager.login_view = "admin_login"
 
 
-class User(db.Model, UserMixin):
+class User(db.Model):
     id = sa.Column(sa.Integer, primary_key=True, unique=True)
     username = sa.Column(sa.String(20), nullable=False)
     password = sa.Column(sa.String(64), nullable=False)
@@ -30,6 +30,15 @@ class User(db.Model, UserMixin):
 
     def __repr__(self):
         return f"ID: {str(self.id)} --- {self.username}"
+
+
+class Admin(db.Model, UserMixin):
+    id = sa.Column(sa.Integer, primary_key=True, unique=True)
+    username = sa.Column(sa.String(20), nullable=False)
+    password = sa.Column(sa.String(64), nullable=False)
+
+    def __repr__(self):
+        return f"{str(self.id)}. {self.username} with {self.password}"
 
 
 class Book(db.Model):
@@ -43,11 +52,13 @@ class Book(db.Model):
 
 @login_manager.user_loader
 def load_user(user_id):
-    return User.query.get(int(user_id))
+    return Admin.query.get(int(user_id))
 
 
 @app.route("/")
 def home():
+    if current_user.is_authenticated:
+        return render_template("admin_tools.html")
     return render_template("home.html")
 
 
@@ -143,13 +154,23 @@ def admin_login():
         return redirect(url_for("home"))
     form = LoginForm()
     if form.validate_on_submit():
-        if form.password.data == "test":
-            admin = User.query.filter_by(username="ADMIN").first()
+        admin = Admin.query.filter_by(username=form.username.data).first()
+        if admin is None:
+            flash("Incorrect username/password", "alert")
+        elif form.password.data == admin.password:
             login_user(admin)
             flash("Logged in.")
             return redirect(url_for("home"))
     return render_template("admin_login.html", form=form)
 
+
+@app.route("/add_admin/<a>/<p>")
+def add_admin(a=None, p=None):
+    a = Admin(username=a, password=p)
+    db.session.add(a)
+    db.session.commit()
+    flash("Admin user {a.username} added successfully.")
+    return redirect(url_for("home"))
 
 @app.route("/logout")
 @login_required
@@ -159,8 +180,8 @@ def logout():
     return redirect(url_for("home"))
 
 
-# with app.app_context():
-#     db.create_all()
+with app.app_context():
+    db.create_all()
 
 
 if __name__ == "__main__":

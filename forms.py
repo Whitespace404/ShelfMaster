@@ -4,6 +4,7 @@ from wtforms.validators import DataRequired, Regexp
 
 
 class LoginForm(FlaskForm):
+    username = StringField()
     password = PasswordField()
     submit = SubmitField("Login")
 

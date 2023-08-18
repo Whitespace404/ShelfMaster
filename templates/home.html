@@ -3,11 +3,4 @@
 {% block content %}
 
 
-{% if current_user.is_authenticated %}
-<h3>Admin Tools</h3>
-<a href="{{ url_for('view_books')}}" class="footer-link">View all books</a>
-{% else %}
-
-{% endif %}
-
 {% endblock %}
