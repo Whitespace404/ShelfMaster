@@ -9,7 +9,7 @@ from flask_login import (
 )
 from flask_sqlalchemy import SQLAlchemy
 from forms import BorrowForm, ReturnForm, LoginForm
-from admin_forms import AddAdminsForm
+from admin_forms import AddAdminsForm, AddBookForm
 import sqlalchemy as sa
 from sqlalchemy.orm import relationship
 from datetime import datetime
@@ -58,6 +58,25 @@ class AdminActionsLog(db.Model):
     username = sa.Column(sa.String(20))
     action = sa.Column(sa.String(120))
     time = sa.Column(sa.DateTime, default=datetime.now)
+
+
+# TODO Replace Book with Entity
+# class Entity(db.Model):
+#     id = sa.Column(sa.Integer, primary_key=True)
+#     type = sa.Column(sa.String(40))
+#     rack_number = sa.Column(sa.String(20))
+#     shelf_number = sa.Column(sa.String(20))
+#     accession_number = sa.Column(sa.String(25))
+#     call_number = sa.Column(sa.String(32))
+#     publisher = sa.Column(sa.String(120))
+#     isbn = sa.Column(sa.Integer(13))
+#     vendor = sa.Column(sa.String(32))
+#     bill_number = sa.Column(sa.String(32))
+#     amount = sa.Column(sa.String(10))
+#     remarks = sa.Column(sa.String(120))
+#     language = sa.Column(sa.String(32))
+#     is_borrowed = sa.Column(sa.Boolean, default=False)
+#     due_date = sa.Column(sa.DateTime)
 
 
 @login_manager.user_loader
@@ -179,6 +198,13 @@ def admin_login():
             flash(f"Logged in")
             return redirect(url_for("home"))
     return render_template("admin_login.html", form=form)
+
+
+@app.route("/add_book", methods=["GET", "POST"])
+@login_required
+def add_entity():
+    form = AddBookForm()
+    return render_template("add_entity.html", form=form)
 
 
 @app.route("/logout")
