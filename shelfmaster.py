@@ -82,7 +82,8 @@ def borrow():
             form.usn.errors.append("USN does not exist")
             return render_template("borrow.html", form=form)
 
-        b = Book(book_id=form.book_id.data, user_id=u.id)
+        b = Book(book_id=form.book_id.data)
+        b.user = u
         db.session.add(b)
         db.session.commit()
 
@@ -97,12 +98,11 @@ def return_():
 
     if form.validate_on_submit():
         b = Book.query.filter_by(book_id=form.book_id.data).first()
-        u = User.query.filter_by(id=b.user_id).first()
-        b.user_id = None
+        b.user = None
 
         db.session.commit()
 
-        flash(f"Book taken by {u.username} was returned successfully.")
+        flash(f"Book was returned successfully.")  # TODO show who took it
         return redirect(url_for("home"))
 
     return render_template("return.html", form=form)
@@ -152,13 +152,12 @@ def view_admin_log():
 def view_books():
     books = Book.query.filter_by().all()
     book_borrower = dict()
+
     for book in books:
-        borrower = User.query.filter_by(id=book.user_id).first()
-        print(borrower)
-        if borrower:
-            book_borrower[book.book_id] = borrower.username
+        if book.user:
+            book_borrower[book.book_id] = book.user.username
         else:
-            book_borrower[book.book_id] = ""
+            book_borrower[book.book_id] = None
 
     return render_template("books.html", books=book_borrower)
 

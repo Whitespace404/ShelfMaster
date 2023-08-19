@@ -13,4 +13,5 @@ css spelling error property :>
 
 if book already borrowed by someone then dont let other user borrow it
 
+if book is borrowed show class and section of borrower
 > teachers can borrow multiple books at a time [MIGHT HAVE TO CHANGE DB RELATIONSHIP!] 
