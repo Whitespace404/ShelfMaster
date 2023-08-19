@@ -27,6 +27,7 @@ login_manager.login_view = "admin_login"
 class User(db.Model):
     id = sa.Column(sa.Integer, primary_key=True, unique=True)
     username = sa.Column(sa.String(20), nullable=False)
+    name = sa.Column(sa.String(32))
     is_teacher = sa.Column(sa.Boolean)
     class_section = sa.Column(sa.String(10))
     borrowed_book_id = relationship("Book", backref="user", lazy=True)
@@ -77,6 +78,7 @@ class AdminActionsLog(db.Model):
 #     language = sa.Column(sa.String(32))
 #     is_borrowed = sa.Column(sa.Boolean, default=False)
 #     due_date = sa.Column(sa.DateTime)
+#     TODO make sure to add the relationship from user in ENTITY
 
 
 @login_manager.user_loader
