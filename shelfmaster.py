@@ -8,11 +8,12 @@ from flask_login import (
     current_user,
 )
 from flask_sqlalchemy import SQLAlchemy
-from forms import BorrowForm, ReturnForm, LoginForm
-from admin_forms import AddAdminsForm, AddBookForm
 import sqlalchemy as sa
 from sqlalchemy.orm import relationship
 from datetime import datetime
+
+from forms import BorrowForm, ReturnForm, LoginForm
+from admin_forms import AddAdminsForm, AddBookForm, AddUserForm
 
 app = Flask(__name__)
 app.config["SECRET_KEY"] = "28679ae72d9d4c7b0e93b1db218426a6"
@@ -78,6 +79,7 @@ class AdminActionsLog(db.Model):
 #     language = sa.Column(sa.String(32))
 #     is_borrowed = sa.Column(sa.Boolean, default=False)
 #     due_date = sa.Column(sa.DateTime)
+#     date_added = sa.Column(sa.DateTime, default=datetime.now)
 #     TODO make sure to add the relationship from user in ENTITY
 
 
@@ -119,26 +121,15 @@ def return_():
 
     if form.validate_on_submit():
         b = Book.query.filter_by(book_id=form.book_id.data).first()
+        former_borrower = b.user
         b.user = None
 
         db.session.commit()
 
-        flash(f"Book was returned successfully.")  # TODO show who took it
+        flash(f"Book borrowed by {former_borrower} was returned successfully.")
         return redirect(url_for("home"))
 
     return render_template("return.html", form=form)
-
-
-@app.route("/add_user/<u>")
-@login_required
-def add_user(u=None):
-    user = User(username=u)
-    db.session.add(user)
-    db.session.commit()
-
-    print(user.id)
-
-    return render_template("success.html", user=user)
 
 
 @app.route("/add_admin", methods=["GET", "POST"])
@@ -159,6 +150,41 @@ def add_admin():
         flash(f"Admin {admin.username} added successfully.")
         return redirect(url_for("home"))
     return render_template("add_admin.html", form=form)
+
+
+@app.route("/add_user", methods=["GET", "POST"])
+@login_required
+def add_user():
+    form = AddUserForm()
+
+    if form.validate_on_submit():
+        is_teacher = True if form.is_teacher.data == "Teacher" else False
+        user = User(
+            username=form.username.data,
+            name=form.name.data,
+            is_teacher=is_teacher,
+            class_section=form.class_section.data,
+        )
+        db.session.add(user)
+        db.session.commit()
+
+        performed_action = f"Added a new username with username '{form.username.data}'"
+        action = AdminActionsLog(
+            username=current_user.username, action=performed_action
+        )
+        db.session.add(action)
+        db.session.commit()
+
+        flash(f"Added user {form.username.data} who is {is_teacher} successfully.")
+        return redirect(url_for("home"))
+    return render_template("add_user.html", form=form)
+
+
+@app.route("/view_all_users")
+@login_required
+def view_all_users():
+    logs = User.query.filter_by().all()
+    return render_template("view_users.html", logs=logs)
 
 
 @app.route("/view_admin_log")
@@ -202,7 +228,7 @@ def admin_login():
     return render_template("admin_login.html", form=form)
 
 
-@app.route("/add_book", methods=["GET", "POST"])
+@app.route("/add_entity", methods=["GET", "POST"])
 @login_required
 def add_entity():
     form = AddBookForm()

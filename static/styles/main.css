@@ -138,13 +138,15 @@ span.form-error {
 }
 
 table {
+    font-size: 20px;
     border: 3px solid silver;
     margin: 10px;
 }
 
 td {
+    font-size: 20px;
     border: 3px solid silver;
-    padding: 20px;
+    padding: 10px;
 }
 
 .flash-message {
@@ -237,4 +239,8 @@ select>option {
 
 span#hide-inputs {
     font-size: 20px;
+}
+
+textarea#remarks::spelling-error {
+    text-decoration: 5px solid red;
 }

@@ -7,7 +7,7 @@ from wtforms import (
     SelectField,
     TextAreaField,
 )
-from wtforms.validators import DataRequired, Length
+from wtforms.validators import DataRequired, Length, Regexp
 
 
 class AddAdminsForm(FlaskForm):
@@ -33,3 +33,22 @@ class AddBookForm(FlaskForm):
     language = StringField("Language", validators=[Length(max=32)])
 
     submit = SubmitField("Add Entity")
+
+
+class AddUserForm(FlaskForm):
+    username = StringField(
+        "USN",
+        validators=[
+            DataRequired(),
+            # Regexp(
+            #     "^[0123]\d{1}[01][NLU0123456789]?\d{3}$",
+            #     message="That is not a real USN.",
+            # ),
+            Length(max=20),
+        ],
+    )
+    name = StringField("Name", validators=[DataRequired(), Length(max=32)])
+    is_teacher = SelectField("Role", choices=["Student", "Teacher"])
+    class_section = StringField("Class and Section", validators=[Length(max=4)])
+
+    submit = SubmitField("Add User")

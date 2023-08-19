@@ -1,17 +1,14 @@
 admins can change other admins passwords
 DELETE admins feature
-add favicon
 
 admins can add thing (book, map, mag, other, etc) to library
-admins can add user
 
-check if user exists before borrowing
 reading log
 transaction log
-
-css spelling error property :>
 
 if book already borrowed by someone then dont let other user borrow it
 
 if book is borrowed show class and section of borrower
-> teachers can borrow multiple books at a time [MIGHT HAVE TO CHANGE DB RELATIONSHIP!] 
+> remember teachers can borrow multiple books at a time [MIGHT HAVE TO CHANGE DB RELATIONSHIP!] 
+
+FILTER AND SORT option whenever db shows up in table form 
