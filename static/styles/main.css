@@ -1,5 +1,5 @@
 * {
-    font-family: serif;
+    font-family: sans-serif;
     font-size: 42px;
 }
 
@@ -99,21 +99,16 @@ form {
     border-width: 10px;
 }
 
-div>a:hover {
+.wrapper>a:hover {
     transform: scale(1.07);
 }
 
-a.footer-link {
-    color: white;
-    font-size: 20px;
-    transition: 0.2s ease-in;
-}
 
 .submit-btn {
     text-align: center;
 }
 
-fieldset>input {
+.styled-form>fieldset>input {
     margin: 15px;
     display: block;
     width: 400px;
@@ -124,19 +119,11 @@ fieldset>input {
     padding: 20px;
 }
 
-fieldset>input:focus {
+.styled-form>fieldset>input:focus {
     border: 2px solid greenyellow;
     transform: scaleX(1.04);
     font-size: 34px;
     background-color: #F8C300;
-}
-
-a.footer-link:hover {
-    visibility: visible;
-    color: black;
-    font-size: 50px;
-    text-decoration: none;
-    font-weight: bold;
 }
 
 .form {
@@ -148,4 +135,131 @@ a.footer-link:hover {
 span.form-error {
     color: red;
     font-size: smaller;
+}
+
+table {
+    font-size: 20px;
+    border: 3px solid silver;
+    margin: 10px;
+}
+
+td {
+    font-size: 20px;
+    border: 3px solid silver;
+    padding: 10px;
+}
+
+.flash-message {
+    margin-bottom: 5px;
+    margin-top: 0;
+    padding: 20px;
+}
+
+.message {
+    background: rgb(84, 157, 222);
+}
+
+.alert {
+    background: red;
+}
+
+.admin-tools-panel>a {
+    display: inline-block;
+    padding: 15px;
+    font-size: 25px;
+    text-align: left;
+    background-color: #1498c8;
+    border-radius: 15px;
+    transition: 0.2s ease;
+    margin: 15px;
+}
+
+.admin-tools-panel>a:hover {
+    transform: scale(1.1);
+}
+
+.admin-tools-panel>a:active {
+    border: 3px solid silver;
+}
+
+
+.admin-tools-panel {
+    text-align: left;
+}
+
+h3 {
+    text-align: left;
+}
+
+.add-book-form>fieldset>label {
+    font-size: 30px;
+    margin: 0px;
+    float: left;
+    width: 300px;
+    clear: both;
+}
+
+.add-book-form>fieldset>input {
+    font-size: 20px;
+    padding: 10px;
+}
+
+#hide-inputs>label {
+    font-size: 30px;
+    margin: 0px;
+    float: left;
+    width: 300px;
+    clear: both;
+}
+
+#hide-inputs>input {
+    font-size: 20px;
+    padding: 10px;
+}
+
+textarea {
+    padding: 15px;
+    font-size: 20px;
+    width: 95%;
+    height: 100px;
+    margin-right: 10px;
+    margin-top: 10px;
+}
+
+select {
+    font-size: 20px;
+}
+
+select>option {
+    font-size: 20px;
+}
+
+.error-message {
+    font-size: 15px;
+    padding: 0;
+    margin: 0;
+}
+
+.error-help {
+    font-size: 15px;
+    text-decoration: underline;
+    color: #0a46cb;
+    padding: 0;
+    margin: 0;
+}
+
+.hidden {
+    display: none;
+}
+
+span#hide-inputs {
+    font-size: 20px;
+}
+
+body>div.form>form>fieldset>label {
+    margin-top: 14px;
+}
+
+#hide-inputs>label {
+    margin-top: 14px;
 }

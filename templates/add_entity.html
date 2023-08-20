@@ -1,0 +1,166 @@
+{% extends 'base.html' %}
+
+{% block content %}
+  <div class="form">
+    <form action="" method="POST" class="add-book-form">
+      <fieldset>
+        <legend>Add an Entity</legend>
+
+        {{ form.hidden_tag() }}
+
+        {{ form.type.label }}
+
+        {% if form.type.errors %}
+          {{ form.type(autocomplete = 'off', id = 'select-field') }}
+          {% for error in form.type.errors %}
+            <span class="form-error">{{ error }}</span>
+          {% endfor %}
+        {% else %}
+          {{ form.type(autocomplete = 'off') }}
+        {% endif %}
+        <br />
+        {{ form.title.label }}
+        {% if form.title.errors %}
+          {{ form.title(autocomplete = 'off') }}
+          {% for error in form.title.errors %}
+            <span class="form-error">{{ error }}</span>
+          {% endfor %}
+        {% else %}
+          {{ form.title(autocomplete = 'off') }}
+        {% endif %}
+        <br />
+        {{ form.author.label }}
+        {% if form.author.errors %}
+          {{ form.author(autocomplete = 'off') }}
+          {% for error in form.author.errors %}
+            <span class="form-error">{{ error }}</span>
+          {% endfor %}
+        {% else %}
+          {{ form.author(autocomplete = 'off') }}
+        {% endif %}
+        <br />
+        {{ form.rack_number.label }}
+        {% if form.rack_number.errors %}
+          {{ form.rack_number(autocomplete = 'off') }}
+          {% for error in form.rack_number.errors %}
+            <span class="form-error">{{ error }}</span>
+          {% endfor %}
+        {% else %}
+          {{ form.rack_number(autocomplete = 'off') }}
+        {% endif %}
+        <br />
+
+        {{ form.shelf_number.label }}
+        {% if form.shelf_number.errors %}
+          {{ form.shelf_number(autocomplete = 'off') }}
+          {% for error in form.shelf_number.errors %}
+            <span class="form-error">{{ error }}</span>
+          {% endfor %}
+        {% else %}
+          {{ form.shelf_number(autocomplete = 'off') }}
+        {% endif %}
+        <br />
+
+        {{ form.accession_number.label }}
+        {% if form.accession_number.errors %}
+          {{ form.accession_number(autocomplete = 'off') }}
+          {% for error in form.accession_number.errors %}
+            <span class="form-error">{{ error }}</span>
+          {% endfor %}
+        {% else %}
+          {{ form.accession_number(autocomplete = 'off') }}
+        {% endif %}
+        <br />
+
+        {{ form.call_number.label }}
+        {% if form.call_number.errors %}
+          {{ form.call_number(autocomplete = 'off') }}
+          {% for error in form.call_number.errors %}
+            <span class="form-error">{{ error }}</span>
+          {% endfor %}
+        {% else %}
+          {{ form.call_number(autocomplete = 'off') }}
+        {% endif %}
+        <br />
+        <div id="hide-inputs">
+          {{ form.publisher.label }}
+          {% if form.publisher.errors %}
+            {{ form.publisher(autocomplete = 'off') }}
+            {% for error in form.publisher.errors %}
+              <span class="form-error">{{ error }}</span>
+            {% endfor %}
+          {% else %}
+            {{ form.publisher(autocomplete = 'off') }}
+          {% endif %}
+          <br />
+          {{ form.isbn.label }}
+          {% if form.isbn.errors %}
+            {{ form.isbn(autocomplete = 'off') }}
+            {% for error in form.isbn.errors %}
+              <span class="form-error">{{ error }}</span>
+            {% endfor %}
+          {% else %}
+            {{ form.isbn(autocomplete = 'off') }}
+          {% endif %}
+          <br />
+        </div>
+        {{ form.vendor.label }}
+        {% if form.vendor.errors %}
+          {{ form.vendor(autocomplete = 'off') }}
+          {% for error in form.vendor.errors %}
+            <span class="form-error">{{ error }}</span>
+          {% endfor %}
+        {% else %}
+          {{ form.vendor(autocomplete = 'off') }}
+        {% endif %}
+        <br />
+
+        {{ form.bill_number.label }}
+        {% if form.bill_number.errors %}
+          {{ form.bill_number(autocomplete = 'off') }}
+          {% for error in form.bill_number.errors %}
+            <span class="form-error">{{ error }}</span>
+          {% endfor %}
+        {% else %}
+          {{ form.bill_number(autocomplete = 'off') }}
+        {% endif %}
+        <br />
+
+        {{ form.amount.label }}
+        {% if form.amount.errors %}
+          {{ form.amount(autocomplete = 'off') }}
+          {% for error in form.amount.errors %}
+            <span class="form-error">{{ error }}</span>
+          {% endfor %}
+        {% else %}
+          {{ form.amount(autocomplete = 'off') }}
+        {% endif %}
+        <br />
+
+        {{ form.remarks.label }}
+        <br />
+        {% if form.remarks.errors %}
+          {{ form.remarks(autocomplete = 'off') }}
+          {% for error in form.remarks.errors %}
+            <span class="form-error">{{ error }}</span>
+          {% endfor %}
+        {% else %}
+          {{ form.remarks(autocomplete = 'off') }}
+        {% endif %}
+        <br />
+        {{ form.language.label }}
+        {% if form.language.errors %}
+          {{ form.language(autocomplete = 'off') }}
+          {% for error in form.language.errors %}
+            <span class="form-error">{{ error }}</span>
+          {% endfor %}
+        {% else %}
+          {{ form.language(autocomplete = 'off') }}
+        {% endif %}
+        <br />
+        <div class="submit-btn">{{ form.submit }}</div>
+      </fieldset>
+    </form>
+  </div>
+  <script src="{{ url_for('static', filename = 'scripts.js') }}"></script>
+{% endblock %}

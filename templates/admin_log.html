@@ -1,0 +1,30 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/css/bootstrap.min.css"
+    integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+
+<div class="table-responsive-md">
+    <table class="admin-logs">
+        <tr>
+            <td>Sl no</td>
+            <td>Action</td>
+            <td>Performed by</td>
+            <td>Date performed</td>
+            <td>Time performed</td>
+        </tr>
+        {% for log in logs %}
+        <tr>
+            <td>{{ log.id }}</td>
+            <td>{{ log.action }}</td>
+            <td>{{ log.username }}</td>
+            {% set time = log.time %}
+            <td>{{ time.strftime("%m/%d/%Y") }}</td>
+            <td>{{ time.strftime("%I:%M %p") }}</td>
+        </tr>
+        {% endfor %}
+    </table>
+</div>
+
+{% endblock %}

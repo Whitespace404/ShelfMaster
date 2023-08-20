@@ -1,0 +1,21 @@
+admins can change other admins passwords
+DELETE admins 
+
+reading log
+transaction log
+
+if book already borrowed by someone then dont let other user borrow it
+
+if book is borrowed show class and section of borrower
+> can teachers borrow multiple books at a time? [MIGHT HAVE TO CHANGE DB RELATIONSHIP!] 
+
+FILTER AND SORT option whenever db shows up in table form in HTML
+
+ADD due date in entity db when book borrowed
+add column author/borrowed_time in entity table
+
+Make select field for form fields like Language, where the options can be modified by admin
+
+when book returned show rack and shelf number
+
+lookup book and find rack and shelf number

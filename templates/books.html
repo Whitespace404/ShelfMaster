@@ -1,9 +1,0 @@
-{% extends 'base.html' %}
-
-{% block content %}
-
-{% for book in books %}
-    <p>{{ book }} is borrowed by {{ books[book] }}</p>
-{% endfor %}
-
-{% endblock %}
