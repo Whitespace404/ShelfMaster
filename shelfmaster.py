@@ -31,7 +31,7 @@ class User(db.Model):
     name = sa.Column(sa.String(32))
     is_teacher = sa.Column(sa.Boolean)
     class_section = sa.Column(sa.String(10))
-    borrowed_book_id = relationship("Book", backref="user", lazy=True)
+    borrowed_entities = relationship("Entity", backref="user", lazy=True)
 
     def __repr__(self):
         return f"ID: {str(self.id)}; {self.username}"
@@ -46,41 +46,39 @@ class Admin(db.Model, UserMixin):
         return f"{str(self.id)}. {self.username} with {self.password}"
 
 
-class Book(db.Model):
-    id = sa.Column(sa.Integer, primary_key=True, unique=True)
-    book_id = sa.Column(sa.Integer)
-    user_id = sa.Column(sa.Integer, sa.ForeignKey("user.id"))
-
-    def __repr__(self):
-        return f"#{str(self.id)} -- BOOK: {str(self.book_id)} is borrowed by USER: {str(self.user_id)}"
-
-
 class AdminActionsLog(db.Model):
-    id = sa.Column(sa.Integer, primary_key=True)
+    id = sa.Column(sa.Integer, primary_key=True, unique=True)
     username = sa.Column(sa.String(20))
     action = sa.Column(sa.String(120))
     time = sa.Column(sa.DateTime, default=datetime.now)
 
+    def __repr__(self):
+        return f"{self.username} performed {self.action}"
 
-# TODO Replace Book with Entity
-# class Entity(db.Model):
-#     id = sa.Column(sa.Integer, primary_key=True)
-#     type = sa.Column(sa.String(40))
-#     rack_number = sa.Column(sa.String(20))
-#     shelf_number = sa.Column(sa.String(20))
-#     accession_number = sa.Column(sa.String(25))
-#     call_number = sa.Column(sa.String(32))
-#     publisher = sa.Column(sa.String(120))
-#     isbn = sa.Column(sa.Integer(13))
-#     vendor = sa.Column(sa.String(32))
-#     bill_number = sa.Column(sa.String(32))
-#     amount = sa.Column(sa.String(10))
-#     remarks = sa.Column(sa.String(120))
-#     language = sa.Column(sa.String(32))
-#     is_borrowed = sa.Column(sa.Boolean, default=False)
-#     due_date = sa.Column(sa.DateTime)
-#     date_added = sa.Column(sa.DateTime, default=datetime.now)
-#     TODO make sure to add the relationship from user in ENTITY
+
+class Entity(db.Model):
+    id = sa.Column(sa.Integer, primary_key=True, unique=True)
+    type = sa.Column(sa.String(40))
+    title = sa.Column(sa.String(100))
+    author = sa.Column(sa.String(100))
+    rack_number = sa.Column(sa.String(20))
+    shelf_number = sa.Column(sa.String(20))
+    accession_number = sa.Column(sa.String(25))
+    call_number = sa.Column(sa.String(32))
+    publisher = sa.Column(sa.String(120))
+    isbn = sa.Column(sa.Integer)
+    vendor = sa.Column(sa.String(32))
+    bill_number = sa.Column(sa.String(32))
+    amount = sa.Column(sa.String(10))
+    remarks = sa.Column(sa.String(120))
+    language = sa.Column(sa.String(32))
+    is_borrowed = sa.Column(sa.Boolean, default=False)
+    due_date = sa.Column(sa.DateTime)
+    date_added = sa.Column(sa.DateTime, default=datetime.now)
+    user_id = sa.Column(sa.Integer, sa.ForeignKey("user.id"))
+
+    def __repr__(self):
+        return f"{self.id} borrowed by {self.user_id}"
 
 
 @login_manager.user_loader
@@ -105,12 +103,18 @@ def borrow():
             form.usn.errors.append("USN does not exist")
             return render_template("borrow.html", form=form)
 
-        b = Book(book_id=form.book_id.data)
-        b.user = u
-        db.session.add(b)
+        entity = Entity.query.filter_by(call_number=form.book_id.data).first()
+        if entity is None:
+            form.book_id.errors.append("That book doesn't exist in the database yet.")
+            return render_template("borrow.html", form=form)
+        entity.user = u
+        entity.is_borrowed = True
+        type_of_entity = entity.type
+
+        db.session.add(entity)
         db.session.commit()
 
-        flash("Book borrowed successfully")
+        flash(f"{type_of_entity} borrowed successfully.")
         return redirect(url_for("home"))
     return render_template("borrow.html", form=form)
 
@@ -120,8 +124,9 @@ def return_():
     form = ReturnForm()
 
     if form.validate_on_submit():
-        b = Book.query.filter_by(book_id=form.book_id.data).first()
+        b = Entity.query.filter_by(call_number=form.book_id.data).first()
         former_borrower = b.user
+        b.is_borrowed = False
         b.user = None
 
         db.session.commit()
@@ -168,14 +173,14 @@ def add_user():
         db.session.add(user)
         db.session.commit()
 
-        performed_action = f"Added a new username with username '{form.username.data}'"
+        performed_action = f"Added a new user with username '{form.username.data}'"
         action = AdminActionsLog(
             username=current_user.username, action=performed_action
         )
         db.session.add(action)
         db.session.commit()
 
-        flash(f"Added user {form.username.data} who is {is_teacher} successfully.")
+        flash(f"Added user {form.name.data}")
         return redirect(url_for("home"))
     return render_template("add_user.html", form=form)
 
@@ -197,16 +202,8 @@ def view_admin_log():
 @app.route("/view_books")
 @login_required
 def view_books():
-    books = Book.query.filter_by().all()
-    book_borrower = dict()
-
-    for book in books:
-        if book.user:
-            book_borrower[book.book_id] = book.user.username
-        else:
-            book_borrower[book.book_id] = None
-
-    return render_template("books.html", books=book_borrower)
+    books = Entity.query.filter_by().all()
+    return render_template("view_entities.html", books=books)
 
 
 @app.route("/admin_login", methods=["GET", "POST"])
@@ -232,6 +229,32 @@ def admin_login():
 @login_required
 def add_entity():
     form = AddBookForm()
+    if form.validate_on_submit():
+        e = Entity(
+            type=form.type.data,
+            title=form.title.data,
+            rack_number=form.rack_number.data,
+            shelf_number=form.shelf_number.data,
+            accession_number=form.accession_number.data,
+            call_number=form.call_number.data,
+            publisher=form.publisher.data,
+            isbn=form.isbn.data,
+            vendor=form.vendor.data,
+            bill_number=form.bill_number.data,
+            amount=form.amount.data,
+            remarks=form.remarks.data,
+            language=form.language.data,
+        )
+        db.session.add(e)
+        db.session.commit()
+
+        log_message = f"Added a {form.type.data} with Call Number:{form.call_number.data}"  # NOTE here as well :)
+        action = AdminActionsLog(username=current_user.username, action=log_message)
+        db.session.add(action)
+        db.session.commit()
+
+        flash(f"{form.type.data} added successfully")
+        return redirect(url_for("home"))
     return render_template("add_entity.html", form=form)
 
 
