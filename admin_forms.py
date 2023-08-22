@@ -26,12 +26,17 @@ class AddBookForm(FlaskForm):
     accession_number = StringField("Accession number", validators=[Length(max=25)])
     call_number = StringField("Call number", validators=[Length(max=32)])
     publisher = StringField("Publisher", validators=[Length(max=120)])
+    place_of_publication = StringField(
+        "Place of Publication", validators=[Length(max=64)]
+    )
     isbn = IntegerField("ISBN")
     vendor = StringField("Vendor", validators=[Length(max=32)])
     bill_number = StringField("Bill number", validators=[Length(max=32)])
     amount = IntegerField("Amount")
     remarks = TextAreaField("Remarks", validators=[Length(max=120)])
-    language = StringField("Language", validators=[Length(max=32)])
+
+    language_choices = ["English", "Hindi", "Kannada", "Sanskrit"]
+    language = SelectField("Language", choices=language_choices)
 
     submit = SubmitField("Add Entity")
 

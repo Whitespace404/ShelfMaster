@@ -7,13 +7,18 @@ from flask_login import (
     logout_user,
     current_user,
 )
+
 from flask_sqlalchemy import SQLAlchemy
 import sqlalchemy as sa
 from sqlalchemy.orm import relationship
-from datetime import datetime
+
+from datetime import datetime, timedelta
 
 from forms import BorrowForm, ReturnForm, LoginForm
 from admin_forms import AddAdminsForm, AddBookForm, AddUserForm
+
+from excel_automation import read_file_and_get_details, read_namelist_and_get_details
+from helper_functions import exceeds_seven_days
 
 app = Flask(__name__)
 app.config["SECRET_KEY"] = "28679ae72d9d4c7b0e93b1db218426a6"
@@ -32,6 +37,7 @@ class User(db.Model):
     is_teacher = sa.Column(sa.Boolean)
     class_section = sa.Column(sa.String(10))
     borrowed_entities = relationship("Entity", backref="user", lazy=True)
+    transaction = relationship("TransactionLog", backref="user", lazy=True)
 
     def __repr__(self):
         return f"ID: {str(self.id)}; {self.username}"
@@ -44,6 +50,19 @@ class Admin(db.Model, UserMixin):
 
     def __repr__(self):
         return f"{str(self.id)}. {self.username} with {self.password}"
+
+
+class TransactionLog(db.Model):
+    id = sa.Column(sa.Integer, primary_key=True, unique=True)
+    user_id = sa.Column(sa.Integer, sa.ForeignKey("user.id"))
+    entity_id = sa.Column(sa.Integer, sa.ForeignKey("entity.id"))
+    borrowed_time = sa.Column(sa.DateTime, default=datetime.now)
+    due_date = sa.Column(
+        sa.DateTime, default=lambda: datetime.now() + timedelta(days=7)
+    )
+
+    def __repr__(self):
+        return f"{str(self.id)}"
 
 
 class AdminActionsLog(db.Model):
@@ -66,9 +85,11 @@ class Entity(db.Model):
     accession_number = sa.Column(sa.String(25))
     call_number = sa.Column(sa.String(32))
     publisher = sa.Column(sa.String(120))
-    isbn = sa.Column(sa.Integer)
+    place_of_publication = sa.Column(sa.String(64))
+    isbn = sa.Column(sa.String(20))
     vendor = sa.Column(sa.String(32))
     bill_number = sa.Column(sa.String(32))
+    bill_date = sa.Column(sa.DateTime)
     amount = sa.Column(sa.String(10))
     remarks = sa.Column(sa.String(120))
     language = sa.Column(sa.String(32))
@@ -76,9 +97,10 @@ class Entity(db.Model):
     due_date = sa.Column(sa.DateTime)
     date_added = sa.Column(sa.DateTime, default=datetime.now)
     user_id = sa.Column(sa.Integer, sa.ForeignKey("user.id"))
+    transaction = relationship("TransactionLog", backref="entity", lazy=True)
 
     def __repr__(self):
-        return f"{self.id} borrowed by {self.user_id}"
+        return f"{self.accession_number}"
 
 
 @login_manager.user_loader
@@ -103,13 +125,24 @@ def borrow():
             form.usn.errors.append("USN does not exist")
             return render_template("borrow.html", form=form)
 
-        entity = Entity.query.filter_by(call_number=form.book_id.data).first()
+        entity = Entity.query.filter_by(accession_number=form.book_id.data).first()
         if entity is None:
             form.book_id.errors.append("That book doesn't exist in the database yet.")
             return render_template("borrow.html", form=form)
-        entity.user = u
-        entity.is_borrowed = True
-        type_of_entity = entity.type
+        if not entity.is_borrowed:
+            entity.user = u
+            entity.is_borrowed = True
+            type_of_entity = entity.type
+
+            log = TransactionLog(user=u, entity=entity)
+            db.session.add(log)
+            db.session.commit()
+
+        else:
+            form.book_id.errors.append(
+                f"This book is already borrowed by {entity.user.name}."
+            )
+            return render_template("borrow.html", form=form)
 
         db.session.add(entity)
         db.session.commit()
@@ -124,16 +157,30 @@ def return_():
     form = ReturnForm()
 
     if form.validate_on_submit():
-        b = Entity.query.filter_by(call_number=form.book_id.data).first()
-        former_borrower = b.user
-        b.is_borrowed = False
-        b.user = None
+        b = Entity.query.filter_by(accession_number=form.book_id.data).first()
+        if b is None:
+            form.book_id.errors.append("That book doesn't exist in the database.")
+            return render_template("return.html", form=form)
 
+        if b.user is None:
+            form.book_id.errors.append("That book is not borrowed.")
+            return render_template("return.html", form=form)
+
+        t = TransactionLog.query.filter_by(
+            entity_id=b.id, user_id=b.user.id
+        ).first()  # TODO does .first() pose a problem here when multiple books borrowed? use .last() instead??
+
+        current_dt = datetime.now() + timedelta(days=10)
+        if not exceeds_seven_days(current_dt, t.borrowed_time):
+            former_borrower = b.user
+            b.is_borrowed = False
+            b.user = None
+            flash(f"Book borrowed by {former_borrower.name} was returned successfully.")
+        else:
+            former_borrower = b.user
+            flash(f"Fine must be paid by {former_borrower.name} ", "alert")
         db.session.commit()
-
-        flash(f"Book borrowed by {former_borrower} was returned successfully.")
         return redirect(url_for("home"))
-
     return render_template("return.html", form=form)
 
 
@@ -206,6 +253,11 @@ def view_books():
     return render_template("view_entities.html", books=books)
 
 
+@app.route("/view_transactions")
+def view_transactions():
+    transactions = TransactionLog.query.filter_by().all()
+
+
 @app.route("/admin_login", methods=["GET", "POST"])
 def admin_login():
     if current_user.is_authenticated:
@@ -238,6 +290,7 @@ def add_entity():
             accession_number=form.accession_number.data,
             call_number=form.call_number.data,
             publisher=form.publisher.data,
+            place_of_publication=form.place_of_publication.data,
             isbn=form.isbn.data,
             vendor=form.vendor.data,
             bill_number=form.bill_number.data,
@@ -248,7 +301,7 @@ def add_entity():
         db.session.add(e)
         db.session.commit()
 
-        log_message = f"Added a {form.type.data} with Call Number:{form.call_number.data}"  # NOTE here as well :)
+        log_message = f"Added a {form.type.data} with Accession Number:{form.accession_number.data}"
         action = AdminActionsLog(username=current_user.username, action=log_message)
         db.session.add(action)
         db.session.commit()
@@ -269,8 +322,39 @@ def logout():
     return redirect(url_for("home"))
 
 
-# with app.app_context():
-#     db.create_all()
+@app.route("/create_db")
+def create_db():
+    db.create_all()
+
+    admin = Admin(username="rahulreji", password="power")
+    db.session.add(admin)
+    db.session.commit()
+
+    for t in read_namelist_and_get_details():
+        u = User(username=t[0], name=t[1], is_teacher=False, class_section="4A")
+        db.session.add(u)
+        db.session.commit()
+
+    for v in read_file_and_get_details():
+        e = Entity(
+            type="Book",
+            title=v["title"],
+            author=v["author"],
+            accession_number=v["accession_number"],
+            call_number=v["call_number"],
+            publisher=v["publisher"],
+            place_of_publication=v["place_of_publication"],
+            isbn=v["isbn"],
+            vendor=v["vendor"],
+            bill_number=v["bill_number"],
+            amount=v["price"],
+            language="English",
+        )
+        db.session.add(e)
+        db.session.commit()
+
+    flash("success")
+    return render_template("home.html")
 
 
 if __name__ == "__main__":
