@@ -167,7 +167,7 @@ def return_():
             entity_id=b.id, user_id=b.user.id
         ).first()  # TODO does .first() pose a problem here when multiple books borrowed? use .last() instead??
 
-        current_dt = datetime.now() + timedelta(days=10)
+        current_dt = datetime.now()
         if not exceeds_seven_days(current_dt, t.borrowed_time):
             former_borrower = b.user
             b.is_borrowed = False

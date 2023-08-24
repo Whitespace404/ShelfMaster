@@ -6,7 +6,6 @@
       <td>Sl no</td>
       <td>USN</td>
       <td>Name</td>
-      <td>Is Teacher</td>
       <td>Class and Section</td>
       <td>Borrowed Books</td>
     </tr>
@@ -15,11 +14,6 @@
         <td>{{ log.id }}</td>
         <td>{{ log.username }}</td>
         <td>{{ log.name }}</td>
-        {% if log.is_teacher %}
-          <td>Yes</td>
-        {% else %}
-          <td>No</td>
-        {% endif %}
         <td>{{ log.class_section }}</td>
         <td>{{ log.borrowed_entities }}</td>
       </tr>
