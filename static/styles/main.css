@@ -4,6 +4,7 @@
 }
 
 /* F8C300 */
+/* 090B5C BRIGADE BLUE */
 h1 {
     font-size: 50px;
 }
@@ -32,11 +33,15 @@ form {
     display: inline-block;
 }
 
+marquee {
+    --school-color: #090b5c;
+}
+
 div.wrapper {
     margin-top: 0;
     padding: 20px;
     padding-left: 10px;
-    background-color: #F8C300;
+    background-color: #090b5c;
     padding-right: 10px;
     display: flex;
     justify-content: space-between;
@@ -46,7 +51,7 @@ div.wrapper>a,
 span.logo {
     font-size: 35px;
     text-decoration: none;
-    color: black;
+    color: white;
     display: inline-block;
     position: relative;
     transition: 0.1s ease-in-out;
@@ -60,7 +65,7 @@ div.wrapper>a:after {
     height: 4px;
     bottom: 0;
     left: 0;
-    background-color: #0a46cb;
+    background-color: rgb(245, 255, 240);
     transform-origin: bottom right;
     transition: transform 0.25s ease-out;
 }

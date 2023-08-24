@@ -1,0 +1,17 @@
+{% extends 'base.html' %%}
+
+{% block content %}
+
+<table>
+    <tr>
+        <td>Sl No</td>
+    </tr>
+    <tr>
+        {% for log in transactions %}
+        <td>{{ log.id }}</td>
+        <td>{{ log.user_id }}</td>
+        {% endfor %}
+    </tr>
+</table>
+
+{% endblock content %}

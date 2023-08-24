@@ -1,5 +1,24 @@
 # Guidelines
 
+## Quickstart
+
+To run the server, open this folder using command prompt and execute:
+
+```powershell
+env\Scripts\activate.bat
+```
+Once you've run that run
+```
+python shelfmaster.py
+```
+to run the server.
+
+The admin login credentials is as follows
+
+Username: rahulreji
+Password: power
+
+
 ## 1. When you want to make changes
 Before you can do this you must have the 
 repository cloned in your local. See [below](#how-to-set-up-the-development-environment) to see 

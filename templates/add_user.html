@@ -1,55 +1,57 @@
 {% extends 'base.html' %}
 
 {% block content %}
-  <div class="form">
+
+<div class="form">
     <form action="" method="POST" class="add-book-form">
-      <fieldset>
-        <legend>Add a User</legend>
-        {{ form.hidden_tag() }}
-
-        {{ form.username.label }}
-        {% if form.username.errors %}
-          {{ form.username(autocomplete = 'off') }}
-
-          {% for error in form.username.errors %}
-            <span class="form-error">{{ error }}</span>
-          {% endfor %}
-        {% else %}
-          {{ form.username(autocomplete = 'off') }}
-        {% endif %}
-        <br />
-        {{ form.name.label }}
-        {% if form.name.errors %}
-          {{ form.name(autocomplete = 'off') }}
-
-          {% for error in form.name.errors %}
-            <p>{{ error }}</p>
-          {% endfor %}
-        {% else %}
-          {{ form.name(autocomplete = 'off') }}
-        {% endif %}
-        <br />
-        {{ form.is_teacher.label }}
-        {{ form.is_teacher }}
-        <br />
-        <div id="hide-inputs">
-          {{ form.class_section.label }}
-          {% if form.class_section.errors %}
-            {{ form.class_section(autocomplete = 'off') }}
-
-            {% for error in form.class_section.errors %}
-              <p>{{ error }}</p>
-            {% endfor %}
-          {% else %}
-            {{ form.class_section(autocomplete = 'off') }}
-          {% endif %}
-          <br />
-        </div>
-
-        <div class="submit-btn">{{ form.submit }}</div>
-      </fieldset>
+        <fieldset>
+            <legend>Add a User</legend>
+            {{ form.hidden_tag() }}
+    
+            {{ form.username.label }}
+            {% if form.username.errors %}
+                {{ form.username(autocomplete='off') }}
+                
+                {% for error in form.username.errors %}
+                    <span class="form-error">{{ error }}</span>
+                {% endfor %}
+            {% else %}
+                {{ form.username(autocomplete='off') }}
+            {% endif %}
+            <br>
+            {{ form.name.label }}
+            {% if form.name.errors %}
+                {{ form.name(autocomplete='off') }}
+                
+                {% for error in form.name.errors %}
+                    <p>{{ error }}</p>
+                {% endfor %}
+            {% else %}
+                {{ form.name(autocomplete='off') }}
+            {% endif %}
+            <br>
+            {{ form.is_teacher.label }}
+            {{ form.is_teacher }}
+            <br>
+            <div id="hide-inputs">
+                {{ form.class_section.label }}
+                {% if form.class_section.errors %}
+                    {{ form.class_section(autocomplete='off') }}
+                    
+                    {% for error in form.class_section.errors %}
+                        <p>{{ error }}</p>
+                    {% endfor %}
+                {% else %}
+                    {{ form.class_section(autocomplete='off') }}
+                {% endif %}
+            </div>
+            <div class="submit-btn">{{ form.submit }}</div>
+        </fieldset>
+        
     </form>
-  </div>
+</div>
 
-  <script src="{{ url_for('static', filename = 'add_user_form_script.js') }}"></script>
-{% endblock %}
+<script src="{{url_for('static', filename='add_user_form_script.js')}}"></script>
+
+
+{% endblock content %}

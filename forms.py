@@ -20,11 +20,11 @@ class BorrowForm(FlaskForm):
             ),
         ],
     )
-    book_id = StringField("Book ID", validators=[DataRequired()])
+    book_id = StringField("Accession Number", validators=[DataRequired()])
 
     submit = SubmitField("Borrow")
 
 
 class ReturnForm(FlaskForm):
-    book_id = StringField("Book ID", validators=[DataRequired()])
+    book_id = StringField("Accession Number", validators=[DataRequired()])
     submit = SubmitField("Return")
