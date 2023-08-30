@@ -101,6 +101,7 @@ div.wrapper>a:hover:after {
 
 form {
     margin-top: 2vh;
+    box-shadow: 0 12px 16px 0 rgba(0, 0, 0, 0.24), 0 17px 35px 0 rgba(0, 0, 0, 0.19);
     border-width: 10px;
 }
 
@@ -284,4 +285,10 @@ body>div.form>form>fieldset>label {
 
 #hide-inputs>label {
     margin-top: 14px;
+}
+
+body > div > img {
+    max-width: 35%;
+    width: 150px;
+    height: 70px;
 }
