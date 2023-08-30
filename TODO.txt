@@ -18,7 +18,7 @@ lookup book and find rack and shelf number
 Make acc. number be created using multiple dropdowns
 Generate fine slip for library late return
 
-Generate statistics for the following (committed):
+Generate statistics for the following:
 
 - Top readers of each class/section
 - Top borrowed book
@@ -26,4 +26,4 @@ Generate statistics for the following (committed):
 Generate graphs to show library usage :0
 
 Test /view_transactions route
-Get DB with master.xlsx loaded properly into /instance/main.db
+Get DB with master.xlsx loaded properly into ./instance/main.db
