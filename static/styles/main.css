@@ -147,17 +147,26 @@ table {
     border: 3px solid silver;
     margin: 10px;
     table-layout: fixed;
+    position: relative;
     /* width: 310px; */
 }
 
-td {
+th {
+    position: sticky;
+    background: white;
+    top: 0;
+    border-bottom: 5px solid silver;
+}
+
+td,
+th {
     font-size: 20px;
     border: 3px solid silver;
     padding: 10px;
 }
 
 td.td-title {
-    width: 110px;
+    width: 200px;
     word-wrap: break-word;
 }
 

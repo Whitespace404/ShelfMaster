@@ -27,3 +27,5 @@ Generate graphs to show library usage :0
 
 Test /view_transactions route
 Get DB with master.xlsx loaded properly into ./instance/main.db
+
+must revert to using relationships for TransactionLog instead of IDs
