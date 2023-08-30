@@ -31,3 +31,9 @@ Get DB with master.xlsx loaded properly into ./instance/main.db
 must revert to using relationships for TransactionLog instead of IDs
 
 Gunterz cannot be used in production environment
+
+style select menus
+
+test:
+borrowing the same book again with same user/
+borrowing more than one book by same user

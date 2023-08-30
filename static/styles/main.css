@@ -21,6 +21,10 @@ a {
 html {
     background: rgb(48, 43, 139);
     background: linear-gradient(rgb(43, 81, 139), rgb(0, 96, 86));
+
+    the gradient:
+    background: rgb(78, 47, 255);
+    background: linear-gradient(0deg, rgba(78, 47, 255, 1) 0%, rgba(26, 106, 179, 1) 53%);
 } */
 
 body {
@@ -54,7 +58,7 @@ div.wrapper {
     margin-top: 0;
     padding: 20px;
     padding-left: 30px;
-    padding-right: 10px;
+    padding-right: 30px;
     display: flex;
     justify-content: space-between;
 }
@@ -301,22 +305,22 @@ label {
     outline: none;
 }
 
-option {
-    padding: 20px;
-}
-
 textarea {
     padding: 15px;
     font-size: 20px;
     width: 95%;
     height: 100px;
+    background: transparent;
     margin-right: 10px;
+    color: white;
     margin-top: 10px;
+    outline: none;
 }
 
 select {
     font-size: 20px;
     margin: 10px;
+    text-indent: 5px;
 }
 
 select>option {
@@ -360,12 +364,23 @@ body>div>img {
     height: 70px;
 }
 
+@keyframes slideInLeft {
+    0% {
+        transform: translateX(-100%);
+    }
+
+    100% {
+        transform: translateX(0);
+    }
+}
+
 .hero {
     text-align: left;
     color: white;
 }
 
 .hero>.title {
+    /* animation: 0.4s ease-in 0s 1 slideInLeft; */
     margin-top: 90px;
     font-family: 'Special Elite';
     margin-left: 150px;
@@ -378,8 +393,18 @@ body>div>img {
 }
 
 .hero>.sub-heading {
+    /* animation: 0.5s ease-in 0s 1 slideInLeft; */
     font-family: 'Quicksand';
     font-weight: 300;
+    font-size: 38px;
     margin-left: 150px;
+    background: linear-gradient(to right, white, aliceblue, white);
+    /* background: linear-gradient(90deg, rgba(248, 195, 0, 1) 0%, rgb(0, 132, 255) 100%); */
+    background-clip: text;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
 
+.main-body::-webkit-scrollbar {
+    display: none;
 }
