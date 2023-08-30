@@ -19,6 +19,7 @@ from admin_forms import AddAdminsForm, AddBookForm, AddUserForm
 
 # from excel_automation import read_file_and_get_details, read_namelist_and_get_details
 from helper_functions import exceeds_seven_days
+from time import sleep
 
 app = Flask(__name__)
 app.config["SECRET_KEY"] = "28679ae72d9d4c7b0e93b1db218426a6"
@@ -287,6 +288,7 @@ def add_entity():
         e = Entity(
             type=form.type.data,
             title=form.title.data,
+            author=form.author.data,
             rack_number=form.rack_number.data,
             shelf_number=form.shelf_number.data,
             accession_number=form.accession_number.data,
@@ -359,5 +361,15 @@ def create_db():
     return render_template("home.html")
 
 
+@app.route("/flash")
+def flash_():
+    flash("Just a test message")
+    return redirect(url_for("home"))
+
+
 if __name__ == "__main__":
+    print("OI")
+    print("You forgot to put Quicksand in.")
+    print("Run it again.")
+    sleep(3)
     app.run(debug=True)

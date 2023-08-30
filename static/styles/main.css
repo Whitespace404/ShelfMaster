@@ -1,9 +1,11 @@
+@import url('https://fonts.googleapis.com/css2?family=Nosifer&family=Pangolin&family=Quicksand:wght@700&family=Special+Elite&display=swap');
+
 * {
-    font-family: sans-serif;
-    font-size: 42px;
+    font-family: Quicksand;
+    font-size: 36px;
 }
 
-/* F8C300 */
+/* F8C300 BRIGADE YELLOW  */
 /* 090B5C BRIGADE BLUE */
 h1 {
     font-size: 50px;
@@ -15,9 +17,20 @@ a {
     text-align: center;
 }
 
+/* 
+html {
+    background: rgb(48, 43, 139);
+    background: linear-gradient(rgb(43, 81, 139), rgb(0, 96, 86));
+} */
+
 body {
-    background-color: white;
     text-align: center;
+
+    /* This one is a "good" */
+    /* background: rgb(43, 81, 139); background: linear-gradient(rgb(43, 81, 139), rgb(0, 96, 86));  */
+    height: 100vh;
+    background: rgb(78, 47, 255);
+    background: linear-gradient(0deg, rgba(78, 47, 255, 1) 0%, rgba(26, 106, 179, 1) 53%);
 }
 
 hr {
@@ -40,8 +53,7 @@ marquee {
 div.wrapper {
     margin-top: 0;
     padding: 20px;
-    padding-left: 10px;
-    background-color: #090b5c;
+    padding-left: 30px;
     padding-right: 10px;
     display: flex;
     justify-content: space-between;
@@ -56,6 +68,7 @@ span.logo {
     position: relative;
     transition: 0.1s ease-in-out;
 }
+
 
 div.wrapper>a:after {
     content: '';
@@ -75,13 +88,19 @@ div.wrapper>a:hover:after {
     transform-origin: bottom left;
 }
 
+legend {
+    color: white;
+}
+
 #submit {
     background-color: white;
     letter-spacing: 2px;
     border: none;
     padding: 5%;
-    padding-left: 30px;
-    padding-right: 30px;
+    padding-left: 70px;
+    background: rgb(248, 195, 0);
+    background: linear-gradient(90deg, rgba(248, 195, 0, 1) 0%, rgba(209, 124, 55, 1) 100%);
+    padding-right: 70px;
     border-radius: 10px;
     margin-top: 30px;
     font-size: 25px;
@@ -114,22 +133,44 @@ form {
     text-align: center;
 }
 
+.styled-form {
+    margin-top: 45px;
+}
+
 .styled-form>fieldset>input {
     margin: 15px;
     display: block;
+    color: white;
     width: 400px;
     font-size: 32px;
-    border-radius: 25px;
-    border: 1px solid silver;
     transition: 0.4s ease-in-out;
     padding: 20px;
+    border-image: linear-gradient(90deg, rgba(63, 94, 251, 1) 0%, rgba(252, 70, 107, 1) 100%) 30;
+    border-width: 4px;
+    border-style: solid;
+    background: transparent;
 }
 
 .styled-form>fieldset>input:focus {
-    border: 2px solid greenyellow;
     transform: scaleX(1.04);
     font-size: 34px;
-    background-color: #F8C300;
+    border-image: linear-gradient(90deg, rgba(63, 94, 251, 1) 0%, rgba(252, 70, 107, 1) 100%) 30;
+    border-width: 4px;
+    border-style: solid;
+}
+
+fieldset {
+    border: 0;
+    border-image: linear-gradient(90deg, rgba(63, 94, 251, 1) 0%, rgba(252, 70, 107, 1) 100%) 30;
+    border-width: 4px;
+    border-style: solid;
+}
+
+.styled-form>fieldset>input:focus-visible {
+    border-image: linear-gradient(90deg, rgba(63, 94, 251, 1) 0%, rgba(252, 70, 107, 1) 100%) 30;
+    border-width: 4px;
+    border-style: solid;
+    outline: 0;
 }
 
 .form {
@@ -147,14 +188,14 @@ table {
     font-size: 20px;
     border: 3px solid silver;
     margin: 10px;
+    color: white;
     table-layout: fixed;
     position: relative;
-    /* width: 310px; */
 }
 
 th {
     position: sticky;
-    background: white;
+    background: rgb(16, 35, 126);
     top: 0;
     border-bottom: 5px solid silver;
 }
@@ -175,10 +216,13 @@ td.td-title {
     margin-bottom: 5px;
     margin-top: 0;
     padding: 20px;
+    border-image: linear-gradient(90deg, rgba(63, 94, 251, 1) 0%, rgba(252, 70, 107, 1) 100%) 30;
+    border-width: 4px;
+    border-style: solid;
 }
 
 .message {
-    background: rgb(84, 157, 222);
+    color: white;
 }
 
 .alert {
@@ -212,6 +256,9 @@ td.td-title {
 
 h3 {
     text-align: left;
+    color: white;
+    padding-left: 45px;
+    text-decoration: underline;
 }
 
 .add-book-form>fieldset>label {
@@ -222,9 +269,18 @@ h3 {
     clear: both;
 }
 
+label {
+    color: white;
+}
+
 .add-book-form>fieldset>input {
     font-size: 20px;
+    color: white;
+    background: transparent;
     padding: 10px;
+    margin: 10px;
+    outline: none;
+    border: 1px solid silver;
 }
 
 #hide-inputs>label {
@@ -238,6 +294,15 @@ h3 {
 #hide-inputs>input {
     font-size: 20px;
     padding: 10px;
+    margin: 10px;
+    color: white;
+    background: transparent;
+    border: 1px solid silver;
+    outline: none;
+}
+
+option {
+    padding: 20px;
 }
 
 textarea {
@@ -251,6 +316,7 @@ textarea {
 
 select {
     font-size: 20px;
+    margin: 10px;
 }
 
 select>option {
@@ -281,14 +347,39 @@ span#hide-inputs {
 
 body>div.form>form>fieldset>label {
     margin-top: 14px;
+    color: white;
 }
 
 #hide-inputs>label {
     margin-top: 14px;
 }
 
-body > div > img {
+body>div>img {
     max-width: 35%;
     width: 150px;
     height: 70px;
+}
+
+.hero {
+    text-align: left;
+    color: white;
+}
+
+.hero>.title {
+    margin-top: 90px;
+    font-family: 'Special Elite';
+    margin-left: 150px;
+    font-size: 5em;
+    background: linear-gradient(90deg, rgba(248, 195, 0, 1) 0%, rgb(0, 132, 255) 100%);
+    background-clip: text;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    margin-bottom: 0;
+}
+
+.hero>.sub-heading {
+    font-family: 'Quicksand';
+    font-weight: 300;
+    margin-left: 150px;
+
 }
