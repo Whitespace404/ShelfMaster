@@ -4,14 +4,18 @@
   <table>
     <tr>
       <th>Sl No</th>
-      <th>User ID</th>
-      <th>Entity ID</th>
+      <th>USN</th>
+      <th>Name</th>
+      <th>Accession Number</th>
+      <th>Borrowed Time</th>
     </tr>
     {% for log in transactions %}
       <tr>
         <td>{{ log.id }}</td>
-        <td>{{ log.user_id }}</td>
-        <td>{{ log.entity_id }}</td>
+        <td>{{ log.user.username }}</td>
+        <td>{{ log.user.name }}</td>
+        <td>{{ log.entity.accession_number }}</td>
+        <td>{{ log.borrowed_time.strftime('%m/%d/%Y %I:%M %p') }}</td>
       </tr>
     {% endfor %}
   </table>

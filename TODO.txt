@@ -26,17 +26,12 @@ Generate statistics for the following:
 Generate graphs to show library usage :0
 
 Test /view_transactions route
-Get DB with master.xlsx loaded properly into ./instance/main.db
-
-must revert to using relationships for TransactionLog instead of IDs
 
 Gunterz cannot be used in production environment
 
 style select menus
 
-test:
-borrowing the same book again with same user/
-borrowing more than one book by same user
-
 report generation
 catalog
+
+while hiding #hide-inputs tag make sure to clear whatever data already entered

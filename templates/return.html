@@ -11,7 +11,9 @@
         {{ form.book_id(autocomplete = 'off') }}
 
         {% for error in form.book_id.errors %}
-          <p class="error-message">{{ error }}</p>
+          {% for line in error.split('-linebreak-') %}
+            <span class="form-error">{{ line }}</span>
+          {% endfor %}
         {% endfor %}
       {% else %}
         {{ form.book_id(autocomplete = 'off') }}

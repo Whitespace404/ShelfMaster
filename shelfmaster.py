@@ -15,7 +15,7 @@ from sqlalchemy.orm import relationship
 from datetime import datetime, timedelta
 
 from forms import BorrowForm, ReturnForm, LoginForm
-from admin_forms import AddAdminsForm, AddBookForm, AddUserForm
+from admin_forms import AddAdminsForm, AddBookForm, AddUserForm, CatalogForm
 
 from excel_automation import read_file_and_get_details, read_namelist_and_get_details
 from helper_functions import exceeds_seven_days
@@ -32,7 +32,7 @@ login_manager.login_view = "admin_login"
 
 class User(db.Model):
     id = sa.Column(sa.Integer, primary_key=True, unique=True)
-    username = sa.Column(sa.String(20), nullable=False)
+    username = sa.Column(sa.String(20), nullable=False, unique=True)
     name = sa.Column(sa.String(32))
     is_teacher = sa.Column(sa.Boolean)
     class_section = sa.Column(sa.String(10))
@@ -83,7 +83,7 @@ class Entity(db.Model):
     author = sa.Column(sa.String(100))
     rack_number = sa.Column(sa.String(20))
     shelf_number = sa.Column(sa.String(20))
-    accession_number = sa.Column(sa.String(25))
+    accession_number = sa.Column(sa.String(25), unique=True)
     call_number = sa.Column(sa.String(32))
     publisher = sa.Column(sa.String(120))
     place_of_publication = sa.Column(sa.String(64))
@@ -119,7 +119,6 @@ def home():
 @app.route("/borrow", methods=["GET", "POST"])
 def borrow():
     form = BorrowForm()
-
     if form.validate_on_submit():
         u = User.query.filter_by(username=form.usn.data).first()
         if u is None:
@@ -127,30 +126,42 @@ def borrow():
             return render_template("borrow.html", form=form)
 
         entity = Entity.query.filter_by(accession_number=form.book_id.data).first()
+
         if entity is None:
             form.book_id.errors.append("That book doesn't exist in the database yet.")
             return render_template("borrow.html", form=form)
         if entity.is_borrowed:
             form.book_id.errors.append(
-                f"This book is already borrowed by {entity.user.name}."
+                f"{form.book_id.data} borrowed by {entity.user.name}."
             )
             return render_template("borrow.html", form=form)
-        if u.is_teacher == True or (
-            (u.is_teacher == False) and (u.borrowed_entities != None)
-        ):
+
+        if u.is_teacher == True:
             entity.user = u
             entity.is_borrowed = True
-            type_of_entity = entity.type
 
-            log = TransactionLog(user_id=u.id, entity_id=entity.id)
+            log = TransactionLog(user=u, entity=entity)
             db.session.add(log)
+            db.session.add(entity)
             db.session.commit()
 
-        db.session.add(entity)
-        db.session.commit()
+            flash(f"{entity.type} borrowed successfully.")
+            return redirect(url_for("home"))
+        elif len(u.borrowed_entities) == 0:
+            entity.user = u
+            entity.is_borrowed = True
 
-        flash(f"{type_of_entity} borrowed successfully.")
-        return redirect(url_for("home"))
+            log = TransactionLog(user=u, entity=entity)
+            db.session.add(log)
+            db.session.add(entity)
+            db.session.commit()
+
+            flash(f"{entity.type} borrowed successfully.")
+            return redirect(url_for("home"))
+        else:
+            form.usn.errors.append(
+                "You have already borrowed a book. -linebreak- Return it and try again. "
+            )
     return render_template("borrow.html", form=form)
 
 
@@ -215,6 +226,11 @@ def add_user():
 
     if form.validate_on_submit():
         is_teacher = True if form.is_teacher.data == "Teacher" else False
+
+        u = User.query.filter_by(username=form.username.data).first()
+        if u is not None:
+            form.username.errors.append("USN already exists.")
+            return render_template("add_user.html", form=form)
         user = User(
             username=form.username.data,
             name=form.name.data,
@@ -369,6 +385,29 @@ def create_db():
 def flash_():
     flash("Just a test message")
     return redirect(url_for("home"))
+
+
+SEARCH_TYPE_MAPPING: dict = {
+    "author": Entity.author,
+    "title": Entity.title,
+    "call_number": Entity.call_number,
+    "is_borrowed": Entity.is_borrowed,
+}
+
+
+@app.route("/catalog", methods=["GET", "POST"])
+def catalog():
+    form = CatalogForm()
+    if form.validate_on_submit():
+        if form.criteria.data in SEARCH_TYPE_MAPPING:
+            search_attribute = SEARCH_TYPE_MAPPING[form.criteria.data]
+            q = Entity.query.filter(
+                search_attribute.ilike(f"%{form.query.data}%")
+            ).all()
+        else:
+            q = []
+        return render_template("view_entities.html", books=q)
+    return render_template("catalog.html", form=form)
 
 
 if __name__ == "__main__":

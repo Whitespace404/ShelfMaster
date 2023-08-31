@@ -1,0 +1,40 @@
+{% extends 'base.html' %}
+
+{% block content %}
+  <form action="" method="POST" class="styled-form">
+    <fieldset>
+      <legend>Catalog</legend>
+      {{ form.hidden_tag() }}
+
+      {{ form.criteria.label }}
+      {% if form.criteria.errors %}
+        {{ form.criteria(autocomplete = 'off') }}
+
+        {% for error in form.criteria.errors %}
+          {% for line in error.split('-linebreak-') %}
+            <span class="form-error">{{ line }}</span>
+          {% endfor %}
+        {% endfor %}
+      {% else %}
+        {{ form.criteria(autocomplete = 'off') }}
+      {% endif %}
+      <br />
+
+      {{ form.query.label }}
+      {% if form.query.errors %}
+        {{ form.query(autocomplete = 'off') }}
+
+        {% for error in form.query.errors %}
+          {% for line in error.split('-linebreak-') %}
+            <span class="form-error">{{ line }}</span>
+          {% endfor %}
+        {% endfor %}
+      {% else %}
+        {{ form.query(autocomplete = 'off') }}
+      {% endif %}
+      <br />
+
+      <div class="submit-btn">{{ form.submit }}</div>
+    </fieldset>
+  </form>
+{% endblock %}

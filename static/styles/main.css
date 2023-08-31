@@ -40,7 +40,9 @@ body {
     /* background: rgb(43, 81, 139); background: linear-gradient(rgb(43, 81, 139), rgb(0, 96, 86));  */
     height: 100%;
     background: rgb(78, 47, 255);
-    background: linear-gradient(0deg, rgba(78, 47, 255, 1) 0%, rgba(26, 106, 179, 1) 53%);
+    background: linear-gradient(to bottom, rgba(78, 47, 255, 1) 0%, rgba(26, 106, 179, 1) 53%);
+    background-size: 100% 100vh;
+    background-attachment: fixed;
 }
 
 hr {
@@ -129,7 +131,6 @@ form {
     margin-top: 2vh;
     box-shadow: 0 12px 16px 0 rgba(0, 0, 0, 0.24), 0 17px 35px 0 rgba(0, 0, 0, 0.19);
     border-width: 10px;
-    margin-bottom: 20%;
 }
 
 .wrapper>a:hover {
@@ -189,8 +190,9 @@ fieldset {
 }
 
 span.form-error {
-    color: red;
-    font-size: smaller;
+    display: block;
+    color: orange;
+    font-size: 24px;
 }
 
 table {
@@ -200,7 +202,6 @@ table {
     color: white;
     table-layout: fixed;
     position: relative;
-    margin-bottom: 40%;
 }
 
 th {
@@ -263,7 +264,6 @@ td.td-title {
 
 .admin-tools-panel {
     text-align: left;
-    padding-bottom: 30%;
 }
 
 h3 {
@@ -328,7 +328,8 @@ textarea {
 select {
     font-size: 20px;
     margin: 10px;
-    text-indent: 5px;
+    padding: 15px;
+    padding-right: 40px;
 }
 
 select>option {
@@ -420,7 +421,6 @@ body>div.form>form>fieldset>label {
     -webkit-text-fill-color: transparent;
     max-width: fit-content;
     word-wrap: break-word;
-    padding-bottom: 10%;
 }
 
 .main-body::-webkit-scrollbar {

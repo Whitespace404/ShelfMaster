@@ -58,3 +58,16 @@ class AddUserForm(FlaskForm):
     class_section = StringField("Class and Section", validators=[Length(max=4)])
 
     submit = SubmitField("Add User")
+
+
+class CatalogForm(FlaskForm):
+    options = [
+        ("author", "Author"),
+        ("title", "Title"),
+        ("call_number", "Call Number"),
+    ]
+
+    criteria = SelectField("Search criteria", choices=options)
+    query = StringField("Search query")
+
+    submit = SubmitField("Search")
