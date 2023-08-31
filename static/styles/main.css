@@ -1,8 +1,9 @@
-@import url('https://fonts.googleapis.com/css2?family=Nosifer&family=Pangolin&family=Quicksand:wght@700&family=Special+Elite&display=swap');
+/* @import url('https://fonts.googleapis.com/css2?family=Nosifer&family=Pangolin&family=Quicksand:wght@700&family=Special+Elite&display=swap'); */
 
 * {
     font-family: Quicksand;
     font-size: 36px;
+    font-weight: 600;
 }
 
 /* F8C300 BRIGADE YELLOW  */
@@ -61,6 +62,7 @@ div.wrapper {
     padding-right: 30px;
     display: flex;
     justify-content: space-between;
+    font-weight: 600;
 }
 
 div.wrapper>a,
@@ -150,7 +152,7 @@ form {
     transition: 0.4s ease-in-out;
     padding: 20px;
     border-image: linear-gradient(90deg, rgba(63, 94, 251, 1) 0%, rgba(252, 70, 107, 1) 100%) 30;
-    border-width: 4px;
+    border-width: 8px;
     border-style: solid;
     background: transparent;
 }
@@ -159,14 +161,14 @@ form {
     transform: scaleX(1.04);
     font-size: 34px;
     border-image: linear-gradient(90deg, rgba(63, 94, 251, 1) 0%, rgba(252, 70, 107, 1) 100%) 30;
-    border-width: 4px;
+    border-width: 8px;
     border-style: solid;
 }
 
 fieldset {
     border: 0;
     border-image: linear-gradient(90deg, rgba(63, 94, 251, 1) 0%, rgba(252, 70, 107, 1) 100%) 30;
-    border-width: 4px;
+    border-width: 8px;
     border-style: solid;
 }
 
@@ -349,6 +351,10 @@ span#hide-inputs {
     font-size: 20px;
 }
 
+input#password {
+    letter-spacing: 20px;
+}
+
 body>div.form>form>fieldset>label {
     margin-top: 14px;
     color: white;
@@ -356,12 +362,6 @@ body>div.form>form>fieldset>label {
 
 #hide-inputs>label {
     margin-top: 14px;
-}
-
-body>div>img {
-    max-width: 35%;
-    width: 150px;
-    height: 70px;
 }
 
 @keyframes slideInLeft {
@@ -377,6 +377,13 @@ body>div>img {
 .hero {
     text-align: left;
     color: white;
+    display: flex;
+}
+
+.hero>img {
+    margin-left: 100px;
+    margin-top: 25px;
+    max-width: 500px;
 }
 
 .hero>.title {
@@ -385,24 +392,28 @@ body>div>img {
     font-family: 'Special Elite';
     margin-left: 150px;
     font-size: 5em;
-    background: linear-gradient(90deg, rgba(248, 195, 0, 1) 0%, rgb(0, 132, 255) 100%);
+    /* background: linear-gradient(90deg, rgba(248, 195, 0, 1) 0%, rgba(248, 195, 0, 1) 25%, rgb(0, 132, 255) 100%); */
+    background: rgba(248, 195, 0, 1);
     background-clip: text;
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     margin-bottom: 0;
 }
 
-.hero>.sub-heading {
+.sub-heading {
     /* animation: 0.5s ease-in 0s 1 slideInLeft; */
     font-family: 'Quicksand';
-    font-weight: 300;
-    font-size: 38px;
+    font-weight: 800;
+    font-size: 44px;
     margin-left: 150px;
+    margin-top: 90px;
     background: linear-gradient(to right, white, aliceblue, white);
     /* background: linear-gradient(90deg, rgba(248, 195, 0, 1) 0%, rgb(0, 132, 255) 100%); */
     background-clip: text;
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
+    max-width: fit-content;
+    word-wrap: break-word;
 }
 
 .main-body::-webkit-scrollbar {

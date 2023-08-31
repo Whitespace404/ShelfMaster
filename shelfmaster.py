@@ -368,8 +368,4 @@ def flash_():
 
 
 if __name__ == "__main__":
-    print("OI")
-    print("You forgot to put Quicksand in.")
-    print("Run it again.")
-    sleep(3)
     app.run(debug=True)
