@@ -3,7 +3,12 @@
 * {
     font-family: Quicksand;
     font-size: 36px;
-    font-weight: 600;
+    font-weight: 800;
+}
+
+:root {
+    --school-color: #090B5C;
+    --school-yellow: #F8C300;
 }
 
 /* F8C300 BRIGADE YELLOW  */
@@ -33,7 +38,7 @@ body {
 
     /* This one is a "good" */
     /* background: rgb(43, 81, 139); background: linear-gradient(rgb(43, 81, 139), rgb(0, 96, 86));  */
-    height: 100vh;
+    height: 100%;
     background: rgb(78, 47, 255);
     background: linear-gradient(0deg, rgba(78, 47, 255, 1) 0%, rgba(26, 106, 179, 1) 53%);
 }
@@ -49,10 +54,6 @@ li {
 
 form {
     display: inline-block;
-}
-
-marquee {
-    --school-color: #090b5c;
 }
 
 div.wrapper {
@@ -128,6 +129,7 @@ form {
     margin-top: 2vh;
     box-shadow: 0 12px 16px 0 rgba(0, 0, 0, 0.24), 0 17px 35px 0 rgba(0, 0, 0, 0.19);
     border-width: 10px;
+    margin-bottom: 20%;
 }
 
 .wrapper>a:hover {
@@ -167,14 +169,15 @@ form {
 
 fieldset {
     border: 0;
-    border-image: linear-gradient(90deg, rgba(63, 94, 251, 1) 0%, rgba(252, 70, 107, 1) 100%) 30;
+    /* border-image: linear-gradient(90deg, rgba(63, 94, 251, 1) 0%, rgba(252, 70, 107, 1) 100%) 30; */
+    border-image: conic-gradient(red 0%, yellow 100%) 30;
     border-width: 8px;
     border-style: solid;
 }
 
 .styled-form>fieldset>input:focus-visible {
     border-image: linear-gradient(90deg, rgba(63, 94, 251, 1) 0%, rgba(252, 70, 107, 1) 100%) 30;
-    border-width: 4px;
+    border-width: 8px;
     border-style: solid;
     outline: 0;
 }
@@ -197,6 +200,7 @@ table {
     color: white;
     table-layout: fixed;
     position: relative;
+    margin-bottom: 40%;
 }
 
 th {
@@ -239,6 +243,7 @@ td.td-title {
     display: inline-block;
     padding: 15px;
     font-size: 25px;
+    font-weight: 800;
     text-align: left;
     background-color: #090B5C;
     color: aliceblue;
@@ -251,13 +256,14 @@ td.td-title {
     transform: scale(1.1);
 }
 
-.admin-tools-panel>a:active {
-    border: 3px solid silver;
+.admin-tools-panel>a:focus-visible {
+    outline: none;
 }
 
 
 .admin-tools-panel {
     text-align: left;
+    padding-bottom: 30%;
 }
 
 h3 {
@@ -414,6 +420,7 @@ body>div.form>form>fieldset>label {
     -webkit-text-fill-color: transparent;
     max-width: fit-content;
     word-wrap: break-word;
+    padding-bottom: 10%;
 }
 
 .main-body::-webkit-scrollbar {

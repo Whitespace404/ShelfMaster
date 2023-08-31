@@ -17,9 +17,8 @@ from datetime import datetime, timedelta
 from forms import BorrowForm, ReturnForm, LoginForm
 from admin_forms import AddAdminsForm, AddBookForm, AddUserForm
 
-# from excel_automation import read_file_and_get_details, read_namelist_and_get_details
+from excel_automation import read_file_and_get_details, read_namelist_and_get_details
 from helper_functions import exceeds_seven_days
-from time import sleep
 
 app = Flask(__name__)
 app.config["SECRET_KEY"] = "28679ae72d9d4c7b0e93b1db218426a6"
@@ -37,7 +36,9 @@ class User(db.Model):
     name = sa.Column(sa.String(32))
     is_teacher = sa.Column(sa.Boolean)
     class_section = sa.Column(sa.String(10))
+
     borrowed_entities = relationship("Entity", backref="user", lazy=True)
+    transaction = relationship("TransactionLog", backref="user", lazy=True)
 
     def __repr__(self):
         return f"ID: {str(self.id)}; {self.username}"
@@ -54,8 +55,8 @@ class Admin(db.Model, UserMixin):
 
 class TransactionLog(db.Model):
     id = sa.Column(sa.Integer, primary_key=True, unique=True)
-    user_id = sa.Column(sa.Integer)
-    entity_id = sa.Column(sa.Integer)
+    user_id = sa.Column(sa.Integer, sa.ForeignKey("user.id"))
+    entity_id = sa.Column(sa.Integer, sa.ForeignKey("entity.id"))
     borrowed_time = sa.Column(sa.DateTime, default=datetime.now)
     due_date = sa.Column(
         sa.DateTime, default=lambda: datetime.now() + timedelta(days=7)
@@ -97,6 +98,7 @@ class Entity(db.Model):
     due_date = sa.Column(sa.DateTime)
     date_added = sa.Column(sa.DateTime, default=datetime.now)
     user_id = sa.Column(sa.Integer, sa.ForeignKey("user.id"))
+    transaction = relationship("TransactionLog", backref="entity", lazy=True)
 
     def __repr__(self):
         return f"{self.accession_number}"
@@ -128,7 +130,14 @@ def borrow():
         if entity is None:
             form.book_id.errors.append("That book doesn't exist in the database yet.")
             return render_template("borrow.html", form=form)
-        if not entity.is_borrowed:
+        if entity.is_borrowed:
+            form.book_id.errors.append(
+                f"This book is already borrowed by {entity.user.name}."
+            )
+            return render_template("borrow.html", form=form)
+        if u.is_teacher == True or (
+            (u.is_teacher == False) and (u.borrowed_entities != None)
+        ):
             entity.user = u
             entity.is_borrowed = True
             type_of_entity = entity.type
@@ -136,12 +145,6 @@ def borrow():
             log = TransactionLog(user_id=u.id, entity_id=entity.id)
             db.session.add(log)
             db.session.commit()
-
-        else:
-            form.book_id.errors.append(
-                f"This book is already borrowed by {entity.user.name}."
-            )
-            return render_template("borrow.html", form=form)
 
         db.session.add(entity)
         db.session.commit()
@@ -257,7 +260,6 @@ def view_books():
 @app.route("/view_transactions")
 def view_transactions():
     transactions = TransactionLog.query.filter_by().all()
-
     return render_template("view_transaction_log.html", transactions=transactions)
 
 
@@ -334,28 +336,30 @@ def create_db():
     db.session.add(admin)
     db.session.commit()
 
-    # for t in read_namelist_and_get_details():
-    #     u = User(username=t[0], name=t[1], is_teacher=False, class_section="4A")
-    #     db.session.add(u)
-    #     db.session.commit()
+    for usn_name in read_namelist_and_get_details():
+        u = User(
+            username=usn_name[0], name=usn_name[1], is_teacher=False, class_section="4A"
+        )
+        db.session.add(u)
+        db.session.commit()
 
-    # for v in read_file_and_get_details():
-    #     e = Entity(
-    #         type="Book",
-    #         title=v["title"],
-    #         author=v["author"],
-    #         accession_number=v["accession_number"],
-    #         call_number=v["call_number"],
-    #         publisher=v["publisher"],
-    #         place_of_publication=v["place_of_publication"],
-    #         isbn=v["isbn"],
-    #         vendor=v["vendor"],
-    #         bill_number=v["bill_number"],
-    #         amount=v["price"],
-    #         language="English",
-    #     )
-    #     db.session.add(e)
-    #     db.session.commit()
+    for ns in read_file_and_get_details():
+        entity = Entity(
+            type="Book",
+            title=ns["title"],
+            author=ns["author"],
+            accession_number=ns["accession_number"],
+            call_number=ns["call_number"],
+            publisher=ns["publisher"],
+            place_of_publication=ns["place_of_publication"],
+            isbn=ns["isbn"],
+            vendor=ns["vendor"],
+            bill_number=ns["bill_number"],
+            amount=ns["price"],
+            language="English",
+        )
+        db.session.add(entity)
+        db.session.commit()
 
     flash("success")
     return render_template("home.html")

@@ -13,5 +13,6 @@
         "**/env": true,
         ".gitattributes": true,
         "**/build": true
-    }
+    },
+    "python.analysis.typeCheckingMode": "off"
 }
