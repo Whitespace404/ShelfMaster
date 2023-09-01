@@ -346,18 +346,18 @@ def logout():
 
 @app.route("/create_db")
 def create_db():
-    db.create_all()
+    # db.create_all()
 
-    admin = Admin(username="rahulreji", password="power")
-    db.session.add(admin)
-    db.session.commit()
+    # admin = Admin(username="rahulreji", password="power")
+    # db.session.add(admin)
+    # db.session.commit()
 
-    for usn_name in read_namelist_and_get_details():
-        u = User(
-            username=usn_name[0], name=usn_name[1], is_teacher=False, class_section="4A"
-        )
-        db.session.add(u)
-        db.session.commit()
+    # for usn_name in read_namelist_and_get_details():
+    #     u = User(
+    #         username=usn_name[0], name=usn_name[1], is_teacher=False, class_section="4A"
+    #     )
+    #     db.session.add(u)
+    #     db.session.commit()
 
     for ns in read_file_and_get_details():
         entity = Entity(

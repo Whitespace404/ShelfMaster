@@ -2,7 +2,7 @@ import openpyxl
 
 
 def read_file_and_get_details():
-    wb = openpyxl.load_workbook("master.xlsx")
+    wb = openpyxl.load_workbook("master_1.xlsx")
     sheet = wb["Accession Details"]
 
     result_dict = []

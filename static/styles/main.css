@@ -41,6 +41,8 @@ body {
     height: 100%;
     background: rgb(78, 47, 255);
     background: linear-gradient(to bottom, rgba(78, 47, 255, 1) 0%, rgba(26, 106, 179, 1) 53%);
+
+    
     background-size: 100% 100vh;
     background-attachment: fixed;
 }
@@ -193,6 +195,11 @@ span.form-error {
     display: block;
     color: orange;
     font-size: 24px;
+}
+
+.table-div {
+    display: grid;
+    align-items: center;
 }
 
 table {

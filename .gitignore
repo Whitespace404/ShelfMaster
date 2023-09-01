@@ -6,6 +6,6 @@ env/
 bin.txt
 *.spec
 # .vscode/
-master.xlsx
+*.xlsx
 instance/main.db
 instance/
