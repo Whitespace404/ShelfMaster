@@ -29,6 +29,16 @@
           {{ form.password(autocomplete = 'off') }}
         {% endif %}
         <br />
+        {{ form.role.label }}
+        {% if form.role.errors %}
+          {{ form.role(autocomplete = 'off') }}
+
+          {% for error in form.role.errors %}
+            <p>{{ error }}</p>
+          {% endfor %}
+        {% else %}
+          {{ form.role(autocomplete = 'off') }}
+        {% endif %}
         <div class="submit-btn">{{ form.submit }}</div>
       </fieldset>
     </form>

@@ -20,6 +20,8 @@ from admin_forms import AddAdminsForm, AddBookForm, AddUserForm, CatalogForm
 from excel_automation import read_file_and_get_details, read_namelist_and_get_details
 from helper_functions import exceeds_seven_days
 
+from functools import wraps
+
 app = Flask(__name__)
 app.config["SECRET_KEY"] = "28679ae72d9d4c7b0e93b1db218426a6"
 app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///main.db"
@@ -28,6 +30,54 @@ db = SQLAlchemy(app)
 login_manager = LoginManager()
 login_manager.init_app(app)
 login_manager.login_view = "admin_login"
+
+
+def create_database():
+    with app.app_context():
+        db.create_all()
+
+        admin = Admin(username="rahulreji", password="power", role_id=3)
+        db.session.add(admin)
+        db.session.commit()
+
+        for usn_name in read_namelist_and_get_details():
+            u = User(
+                username=usn_name[0],
+                name=usn_name[1],
+                is_teacher=False,
+                class_section="4A",
+            )
+            db.session.add(u)
+            db.session.commit()
+
+        for book_details in read_file_and_get_details():
+            entity = Entity(
+                type="Book",
+                title=book_details["title"],
+                author=book_details["author"],
+                accession_number=book_details["accession_number"],
+                call_number=book_details["call_number"],
+                publisher=book_details["publisher"],
+                place_of_publication=book_details["place_of_publication"],
+                isbn=book_details["isbn"],
+                vendor=book_details["vendor"],
+                bill_number=book_details["bill_number"],
+                amount=book_details["price"],
+                language="English",
+            )
+            db.session.add(entity)
+            db.session.commit()
+
+
+def super_admin_required(func):
+    @wraps(func)
+    def decorated_view(*args, **kwargs):
+        if not current_user.is_authenticated or current_user.role_id != 2:
+            flash("You do not have permission to access this page.", "danger")
+            return redirect(url_for("admin_login"))
+        return func(*args, **kwargs)
+
+    return decorated_view
 
 
 class User(db.Model):
@@ -48,6 +98,21 @@ class Admin(db.Model, UserMixin):
     id = sa.Column(sa.Integer, primary_key=True, unique=True)
     username = sa.Column(sa.String(40), nullable=False)
     password = sa.Column(sa.String(64), nullable=False)
+
+    """
+    ROLE ID RUBRIK:
+
+    1: LIBRARIAN
+    - Can borrow/return books
+    - Can view books/students list
+    - Can add users
+    - Can delete users
+
+    2: ADMIN
+    - Cannot borrow/return books
+    - Can add books, add users, delete users
+    """
+    role_id = sa.Column(sa.Integer)
 
     def __repr__(self):
         return f"{str(self.id)}. {self.username} with {self.password}"
@@ -200,11 +265,16 @@ def return_():
 
 
 @app.route("/add_admin", methods=["GET", "POST"])
-@login_required
+@super_admin_required
 def add_admin():
     form = AddAdminsForm()
     if form.validate_on_submit():
-        admin = Admin(username=form.username.data, password=form.password.data)
+        role = 2 if form.role.data == "Super-Admin" else 1
+        admin = Admin(
+            username=form.username.data,
+            password=form.password.data,
+            role_id=role,
+        )
         db.session.add(admin)
         db.session.commit()
 
@@ -260,10 +330,17 @@ def view_all_users():
 
 
 @app.route("/view_admin_log")
-@login_required
+@super_admin_required
 def view_admin_log():
     logs = AdminActionsLog.query.filter_by().all()
     return render_template("admin_log.html", logs=logs)
+
+
+@app.route("/view_all_admins")
+@login_required
+def view_all_admins():
+    logs = Admin.query.filter_by().all()
+    return render_template("view_admins.html", logs=logs)
 
 
 @app.route("/view_books")
@@ -295,11 +372,14 @@ def admin_login():
             db.session.commit()
             flash(f"Logged in")
             return redirect(url_for("home"))
+        else:
+            flash("Incorrect username/password")
+            return redirect(url_for("admin_login"))
     return render_template("admin_login.html", form=form)
 
 
 @app.route("/add_entity", methods=["GET", "POST"])
-@login_required
+@super_admin_required
 def add_entity():
     form = AddBookForm()
     if form.validate_on_submit():
@@ -346,45 +426,20 @@ def logout():
 
 @app.route("/create_db")
 def create_db():
-    # db.create_all()
+    db.create_all()
 
-    # admin = Admin(username="rahulreji", password="power")
-    # db.session.add(admin)
-    # db.session.commit()
+    admin = Admin(username="rahulreji", password="power", role_id=3)
+    db.session.add(admin)
+    db.session.commit()
 
-    # for usn_name in read_namelist_and_get_details():
-    #     u = User(
-    #         username=usn_name[0], name=usn_name[1], is_teacher=False, class_section="4A"
-    #     )
-    #     db.session.add(u)
-    #     db.session.commit()
-
-    for ns in read_file_and_get_details():
-        entity = Entity(
-            type="Book",
-            title=ns["title"],
-            author=ns["author"],
-            accession_number=ns["accession_number"],
-            call_number=ns["call_number"],
-            publisher=ns["publisher"],
-            place_of_publication=ns["place_of_publication"],
-            isbn=ns["isbn"],
-            vendor=ns["vendor"],
-            bill_number=ns["bill_number"],
-            amount=ns["price"],
-            language="English",
-        )
-        db.session.add(entity)
-        db.session.commit()
-
-    flash("success")
+    flash("Success")
     return render_template("home.html")
 
 
-@app.route("/flash")
-def flash_():
-    flash("Just a test message")
-    return redirect(url_for("home"))
+@app.route("/reports")
+def reports():
+    form = None
+    return render_template("reports_form.html", form=form)
 
 
 SEARCH_TYPE_MAPPING: dict = {

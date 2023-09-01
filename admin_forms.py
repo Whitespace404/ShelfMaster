@@ -11,8 +11,11 @@ from wtforms.validators import DataRequired, Length, Regexp
 
 
 class AddAdminsForm(FlaskForm):
-    username = StringField(validators=[DataRequired()])
-    password = PasswordField(validators=[DataRequired()])
+    username = StringField("Name", validators=[DataRequired()])
+    password = PasswordField("Password", validators=[DataRequired()])
+
+    roles = ["Librarian", "Super-Admin"]
+    role = SelectField("Role", choices=roles)
     submit = SubmitField("Add Admin")
 
 

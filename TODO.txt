@@ -1,13 +1,4 @@
-admins can change other admins passwords
-DELETE admins 
-
 reading log
-transaction log
-
-if book is borrowed show class and section of borrower
-teachers borrow multiple books at a time
-
-FILTER AND SORT option whenever db shows up in table form in HTML
 
 ADD due date in entity db when book borrowed
 add column author/borrowed_time in entity table
@@ -19,19 +10,14 @@ Make acc. number be created using multiple dropdowns
 Generate fine slip for library late return
 
 Generate statistics for the following:
-
 - Top readers of each class/section
 - Top borrowed book
 
 Generate graphs to show library usage :0
 
-Test /view_transactions route
-
 Gunterz cannot be used in production environment
 
-style select menus
-
 report generation
-catalog
 
+DELETE admins 
 while hiding #hide-inputs tag make sure to clear whatever data already entered

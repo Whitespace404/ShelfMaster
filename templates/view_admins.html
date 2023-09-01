@@ -1,0 +1,20 @@
+{% extends 'base.html' %}
+
+{% block content %}
+  <div class="table-div">
+    <table class="admin-logs">
+      <tr>
+        <th>Sl no</th>
+        <th>Username</th>
+        <th>Role</th>
+      </tr>
+      {% for log in logs %}
+        <tr>
+          <td>{{ log.id }}</td>
+          <td>{{ log.username }}</td>
+          <td>{{ log.role_id }}</td>
+        </tr>
+      {% endfor %}
+    </table>
+  </div>
+{% endblock %}
