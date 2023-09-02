@@ -1,8 +1,8 @@
 {% extends 'base.html' %}
 
 {% block content %}
-  <!-- <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous" /> -->
-  <div class="table-div">
+<!-- <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous" /> -->
+<div class="table-div">
   <table>
     <tr>
       <th>#</th>
@@ -10,25 +10,33 @@
       <th>Author</th>
       <th>Call Number</th>
       <th>Accession Number</th>
-      <!-- <th>Status</th>
-      <th>Borrower</th>
-      <th>Borrower USN</th> -->
+      <th>Status</th>
+      <!--     <th>Borrower</th>
+      <th>Borrower USN</th>     -->
     </tr>
     {% for book in books %}
-      <tr>
-        <td>{{ book.id }}</td>
-        <td class="td-title">{{ book.title }}</td>
-        <td>{{ book.author }}</td>
-        <td>{{ book.call_number }}</td>
-        <td>{{ book.accession_number }}</td>
-        <!-- {% if book.is_borrowed %}
-          <td>Borrowed</td>
+    {% if book.is_borrowed %}
+    <tr class="borrowed-row">
+      {% else %}
+    <tr></tr>
+    {% endif %}
+    <td>{{ book.id }}</td>
+    <td class="td-title">{{ book.title }}</td>
+    <td>{{ book.author }}</td>
+    <td>{{ book.call_number }}</td>
+    <td>{{ book.accession_number }}</td>
+    <td>
+      <a href="{{ url_for('view_entity', ac_number = book.accession_number) }}">
+        {% if book.is_borrowed %}
+        Borrowed
         {% else %}
-          <td>Not borrowed</td>
+        Not borrowed
         {% endif %}
-        <td>{{ book.user.name }}</td>
-        <td>{{ book.user.username }}</td> -->
-      </tr>
+      </a>
+    </td>
+    <!--     <td>{{ book.user.name }}</td>
+          <td>{{ book.user.username }}</td>     -->
+    </tr>
     {% endfor %}
   </table>
 </div>

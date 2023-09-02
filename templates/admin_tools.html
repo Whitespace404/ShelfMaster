@@ -1,21 +1,22 @@
 {% extends 'base.html' %}
 
 {% block content %}
-<h3 class="admin-tools-header text-muted text-center">ADMIN TOOLS.</h3>
-<div class="admin-tools-panel">
-  <a href="{{ url_for('view_books') }}" class="btn btn-primary">View all books</a>
-  <a href="{{ url_for('add_user') }}" class="btn btn-primary">Add Student</a>
-  <a href="{{ url_for('view_all_users') }}" class="btn btn-primary">View Students</a>
-  <a href="{{ url_for('view_transactions') }}">Checkout Log</a>
-</div>
+  <h3 class="admin-tools-header text-muted text-center">ADMIN TOOLS.</h3>
+  <div class="admin-tools-panel">
+    <a href="{{ url_for('add_user') }}" class="btn btn-primary">Add Student</a>
+    <a href="{{ url_for('view_all_users') }}" class="btn btn-primary">View Students</a>
+    <a href="{{ url_for('view_books') }}" class="btn btn-primary">View all books</a>
+    <a href="{{ url_for('view_transactions') }}">Checkout Log</a>
+  </div>
 
-{% if current_user.role_id >= 2 %}
-<!-- <h3 class="admin-tools-header text-muted text-center">SUPER-ADMIN TOOLS</h3> -->
-<div class="admin-tools-panel">
-  <a href="{{ url_for('add_admin') }}" class="btn btn-primary">Add Admin</a>
-  <a href="{{ url_for('view_admin_log') }}" class="btn btn-primary">View Admin Log</a>
-  <a href="{{ url_for('view_all_admins') }}" class="btn btn-primary">View All Admins</a>
-  <a href="{{ url_for('add_entity') }}" class="btn btn-primary">Add Books</a>
-</div>
-{% endif %}
+  {% if current_user.role_id >= 2 %}
+    <!-- <h3 class="admin-tools-header text-muted text-center">SUPER-ADMIN TOOLS</h3> -->
+    <div class="admin-tools-panel">
+      <a href="{{ url_for('add_admin') }}" class="btn btn-primary">Add Admin</a>
+      <a href="{{ url_for('view_admin_log') }}" class="btn btn-primary">View Admin Log</a>
+      <a href="{{ url_for('view_all_admins') }}" class="btn btn-primary">View All Admins</a>
+      <a href="{{ url_for('add_entity') }}" class="btn btn-primary">Add Books</a>
+      <a href="{{ url_for('reports') }}" class="btn btn-primary">Generate reports</a>
+    </div>
+  {% endif %}
 {% endblock %}

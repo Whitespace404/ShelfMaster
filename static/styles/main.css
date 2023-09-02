@@ -1,15 +1,20 @@
 /* @import url('https://fonts.googleapis.com/css2?family=Nosifer&family=Pangolin&family=Quicksand:wght@700&family=Special+Elite&display=swap'); */
 
+:root {
+    --school-color: #090B5C;
+    --school-yellow: #F8C300;
+}
+
 * {
     font-family: Quicksand;
     font-size: 36px;
     font-weight: 800;
 }
 
-:root {
-    --school-color: #090B5C;
-    --school-yellow: #F8C300;
+*::selection {
+    background-color: var(--school-color);
 }
+
 
 h1 {
     font-size: 50px;
@@ -41,6 +46,7 @@ li {
 
 form {
     display: inline-block;
+    text-align: left;
 }
 
 div.wrapper {
@@ -95,16 +101,16 @@ legend {
     background: linear-gradient(90deg, rgba(248, 195, 0, 1) 0%, rgba(209, 124, 55, 1) 100%);
     padding-right: 70px;
     border-radius: 10px;
-    margin-top: 30px;
+    margin-top: 20px;
     font-size: 25px;
-    transition: 0.6s;
+    transition: 0.3s;
+    box-shadow: 0 5px 3px 0 rgba(0, 0, 0, 0.24), 0 5px 6px 0 rgba(0, 0, 0, 0.19);
+
 }
 
 #submit:hover {
-    background-color: #F8C300;
-    color: black;
-    transform: scale(1.1);
-    box-shadow: 0 12px 16px 0 rgba(0, 0, 0, 0.24), 0 17px 35px 0 rgba(0, 0, 0, 0.19);
+    transform: scale(1.03);
+    box-shadow: 0 8px 5px 0 rgba(0, 0, 0, 0.24), 0 8px 8px 0 rgba(0, 0, 0, 0.19);
 }
 
 #submit:active {
@@ -205,8 +211,13 @@ th {
 }
 
 td.td-title {
-    /* width: 200px; */
+    width: 465px;
     word-wrap: break-word;
+}
+
+td>a {
+    color: white;
+    font-size: inherit;
 }
 
 .flash-message {
@@ -269,6 +280,8 @@ h3 {
 
 label {
     color: white;
+    font-size: 32px;
+    cursor: text;
 }
 
 .add-book-form>fieldset>input {
@@ -314,12 +327,14 @@ textarea {
 select {
     font-size: 20px;
     margin: 10px;
-    padding: 15px;
-    padding-right: 40px;
+    padding: 5px;
+    color: white;
+    background: var(--school-color);
 }
 
 select>option {
     font-size: 20px;
+    background: var(--school-color);
 }
 
 .error-message {
@@ -409,6 +424,14 @@ body>div.form>form>fieldset>label {
     word-wrap: break-word;
 }
 
+.sub-heading::selection {
+    color: white;
+}
+
 .main-body::-webkit-scrollbar {
     display: none;
+}
+
+.borrowed-row {
+    background: red;
 }

@@ -74,3 +74,13 @@ class CatalogForm(FlaskForm):
     query = StringField("Search query")
 
     submit = SubmitField("Search")
+
+
+class ReportsForm(FlaskForm):
+    options = [
+        ("books", "Popular Books"),
+        ("readers", "Avid Readers"),
+    ]
+
+    report_type = SelectField("Report type", choices=options)
+    submit = SubmitField("Generate reports")

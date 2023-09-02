@@ -1,24 +1,35 @@
 import openpyxl
 
 
+def convert_name(name):
+    parts = name.split(", ")
+
+    if len(parts) == 2:
+        last_name, first_name = parts
+        converted_name = f"{first_name} {last_name}"
+        return converted_name
+    else:
+        return name
+
+
 def read_file_and_get_details():
     wb = openpyxl.load_workbook("master.xlsx")
     sheet = wb["Accession Details"]
 
     result_dict = []
     for row in sheet.iter_rows(min_row=3, values_only=True):
-        a = dict()
-        a["accession_number"] = row[0]
-        a["author"] = row[3]
-        a["title"] = row[4]
-        a["call_number"] = row[5]
-        a["publisher"] = row[6]
-        a["place_of_publication"] = row[7]
-        a["isbn"] = row[8]
-        a["vendor"] = row[9]
-        a["bill_number"] = row[10]
-        a["price"] = row[12]
-        result_dict.append(a)
+        details = dict()
+        details["accession_number"] = row[0]
+        details["author"] = convert_name(row[3])
+        details["title"] = row[4]
+        details["call_number"] = row[5]
+        details["publisher"] = row[6]
+        details["place_of_publication"] = row[7]
+        details["isbn"] = row[8]
+        details["vendor"] = row[9]
+        details["bill_number"] = row[10]
+        details["price"] = row[12]
+        result_dict.append(details)
 
     return result_dict
 

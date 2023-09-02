@@ -1,25 +1,25 @@
 {% extends 'base.html' %}
 
 {% block content %}
-  <br />
   <form action="" method="POST" class="styled-form">
     <fieldset>
-      <legend>Return A Book</legend>
+      <legend>Generate Reports</legend>
       {{ form.hidden_tag() }}
 
-      {{ form.book_id.label }}
-      {% if form.book_id.errors %}
-        {{ form.book_id(autocomplete = 'off') }}
+      {{ form.report_type.label }}
+      {% if form.report_type.errors %}
+        {{ form.report_type(autocomplete = 'off') }}
 
-        {% for error in form.book_id.errors %}
+        {% for error in form.report_type.errors %}
           {% for line in error.split('-linebreak-') %}
             <span class="form-error">{{ line }}</span>
           {% endfor %}
         {% endfor %}
       {% else %}
-        {{ form.book_id(autocomplete = 'off') }}
+        {{ form.report_type(autocomplete = 'off') }}
       {% endif %}
       <br />
+
       <div class="submit-btn">{{ form.submit }}</div>
     </fieldset>
   </form>

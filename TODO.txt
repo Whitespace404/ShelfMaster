@@ -1,7 +1,7 @@
 reading log
 
 ADD due date in entity db when book borrowed
-add column author/borrowed_time in entity table
+add column borrowed_time in entity table
 
 when book returned show rack and shelf number
 lookup book and find rack and shelf number
