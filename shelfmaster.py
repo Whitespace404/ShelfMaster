@@ -203,7 +203,7 @@ def home():
 def borrow():
     form = BorrowForm()
 
-    if request.method == "POST":
+    if request.method == "GET":
         accession_number = request.args.get("accession_number")
 
         if accession_number is not None:
