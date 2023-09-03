@@ -4,6 +4,7 @@
   <div class="table-container" style="display: grid; margin-top: 2rem; align-items: center; justify-content: center;">
     <table>
       <thead>
+        <th>#</th>
         <th>Name</th>
         <th>Class</th>
         <th>Books read</th>
@@ -11,6 +12,7 @@
       <tbody>
         {% for user, count in rep %}
           <tr>
+            <td>{{ loop.index }}</td>
             <td>{{ user.name }}</td>
             <td>{{ user.class_section }}</td>
             <td>{{ count }}</td>

@@ -1,6 +1,5 @@
 reading log
 
-ADD due date in entity db when book borrowed
 add column borrowed_time in entity table
 
 when book returned show rack and shelf number
@@ -9,15 +8,9 @@ lookup book and find rack and shelf number
 Make acc. number be created using multiple dropdowns
 Generate fine slip for library late return
 
-Generate statistics for the following:
-- Top readers of each class/section
-- Top borrowed book
-
 Generate graphs to show library usage :0
 
 Gunterz cannot be used in production environment
-
-report generation
 
 DELETE admins 
 while hiding #hide-inputs tag make sure to clear whatever data already entered

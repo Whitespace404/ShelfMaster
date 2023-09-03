@@ -28,6 +28,7 @@ from excel_automation import read_file_and_get_details, read_namelist_and_get_de
 from helper_functions import exceeds_seven_days
 
 from functools import wraps
+from random import randint, randrange
 
 app = Flask(__name__)
 app.config["SECRET_KEY"] = "28679ae72d9d4c7b0e93b1db218426a6"
@@ -248,7 +249,9 @@ def borrow():
             db.session.add(entity)
             db.session.commit()
 
-            flash(f"{entity.type} borrowed successfully.")
+            flash(
+                f"{entity.type} borrowed successfully. Please return it before {entity.due_date.strftime('%d/%m/%y') }"
+            )
             return redirect(url_for("home"))
         else:
             form.usn.errors.append(
@@ -270,12 +273,8 @@ def return_():
             form.book_id.errors.append("That book is not borrowed.")
             return render_template("return.html", form=form)
 
-        t = TransactionLog.query.filter_by(
-            entity_id=b.id, user_id=b.user.id
-        ).first()  # TODO does .first() pose a problem here when multiple books borrowed? use .last() instead??
-
         current_dt = datetime.now()
-        if not exceeds_seven_days(current_dt, t.borrowed_time):
+        if not exceeds_seven_days(current_dt, b.due_date):
             former_borrower = b.user
             b.is_borrowed = False
             b.user = None
@@ -504,6 +503,7 @@ SEARCH_TYPE_MAPPING: dict = {
     "title": Entity.title,
     "call_number": Entity.call_number,
     "is_borrowed": Entity.is_borrowed,
+    "accession_number": Entity.accession_number,
 }
 
 
