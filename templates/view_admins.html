@@ -12,7 +12,12 @@
         <tr>
           <td>{{ log.id }}</td>
           <td>{{ log.username }}</td>
-          <td>{{ log.role_id }}</td>
+          {% if log.role_id == 2 %}
+            {% set role = 'Super-Admin' %}
+          {% else %}
+            {% set role = 'Librarian' %}
+          {% endif %}
+          <td>{{ role }}</td>
         </tr>
       {% endfor %}
     </table>

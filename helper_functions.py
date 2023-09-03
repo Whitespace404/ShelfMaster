@@ -1,11 +1,11 @@
 from datetime import timedelta
 
 
-def exceeds_seven_days(datetime1, datetime2):
-    time_difference = abs(datetime1 - datetime2)
-
-    # Check if the time difference exceeds 7 days
-    if time_difference > timedelta(days=7):
-        return True
+def find_dif(datetime1, datetime2):
+    if datetime2 is None:
+        return False
+    if datetime1.date() > datetime2.date():
+        time_dif = datetime1 - datetime2
+        return time_dif.days
     else:
         return False

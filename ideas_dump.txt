@@ -3,8 +3,24 @@ REPORTS
 
 1. MOST READ BOOKS
     - BY CATEGORY
+
 2. TOP READERS
     - BY CLASS
+
 3. FINES GENERATED TABLE
     - USER PAYING MOST FINES
     - CLASS PAYING MOST FINES
+
+in `view_entity.html` show some stats about book such as number of reads,
+average number of reads taken to complete
+
+for user stats show number of books read, number of late returns, 
+average days taken to return 
+
+view fines route where you can see all the fines paid 
+reading log is for returns, transaction log is for borrows
+
+When users find a book they want to borrow, there should be a "Borrow" button next to the book details.
+show due date after borrowing book
+
+currently 2080+ lines of code

@@ -2,23 +2,33 @@
 
 {% block content %}
   <div class="table-div">
-  <table class="admin-logs">
-    <tr>
-      <th>Sl no</th>
-      <th>USN</th>
-      <th>Name</th>
-      <th>Class and Section</th>
-      <th>Borrowed Books</th>
-    </tr>
-    {% for log in logs %}
+    <table class="admin-logs">
       <tr>
-        <td>{{ log.id }}</td>
-        <td>{{ log.username }}</td>
-        <td>{{ log.name }}</td>
-        <td>{{ log.class_section }}</td>
-        <td>{{ log.borrowed_entities }}</td>
+        <th>Sl no</th>
+        <th>USN</th>
+        <th>Name</th>
+        <th>Class and Section</th>
+        <th>Book borrowed</th>
       </tr>
-    {% endfor %}
-  </table>
-</div>
+      {% for log in logs %}
+        <tr>
+          <td>{{ log.id }}</td>
+          <td>
+            <a href="{{ url_for('view_user', usn = log.username) }}">{{ log.username }}</a>
+          </td>
+          <td>{{ log.name }}</td>
+          <td>{{ log.class_section }}</td>
+          {% if not log.borrowed_entities %}
+            <td></td>
+          {% else %}
+            {% if log.is_teacher == False %}
+              <td>{{ log.borrowed_entities[0] }}</td>
+            {% else %}
+              <td>{{ log.borrowed_entities }}</td>
+            {% endif %}
+          {% endif %}
+        </tr>
+      {% endfor %}
+    </table>
+  </div>
 {% endblock %}

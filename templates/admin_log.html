@@ -6,7 +6,7 @@
   <div class="table-div">
     <table class="admin-logs">
       <tr>
-        <th>Sl no</th>  
+        <th>Sl no</th>
         <th>Action</th>
         <th>Performed by</th>
         <th>Date performed</th>
@@ -18,7 +18,7 @@
           <td>{{ log.action }}</td>
           <td>{{ log.username }}</td>
           {% set time = log.time %}
-          <td>{{ time.strftime('%m/%d/%Y') }}</td>
+          <td>{{ time.strftime('%d/%m/%Y') }}</td>
           <td>{{ time.strftime('%I:%M %p') }}</td>
         </tr>
       {% endfor %}

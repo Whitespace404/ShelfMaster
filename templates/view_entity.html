@@ -1,0 +1,98 @@
+{% extends 'base.html' %}
+
+{% block content %}
+  <link rel="stylesheet" href="{{ url_for('static', filename = 'styles/style.css') }}" />
+  <div class="container" style="max-width: 68vw;">
+    <h1>{{ book.type }} Details</h1>
+    <div class="book-details">
+      <div class="row">
+        <div class="book-detail">
+          <h3>Title</h3>
+          <p>{{ book.title }}</p>
+        </div>
+        <div class="book-detail">
+          <h3>Author</h3>
+          <p>{{ book.author }}</p>
+        </div>
+        <div class="book-detail">
+          <h3>Publisher</h3>
+          <p>{{ book.publisher }}</p>
+        </div>
+        <div class="book-detail">
+          <h3>Place of Publication</h3>
+          <p>{{ book.place_of_publication }}</p>
+        </div>
+      </div>
+      <div class="row">
+        <div class="book-detail">
+          <h3>ISBN</h3>
+          <p>{{ book.isbn }}</p>
+        </div>
+        <div class="book-detail">
+          <h3>Location</h3>
+          <p>Shelf number: {{ book.shelf_number }}</p>
+          <p>Rack number: {{ book.rack_number }}</p>
+        </div>
+        <div class="book-detail">
+          <h3>Book details</h3>
+          <p>Accession number: {{ book.accession_number }}</p>
+          <p>Call number: {{ book.call_number }}</p>
+        </div>
+      </div>
+      <div class="row">
+        <div class="book-detail">
+          <h3>Vendor</h3>
+          <p>{{ book.vendor }}</p>
+        </div>
+        <div class="book-detail">
+          <h3>Bill Information</h3>
+          <p>Bill Number: {{ book.bill_number }}</p>
+          <!-- <p>Bill Date: {{ book.bill_date }}</p> -->
+          <p>Amount: {{ book.amount }} &#8377;</p>
+        </div>
+        <div class="book-detail">
+          <h3>Remarks</h3>
+          <p>{{ book.remarks }}</p>
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="book-detail library-record">
+          <h3>Past readers</h3>
+          <div class="table-container">
+            <table>
+              <thead>
+                <th>Name of the borrower</th>
+                <th>USN</th>
+                <th>Date returned</th>
+              </thead>
+              <tbody>
+                {% for transaction in e %}
+                  <tr>
+                    <td>{{ transaction.user.name }}</td>
+                    <td>{{ transaction.user.username }}</td>
+                    {% if transaction.entity.user == transaction.user %}
+                      <td>Due on {{ transaction.due_date.strftime('%d/%m/%Y') }}</td>
+                    {% else %}
+                      <td>{{ transaction.due_date.strftime('%d/%m/%Y') }}</td>
+                      <!-- {# change this to when it was actually returned #} -->
+                    {% endif %}
+                  </tr>
+                {% endfor %}
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+      {% if e %}
+        {% if not (e[- 1].user == e[- 1].entity.user) %}
+          {% set link = url_for('borrow', accession_number = book.accession_number) %}
+          <a href="{{ link }}" id="submit" style="padding: 3%">Borrow this book</a>
+        {% endif %}
+      {% else %}
+        {% set link = url_for('borrow', accession_number = book.accession_number) %}
+        <a href="{{ link }}" id="submit" style="padding: 3%">Borrow this book</a>
+      {% endif %}
+    </div>
+  </div>
+{% endblock %}

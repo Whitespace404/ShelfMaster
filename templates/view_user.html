@@ -1,0 +1,65 @@
+{% extends 'base.html' %}
+
+{% block content %}
+  <link rel="stylesheet" href="{{ url_for('static', filename = 'styles/style.css') }}" />
+  <div class="container">
+    {% with messages = get_flashed_messages(with_categories = true) %}
+      {% if messages %}
+        {% for category, message in messages %}
+          <h2 class="flash-message {{ category }}">{{ message }}</h2>
+        {% endfor %}
+      {% endif %}
+    {% endwith %}
+    <h1>User Details</h1>
+    <div class="book-details">
+      <div class="row">
+        <div class="book-detail">
+          <h3>USN</h3>
+          <p>{{ user.username }}</p>
+        </div>
+        <div class="book-detail">
+          <h3>Name</h3>
+          <p>{{ user.name }}</p>
+        </div>
+        {% if not user.is_teacher %}
+          <div class="book-detail">
+            <h3>Class</h3>
+            <p>{{ user.class_section }}</p>
+          </div>
+        {% endif %}
+        <div class="book-detail">
+          <h3>Role</h3>
+          {% if user.is_teacher %}
+            {% set role = 'Teacher' %}
+          {% else %}
+            {% set role = 'Student' %}
+          {% endif %}
+          <p>{{ role }}</p>
+        </div>
+      </div>
+      <div class="row">
+        <div class="book-detail library-record">
+          <h3>Library Record</h3>
+          <div class="table-container">
+            <table>
+              <thead>
+                <th class="title-row">Title</th>
+                <th>Author</th>
+                <th>Date borrowed</th>
+              </thead>
+              <tbody>
+                {% for book in e %}
+                  <tr>
+                    <td>{{ book.entity.title }}</td>
+                    <td>{{ book.entity.author }}</td>
+                    <td>{{ book.borrowed_time.strftime('%d/%m/%Y') }}</td>
+                  </tr>
+                {% endfor %}
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+{% endblock %}

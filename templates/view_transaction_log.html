@@ -2,25 +2,25 @@
 
 {% block content %}
   <div class="table-div">
-  <table>
-    <tr>
-      <th>Sl No</th>
-      <th>USN</th>
-      <th>Name</th>
-      <th>Accession Number</th>
-      <th>Borrowed Time</th>
-      <th>Due Time</th>
-    </tr>
-    {% for log in transactions %}
+    <table>
       <tr>
-        <td>{{ log.id }}</td>
-        <td>{{ log.user.username }}</td>
-        <td>{{ log.user.name }}</td>
-        <td>{{ log.entity.accession_number }}</td>
-        <td>{{ log.borrowed_time.strftime('%m/%d/%Y %I:%M %p') }}</td>
-        <td>{{ log.due_date.strftime('%m/%d/%Y %I:%M %p') }}</td>
+        <th>Sl No</th>
+        <th>USN</th>
+        <th>Name</th>
+        <th>Accession Number</th>
+        <th>Borrowed Time</th>
+        <th>Due Time</th>
       </tr>
-    {% endfor %}
-  </table>
-</div>
+      {% for log in transactions %}
+        <tr>
+          <td>{{ log.id }}</td>
+          <td>{{ log.user.username }}</td>
+          <td>{{ log.user.name }}</td>
+          <td>{{ log.entity.accession_number }}</td>
+          <td>{{ log.borrowed_time.strftime('%d/%m/%Y %I:%M %p') }}</td>
+          <td>{{ log.due_date.strftime('%d/%m/%Y %I:%M %p') }}</td>
+        </tr>
+      {% endfor %}
+    </table>
+  </div>
 {% endblock %}

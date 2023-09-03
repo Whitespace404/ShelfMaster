@@ -49,10 +49,6 @@ class AddUserForm(FlaskForm):
         "USN",
         validators=[
             DataRequired(),
-            Regexp(
-                "^[0123]\d{1}[01][NLU0123456789]?\d{3}$",
-                message="That is not a real USN.",
-            ),
             Length(max=20),
         ],
     )
@@ -68,9 +64,20 @@ class CatalogForm(FlaskForm):
         ("author", "Author"),
         ("title", "Title"),
         ("call_number", "Call Number"),
+        ("accession_number", "Accession Number"),
     ]
 
     criteria = SelectField("Search criteria", choices=options)
     query = StringField("Search query")
 
     submit = SubmitField("Search")
+
+
+class ReportsForm(FlaskForm):
+    options = [
+        ("books", "Popular Books"),
+        ("readers", "Avid Readers"),
+    ]
+
+    report_type = SelectField("Report type", choices=options)
+    submit = SubmitField("Generate reports")
