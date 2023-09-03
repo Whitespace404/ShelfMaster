@@ -28,7 +28,7 @@ from excel_automation import read_file_and_get_details, read_namelist_and_get_de
 from helper_functions import find_dif
 
 from functools import wraps
-from random import randint, randrange
+from random import randint, randrange, choice
 
 app = Flask(__name__)
 app.config["SECRET_KEY"] = "28679ae72d9d4c7b0e93b1db218426a6"
@@ -525,7 +525,14 @@ def catalog():
             q = []
 
         if q:
-            return render_template("view_entities.html", books=q)
+            current_date = datetime.now()
+
+            return render_template(
+                "view_entities.html",
+                books=q,
+                find_dif=find_dif,
+                current_date=current_date,
+            )
         else:
             flash("No results found")
     return render_template("catalog.html", form=form)
@@ -551,14 +558,49 @@ def view_user(usn):
     return redirect(url_for("view_all_users"))
 
 
-# with app.app_context():
-#     entity = Entity.query.filter_by(id=8).first()
-#     u = User.query.filter_by(username="100N005").first()
-#     entity.user = u
-#     entity.is_borrowed = True
-#     entity.due_date = datetime.now() - timedelta(days=3)
+@app.route("/populate_shelf_rack_numbers")
+def pop_():
+    entities = Entity.query.all()
+    for entity in entities:
+        entity.shelf_number = randint(1, 25)
+        entity.rack_number = randint(1, 4)
 
-#     db.session.commit()
+        db.session.commit()
+
+    return redirect(url_for("home"))
+
+
+book_ids = [4863, 11774, 14671, 14673, 14685, 14688, 4000, 9360, 8577]
+users = [6, 7, 8, 10, 11, 12, 2]
+
+
+@app.route("/populate_borrowed_books")
+def pop_books():
+    for book in book_ids:
+        user = User.query.filter_by(id=choice(users)).first()
+        b = Entity.query.filter_by(accession_number="4000").first()
+
+        t = TransactionLog(user=user, entity=b)
+        db.session.add(t)
+        db.session.commit()
+    return redirect(url_for("home"))
+
+
+@app.route("/populate_overdue_books")
+def over():
+    with app.app_context():
+        entity = Entity.query.filter_by(id=36).first()
+        u = User.query.filter_by(username="170N096").first()
+        entity.user = u
+        entity.is_borrowed = True
+        early_date = datetime.now() - timedelta(days=3)
+        entity.due_date = early_date
+
+        t = TransactionLog(user=u, entity=entity, due_date=early_date)
+        db.session.add(t)
+        db.session.commit()
+
+    return redirect(url_for("home"))
 
 
 if __name__ == "__main__":

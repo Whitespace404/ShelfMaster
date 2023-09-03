@@ -16,7 +16,7 @@
     </tr>
     {% for book in books %}
 
-    {% if find_dif(current_date, book.due_date) %}
+    {% if book.is_borrowed and find_dif(current_date, book.due_date) %}
       <tr class="overdue-row">
         {% set status = "Overdue" %}
     {% elif book.is_borrowed %}

@@ -14,3 +14,5 @@ Gunterz cannot be used in production environment
 
 DELETE admins 
 while hiding #hide-inputs tag make sure to clear whatever data already entered
+
+create fake rack and shelf numbers

@@ -93,6 +93,9 @@ h3 {
 
 #submit {
     margin-top: 0;
+    padding: 2% !important;
+    color: white;
+    background: linear-gradient(90deg, rgb(123 25 253) 0%, rgb(64 55 209) 100%);
 }
 
 .title-row {

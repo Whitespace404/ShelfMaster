@@ -233,10 +233,22 @@ td>a {
     color: white;
 }
 
+@keyframes flash {
+    0% {
+        opacity: 0;
+    }
+
+    100% {
+        opacity: 1;
+    }
+}
+
 .alert {
     border: 5px solid red;
     text-decoration: underline;
     color: white;
+    animation: flash 0.2s 3 alternate;
+    transition: opacity 10ms ease-in-out;
 }
 
 .admin-tools-panel>div>a {

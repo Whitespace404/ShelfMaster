@@ -13,7 +13,9 @@
       {% for log in logs %}
         <tr>
           <td>{{ log.id }}</td>
-          <td>{{ log.username }}</td>
+          <td>
+            <a href="{{ url_for('view_user', usn = log.username) }}">{{ log.username }}</a>
+          </td>
           <td>{{ log.name }}</td>
           <td>{{ log.class_section }}</td>
           {% if not log.borrowed_entities %}
