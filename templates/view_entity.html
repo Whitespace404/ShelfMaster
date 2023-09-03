@@ -90,7 +90,8 @@
           <a href="{{ link }}" id="submit" style="padding: 3%">Borrow this book</a>
         {% endif %}
       {% else %}
-        <button>Borrow this book</button>
+        {% set link = url_for('borrow', accession_number = book.accession_number) %}
+        <a href="{{ link }}" id="submit" style="padding: 3%">Borrow this book</a>
       {% endif %}
     </div>
   </div>

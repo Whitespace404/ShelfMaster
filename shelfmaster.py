@@ -199,11 +199,11 @@ def home():
     return render_template("home.html")
 
 
-@app.route("/borrow", methods=["GET", "POST"])
+@app.route("/borrow/", methods=["GET", "POST"])
 def borrow():
     form = BorrowForm()
 
-    if request.method == "GET":
+    if request.method == "POST":
         accession_number = request.args.get("accession_number")
 
         if accession_number is not None:
@@ -485,7 +485,9 @@ def reports():
                 return render_template("book_report.html", rep=most_read_books)
         elif form.report_type.data == "readers":
             most_avid_readers = (
-                db.session.query(User, func.count(TransactionLog.id).label("borrow_count"))
+                db.session.query(
+                    User, func.count(TransactionLog.id).label("borrow_count")
+                )
                 .join(TransactionLog)
                 .group_by(User)
                 .order_by(func.count(TransactionLog.id).desc())

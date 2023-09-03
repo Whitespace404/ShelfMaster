@@ -23,4 +23,4 @@ reading log is for returns, transaction log is for borrows
 When users find a book they want to borrow, there should be a "Borrow" button next to the book details.
 show due date after borrowing book
 
-1703+ lines of code
+currently 2080+ lines of code
