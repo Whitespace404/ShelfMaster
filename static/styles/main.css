@@ -234,7 +234,9 @@ td>a {
 }
 
 .alert {
-    background: red;
+    border: 5px solid red;
+    text-decoration: underline;
+    color: white;
 }
 
 .admin-tools-panel>div>a {
@@ -463,5 +465,9 @@ body>div.form>form>fieldset>label {
 }
 
 .borrowed-row {
+    background: green;
+}
+
+.overdue-row {
     background: red;
 }

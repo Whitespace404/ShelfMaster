@@ -25,7 +25,7 @@ from admin_forms import (
 )
 
 from excel_automation import read_file_and_get_details, read_namelist_and_get_details
-from helper_functions import exceeds_seven_days
+from helper_functions import find_dif
 
 from functools import wraps
 from random import randint, randrange
@@ -274,7 +274,7 @@ def return_():
             return render_template("return.html", form=form)
 
         current_dt = datetime.now()
-        if not exceeds_seven_days(current_dt, b.due_date):
+        if not (dif := find_dif(current_dt, b.due_date)):
             former_borrower = b.user
             b.is_borrowed = False
             b.user = None
@@ -284,9 +284,11 @@ def return_():
             b.is_borrowed = False
             b.user = None
             flash(f"Book borrowed by {former_borrower.name} was returned successfully.")
-            flash(
-                f"Fine must be paid by {former_borrower.name} ", "alert"
-            )  # TODO calculate how much the fine is and generate fine slip
+            if not former_borrower.is_teacher:
+                flash(
+                    f"{former_borrower.name} must pay a fine of Rs. {dif * 10}. The book was returned {dif} days late.",
+                    "alert",
+                )  # TODO calculate how much the fine is and generate fine slip
         db.session.commit()
         return redirect(url_for("home"))
     return render_template("return.html", form=form)
@@ -375,7 +377,10 @@ def view_all_admins():
 @login_required
 def view_books():
     books = Entity.query.filter_by().all()
-    return render_template("view_entities.html", books=books)
+    current_date = datetime.now()
+    return render_template(
+        "view_entities.html", books=books, current_date=current_date, find_dif=find_dif
+    )
 
 
 @app.route("/view_transactions")
@@ -544,6 +549,16 @@ def view_user(usn):
         return render_template("view_user.html", user=user, e=borrowed_books)
     flash(f"Could not find a user with USN = {usn}.")
     return redirect(url_for("view_all_users"))
+
+
+# with app.app_context():
+#     entity = Entity.query.filter_by(id=8).first()
+#     u = User.query.filter_by(username="100N005").first()
+#     entity.user = u
+#     entity.is_borrowed = True
+#     entity.due_date = datetime.now() - timedelta(days=3)
+
+#     db.session.commit()
 
 
 if __name__ == "__main__":

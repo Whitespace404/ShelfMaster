@@ -15,11 +15,18 @@
       <th>Borrower USN</th>     -->
     </tr>
     {% for book in books %}
-    {% if book.is_borrowed %}
-    <tr class="borrowed-row">
-      {% else %}
-    <tr></tr>
+
+    {% if find_dif(current_date, book.due_date) %}
+      <tr class="overdue-row">
+        {% set status = "Overdue" %}
+    {% elif book.is_borrowed %}
+      <tr class="borrowed-row">
+        {% set status = "Borrowed" %}
+    {% else %}
+      <tr>
+        {% set status = "Not borrowed" %}
     {% endif %}
+
     <td>{{ book.id }}</td>
     <td class="td-title">{{ book.title }}</td>
     <td>{{ book.author }}</td>
@@ -27,11 +34,7 @@
     <td>{{ book.accession_number }}</td>
     <td>
       <a href="{{ url_for('view_entity', ac_number = book.accession_number) }}">
-        {% if book.is_borrowed %}
-        Borrowed
-        {% else %}
-        Not borrowed
-        {% endif %}
+        {{ status }}
       </a>
     </td>
     <!--     <td>{{ book.user.name }}</td>
