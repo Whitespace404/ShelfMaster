@@ -57,7 +57,7 @@ deactivate
 ```
 
 You must make sure that you are in the virtual environment 
-before you run the Python program. You may get an `ImportError`
+before you run the Python program. You may get an `ModuleNotFoundError`
 if you are not. This is because the modules used in the program are unresolved because we have installed them
 within our virtual environment, and not in our global Python installation. This is done to prevent package conflicts.
 
