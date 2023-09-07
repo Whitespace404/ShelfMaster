@@ -1,7 +1,6 @@
 reading log
 
 add column borrowed_time in entity table
-
 when book returned show rack and shelf number
 lookup book and find rack and shelf number
 
@@ -10,9 +9,17 @@ Generate fine slip for library late return
 
 Generate graphs to show library usage :0
 
-Gunterz cannot be used in production environment
-
-DELETE admins 
 while hiding #hide-inputs tag make sure to clear whatever data already entered
 
-create fake rack and shelf numbers
+in `view_entity.html` show some stats about book such as number of reads,
+average number of reads taken to complete
+
+for user stats show number of books read, number of late returns, 
+average days taken to return 
+
+view fines route where you can see all the fines paid 
+reading log is for returns, transaction log is for borrows
+
+reports
+- USER PAYING MOST FINES
+- CLASS PAYING MOST FINESs

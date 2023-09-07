@@ -83,4 +83,13 @@ python run.py
 
 Once you have run the code, visit `localhost:5000`  on a web browser to view it.
 
+## Bonus: How to run on your local network
+
+Running on your local network allows you to access the website from any device,
+as long as it is connected to the same WiFi network as the hosting server
+
+Run the flask app with the following command instead to achieve this
+```powershell
+flask --app shelfmaster run -h 0.0.0.0
+```
 <hr>
