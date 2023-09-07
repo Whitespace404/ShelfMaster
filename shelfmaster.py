@@ -24,11 +24,11 @@ from admin_forms import (
     ReportsForm,
 )
 
-from excel_automation import read_file_and_get_details, read_namelist_and_get_details
+from excel_automation import read_booklist, read_namelist
 from helper_functions import find_dif
 
 from functools import wraps
-from random import randint, randrange, choice
+from random import randint, choice
 
 app = Flask(__name__)
 app.config["SECRET_KEY"] = "28679ae72d9d4c7b0e93b1db218426a6"
@@ -48,7 +48,7 @@ def create_database():
         db.session.add(admin)
         db.session.commit()
 
-        for usn_name in read_namelist_and_get_details():
+        for usn_name in read_namelist():
             u = User(
                 username=usn_name[0],
                 name=usn_name[1],
@@ -58,7 +58,7 @@ def create_database():
             db.session.add(u)
             db.session.commit()
 
-        for book_details in read_file_and_get_details():
+        for book_details in read_booklist():
             entity = Entity(
                 type="Book",
                 title=book_details["title"],

@@ -12,7 +12,7 @@ def convert_name(name):
         return name
 
 
-def read_file_and_get_details():
+def read_booklist():
     wb = openpyxl.load_workbook("master.xlsx")
     sheet = wb["Accession Details"]
 
@@ -34,7 +34,7 @@ def read_file_and_get_details():
     return result_dict
 
 
-def read_namelist_and_get_details():
+def read_namelist():
     wb = openpyxl.load_workbook("master.xlsx")
     sheet = wb["Issue Details"]
 
