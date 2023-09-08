@@ -23,3 +23,5 @@ reading log is for returns, transaction log is for borrows
 reports
 - USER PAYING MOST FINES
 - CLASS PAYING MOST FINESs
+
+create borrow() helper function to be DRY compliant
