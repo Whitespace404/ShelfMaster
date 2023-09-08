@@ -483,3 +483,7 @@ body>div.form>form>fieldset>label {
 .overdue-row {
     background: red;
 }
+
+.clickable-row:hover {
+    cursor: pointer;
+}

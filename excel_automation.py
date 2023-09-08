@@ -2,7 +2,10 @@ import openpyxl
 
 
 def convert_name(name):
-    parts = name.split(", ")
+    try:
+        parts = name.split(", ")
+    except AttributeError:
+        return name
 
     if len(parts) == 2:
         last_name, first_name = parts
@@ -20,8 +23,9 @@ def read_booklist():
     for row in sheet.iter_rows(min_row=3, values_only=True):
         details = dict()
         details["accession_number"] = row[0]
-        details["author"] = convert_name(row[3])
-        details["title"] = row[4]
+        name = row[3]
+        details["author"] = convert_name(name)
+        details["title"] = convert_name(row[4])
         details["call_number"] = row[5]
         details["publisher"] = row[6]
         details["place_of_publication"] = row[7]
@@ -43,3 +47,7 @@ def read_namelist():
         result_list.append((row[1], row[2]))
 
     return result_list
+
+
+if __name__ == "__main__":
+    read_booklist()

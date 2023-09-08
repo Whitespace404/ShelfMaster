@@ -7,20 +7,22 @@
     <table class="admin-logs">
       <tr>
         <th>Sl no</th>
-        <th>THE FINED</th>
+        <th>Student name</th>
         <th>Late book</th>
         <th>Due Date</th>
         <th>Date returned</th>
+        <th>Amount due</th>
       </tr>
       {% for log in logs %}
-        <tr>
+        <tr class="clickable-row" onclick="window.location='{{ url_for('view_entity', ac_number = log.entity.accession_number) }}'">
           <td>{{ log.id }}</td>
-          <td>{{ log.finee }}</td>
-          <td>{{ log.late_book.title }}</td>
+          <td>{{ log.user.name }}</td>
+          <td>{{ log.entity.title }} by {{ log.entity.author }}</td>
           {% set ddate = log.due_date %}
           {% set duedate = log.date_returned %}
-          <td>{{ ddate.strftime("%d/%m/%Y") }}</td>
-          <td>{{ duedate.strftime("%d/%m/%Y") }}</td>
+          <td>{{ ddate.strftime('%d/%m/%Y') }}</td>
+          <td>{{ duedate.strftime('%d/%m/%Y') }}</td>
+          <td>{{ log.days_late * 10 }} Rs.</td>
         </tr>
       {% endfor %}
     </table>

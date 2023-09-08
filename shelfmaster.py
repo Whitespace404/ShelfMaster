@@ -1,5 +1,12 @@
 from flask import Flask, render_template, flash, redirect, url_for, request
-from flask_login import LoginManager, login_user, login_required, logout_user, current_user, UserMixin
+from flask_login import (
+    LoginManager,
+    login_user,
+    login_required,
+    logout_user,
+    current_user,
+    UserMixin,
+)
 
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy import func
@@ -7,7 +14,13 @@ from sqlalchemy import func
 from datetime import datetime, timedelta
 
 from forms import BorrowForm, ReturnForm, LoginForm
-from admin_forms import AddAdminsForm, AddBookForm, AddUserForm, CatalogForm, ReportsForm
+from admin_forms import (
+    AddAdminsForm,
+    AddBookForm,
+    AddUserForm,
+    CatalogForm,
+    ReportsForm,
+)
 
 from excel_automation import read_booklist, read_namelist
 from helper_functions import find_dif
@@ -21,7 +34,7 @@ from functools import wraps
 from random import randint, choice
 
 app = Flask(__name__)
-app.config["SECRET_KEY"] = "howmuchwoodwouldawoodchuckchuckifawoodchuchwouldchuckwood-NotCookingUpAnythingInTheKitchenNotCuttingAnybodysHeadOffActually"
+app.config["SECRET_KEY"] = "cx8z351TS3V6HxsP1msE6ldiweAHGCqHRDYyGoBvuguX2LPs"
 app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///main.db"
 
 db = SQLAlchemy(app)
@@ -103,6 +116,7 @@ class FinesLog(db.Model):
     date_returned = sa.Column(sa.DateTime)
 
     is_paid = sa.Column(sa.Boolean, default=False)
+    days_late = sa.Column(sa.Integer)
 
 
 class AdminActionsLog(db.Model):
@@ -138,7 +152,7 @@ class Entity(db.Model):
     date_added = sa.Column(sa.DateTime, default=datetime.now)
     user_id = sa.Column(sa.Integer, sa.ForeignKey("user.id"))
     transaction = relationship("TransactionLog", backref="entity", lazy=True)
-    fine = relationship("FinesLog", backref="late_book", lazy=True)
+    fine = relationship("FinesLog", backref="entity", lazy=True)
 
     def __repr__(self):
         return f"{self.accession_number}"
@@ -148,41 +162,42 @@ class Entity(db.Model):
 def load_user(user_id):
     return Admin.query.get(int(user_id))
 
+
 def create_database():
     with app.app_context():
         db.create_all()
 
-        # admin = Admin(username="rahulreji", password="power", role_id=2)
-        # db.session.add(admin)
-        # db.session.commit()
+        admin = Admin(username="rahulreji", password="power", role_id=2)
+        db.session.add(admin)
+        db.session.commit()
 
-        # for usn_name in read_namelist():
-        #     u = User(
-        #         username=usn_name[0],
-        #         name=usn_name[1],
-        #         is_teacher=False,
-        #         class_section="4A",
-        #     )
-        #     db.session.add(u)
-        #     db.session.commit()
+        for usn_name in read_namelist():
+            u = User(
+                username=usn_name[0],
+                name=usn_name[1],
+                is_teacher=False,
+                class_section="4A",
+            )
+            db.session.add(u)
+            db.session.commit()
 
-        # for book_details in read_booklist():
-        #     entity = Entity(
-        #         type="Book",
-        #         title=book_details["title"],
-        #         author=book_details["author"],
-        #         accession_number=book_details["accession_number"],
-        #         call_number=book_details["call_number"],
-        #         publisher=book_details["publisher"],
-        #         place_of_publication=book_details["place_of_publication"],
-        #         isbn=book_details["isbn"],
-        #         vendor=book_details["vendor"],
-        #         bill_number=book_details["bill_number"],
-        #         amount=book_details["price"],
-        #         language="English",
-        #     )
-        #     db.session.add(entity)
-        #     db.session.commit()
+        for book_details in read_booklist():
+            entity = Entity(
+                type="Book",
+                title=book_details["title"],
+                author=book_details["author"],
+                accession_number=book_details["accession_number"],
+                call_number=book_details["call_number"],
+                publisher=book_details["publisher"],
+                place_of_publication=book_details["place_of_publication"],
+                isbn=book_details["isbn"],
+                vendor=book_details["vendor"],
+                bill_number=book_details["bill_number"],
+                amount=book_details["price"],
+                language="English",
+            )
+            db.session.add(entity)
+            db.session.commit()
 
 
 def super_admin_required(func):
@@ -197,23 +212,24 @@ def super_admin_required(func):
 
 
 def borrow_book(user, entity):
-    """This function can be used to borrow a book. Takes two inputs, 
-    a user object and a book object. """
+    """This function can be used to borrow a book. Takes two inputs,
+    a user object and a book object."""
 
     entity.user = user
     entity.is_borrowed = True
     entity.due_date = datetime.now()
 
     log = TransactionLog(user=user, entity=entity)
-    db.session.add_all()
+    db.session.add(entity)
+    db.session.add(log)
     db.session.commit()
 
 
 @app.route("/")
 def home():
     if current_user.is_authenticated:
-        return render_template("admin_tools.html")
-    return render_template("home.html")
+        return render_template("admin_tools.html", title="Admin Tools")
+    return render_template("home.html", title="Home")
 
 
 @app.route("/borrow/", methods=["GET", "POST"])
@@ -230,18 +246,18 @@ def borrow():
         u = User.query.filter_by(username=form.usn.data).first()
         if u is None:
             form.usn.errors.append("USN does not exist")
-            return render_template("borrow.html", form=form)
+            return render_template("borrow.html", form=form, title="Borrow A Book")
 
         entity = Entity.query.filter_by(accession_number=form.book_id.data).first()
         # TODO create borrow_() helper function to be DRY compliant
         if entity is None:
             form.book_id.errors.append("That book doesn't exist in the database yet.")
-            return render_template("borrow.html", form=form)
+            return render_template("borrow.html", form=form, title="Borrow A Book")
         if entity.is_borrowed:
             form.book_id.errors.append(
                 f"{form.book_id.data} borrowed by {entity.user.name}."
             )
-            return render_template("borrow.html", form=form)
+            return render_template("borrow.html", form=form, title="Borrow A Book")
 
         if u.is_teacher == True:
             borrow_book(u, entity)
@@ -257,7 +273,7 @@ def borrow():
             form.usn.errors.append(
                 "You have already borrowed a book. -linebreak- Return it and try again. "
             )
-    return render_template("borrow.html", form=form)
+    return render_template("borrow.html", form=form, title="Borrow A Book")
 
 
 @app.route("/return", methods=["GET", "POST"])
@@ -268,10 +284,10 @@ def return_():
         b = Entity.query.filter_by(accession_number=form.book_id.data).first()
         if b is None:
             form.book_id.errors.append("That book doesn't exist in the database.")
-            return render_template("return.html", form=form)
+            return render_template("return.html", form=form, title="Return a Book")
         if b.user is None:
             form.book_id.errors.append("That book is not borrowed.")
-            return render_template("return.html", form=form)
+            return render_template("return.html", form=form, title="Return a Book")
 
         current_dt = datetime.now()
         if not (dif := find_dif(current_dt, b.due_date)):
@@ -280,12 +296,18 @@ def return_():
             b.user = None
             flash(f"Book borrowed by {former_borrower.name} was returned successfully.")
         else:
+            fine = FinesLog(
+                user=b.user,
+                entity=b,
+                due_date=b.due_date,
+                date_returned=current_dt,
+                days_late=dif,
+            )
             former_borrower = b.user
             b.is_borrowed = False
             b.user = None
             flash(f"Book borrowed by {former_borrower.name} was returned successfully.")
             if not former_borrower.is_teacher:
-                fine = FinesLog(finee=b.user, late_book=b, due_date=b.due_date, date_returned=current_dt)
                 db.session.add(fine)
                 db.session.commit()
 
@@ -295,7 +317,7 @@ def return_():
                 )
         db.session.commit()
         return redirect(url_for("home"))
-    return render_template("return.html", form=form)
+    return render_template("return.html", form=form, title="Return a Book")
 
 
 @app.route("/add_admin", methods=["GET", "POST"])
@@ -320,7 +342,7 @@ def add_admin():
         db.session.commit()
         flash(f"Admin {admin.username} added successfully.")
         return redirect(url_for("home"))
-    return render_template("add_admin.html", form=form)
+    return render_template("add_admin.html", form=form, title="Add an Admin")
 
 
 @app.route("/add_user", methods=["GET", "POST"])
@@ -334,7 +356,7 @@ def add_user():
         u = User.query.filter_by(username=form.username.data).first()
         if u is not None:
             form.username.errors.append("USN already exists.")
-            return render_template("add_user.html", form=form)
+            return render_template("add_user.html", form=form, title="Add a User")
         user = User(
             username=form.username.data,
             name=form.name.data,
@@ -353,34 +375,34 @@ def add_user():
 
         flash(f"Added user {form.name.data}")
         return redirect(url_for("home"))
-    return render_template("add_user.html", form=form)
+    return render_template("add_user.html", form=form, title="Add a User")
 
 
 @app.route("/view_all_users")
 @login_required
 def view_all_users():
     logs = User.query.filter_by().all()
-    return render_template("view_users.html", logs=logs)
+    return render_template("view_users.html", logs=logs, title="Users List")
 
 
 @app.route("/view_admin_log")
 @super_admin_required
 def view_admin_log():
     logs = AdminActionsLog.query.filter_by().all()
-    return render_template("admin_log.html", logs=logs)
+    return render_template("admin_log.html", logs=logs, title="Admin Logs")
 
 
 @app.route("/view_fine_log")
 def view_fine_log():
     logs = FinesLog.query.filter_by().all()
-    return render_template("view_fine_log.html", logs=logs)
+    return render_template("view_fine_log.html", logs=logs, title="Fine Logs")
 
 
 @app.route("/view_all_admins")
 @login_required
 def view_all_admins():
     logs = Admin.query.filter_by().all()
-    return render_template("view_admins.html", logs=logs)
+    return render_template("view_admins.html", logs=logs, title="Admin List")
 
 
 @app.route("/view_books")
@@ -389,14 +411,20 @@ def view_books():
     books = Entity.query.filter_by().all()
     current_date = datetime.now()
     return render_template(
-        "view_entities.html", books=books, current_date=current_date, find_dif=find_dif
+        "view_entities.html",
+        books=books,
+        current_date=current_date,
+        find_dif=find_dif,
+        title="Book List",
     )
 
 
 @app.route("/view_transactions")
 def view_transactions():
     transactions = TransactionLog.query.filter_by().all()
-    return render_template("view_transaction_log.html", transactions=transactions)
+    return render_template(
+        "view_transaction_log.html", transactions=transactions, title="Transaction Log"
+    )
 
 
 @app.route("/admin_login", methods=["GET", "POST"])
@@ -418,7 +446,7 @@ def admin_login():
         else:
             flash("Incorrect username/password")
             return redirect(url_for("admin_login"))
-    return render_template("admin_login.html", form=form)
+    return render_template("admin_login.html", form=form, title="Admin Login")
 
 
 @app.route("/add_entity", methods=["GET", "POST"])
@@ -453,7 +481,7 @@ def add_entity():
 
         flash(f"{form.type.data} added successfully")
         return redirect(url_for("home"))
-    return render_template("add_entity.html", form=form)
+    return render_template("add_entity.html", form=form, title="Add an Entity")
 
 
 @app.route("/logout")
@@ -469,14 +497,10 @@ def logout():
 
 @app.route("/create_db")
 def create_db():
-    db.create_all()
+    create_database()
 
-    admin = Admin(username="rahulreji", password="power", role_id=3)
-    db.session.add(admin)
-    db.session.commit()
-
-    flash("Success")
-    return render_template("home.html")
+    flash("Database successfully initialised.")
+    return redirect(url_for("home"))
 
 
 @app.route("/reports", methods=["GET", "POST"])
@@ -496,7 +520,9 @@ def reports():
             )
 
             if most_read_books:
-                return render_template("book_report.html", rep=most_read_books)
+                return render_template(
+                    "book_report.html", rep=most_read_books, title="Reports"
+                )
         elif form.report_type.data == "readers":
             most_avid_readers = (
                 db.session.query(
@@ -509,8 +535,10 @@ def reports():
             )
 
             if most_avid_readers:
-                return render_template("readers_report.html", rep=most_avid_readers)
-    return render_template("reports_form.html", form=form)
+                return render_template(
+                    "readers_report.html", rep=most_avid_readers, title="Reports"
+                )
+    return render_template("reports_form.html", form=form, title="Generate a Report")
 
 
 SEARCH_TYPE_MAPPING: dict = {
@@ -542,6 +570,7 @@ def catalog():
                 books=q,
                 find_dif=find_dif,
                 current_date=current_date,
+                title="Book list",
             )
         else:
             flash("No results found")
@@ -553,7 +582,12 @@ def view_entity(ac_number):
     book = Entity.query.filter_by(accession_number=ac_number).first()
     if book:
         borrowers = TransactionLog.query.filter_by(entity=book).all()
-        return render_template("view_entity.html", book=book, e=borrowers)
+        return render_template(
+            "view_entity.html",
+            book=book,
+            e=borrowers,
+            title=f"View {book.title} by {book.author}",
+        )
     flash(f"Could not find a book with accession number = {ac_number}.")
     return redirect(url_for("view_books"))
 
@@ -563,7 +597,12 @@ def view_user(usn):
     user = User.query.filter_by(username=usn).first()
     if user:
         borrowed_books = TransactionLog.query.filter_by(user=user).all()
-        return render_template("view_user.html", user=user, e=borrowed_books)
+        return render_template(
+            "view_user.html",
+            user=user,
+            e=borrowed_books,
+            title=f"View details for {user.username}",
+        )
     flash(f"Could not find a user with USN = {usn}.")
     return redirect(url_for("view_all_users"))
 
@@ -580,7 +619,7 @@ def pop_():
     return redirect(url_for("home"))
 
 
-book_ids = [4863, 11774, 14671, 14673, 14685, 14688, 4000, 9360, 8577]
+book_ids = [11075, 14646, 14647, 13372, 12894, 12893]
 users = [6, 7, 8, 10, 11, 12, 2]
 
 
@@ -599,8 +638,8 @@ def pop_books():
 @app.route("/populate_overdue_books")
 def over():
     with app.app_context():
-        entity = Entity.query.filter_by(id=36).first()
-        u = User.query.filter_by(username="170N096").first()
+        entity = Entity.query.filter_by(id=20, is_borrowed=False).first()
+        u = User.query.filter_by().first()
         entity.user = u
         entity.is_borrowed = True
         early_date = datetime.now() - timedelta(days=3)
@@ -610,7 +649,7 @@ def over():
         db.session.add(t)
         db.session.commit()
 
-    return redirect(url_for("home"))
+    return redirect(url_for("view_books"))
 
 
 if __name__ == "__main__":

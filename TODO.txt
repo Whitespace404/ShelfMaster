@@ -25,3 +25,6 @@ reports
 - CLASS PAYING MOST FINESs
 
 create borrow() helper function to be DRY compliant
+check if user is allowed to borrow the book using accession_number before borrowing
+
+account for holidays when counting fines
