@@ -1,3 +1,45 @@
+import sqlalchemy as sa
+from sqlalchemy.orm import relationship
+from flask_login import UserMixin
+from datetime import datetime, timedelta
+from shelfmaster import db, login_manager
+
+
+def create_database():
+    with app.app_context():
+        db.create_all()
+
+        admin = Admin(username="rahulreji", password="power", role_id=2)
+        db.session.add(admin)
+        db.session.commit()
+
+        for usn_name in read_namelist():
+            u = User(
+                username=usn_name[0],
+                name=usn_name[1],
+                is_teacher=False,
+                class_section="4A",
+            )
+            db.session.add(u)
+            db.session.commit()
+
+        for book_details in read_booklist():
+            entity = Entity(
+                type="Book",
+                title=book_details["title"],
+                author=book_details["author"],
+                accession_number=book_details["accession_number"],
+                call_number=book_details["call_number"],
+                publisher=book_details["publisher"],
+                place_of_publication=book_details["place_of_publication"],
+                isbn=book_details["isbn"],
+                vendor=book_details["vendor"],
+                bill_number=book_details["bill_number"],
+                amount=book_details["price"],
+                language="English",
+            )
+            db.session.add(entity)
+            db.session.commit()
 
 
 class User(db.Model):
@@ -103,3 +145,16 @@ class Entity(db.Model):
 @login_manager.user_loader
 def load_user(user_id):
     return Admin.query.get(int(user_id))
+
+
+class FinesLog(db.Model):
+    id = sa.Column(sa.Integer, primary_key=True, unique=True)
+
+    user_id = sa.Column(sa.Integer, sa.ForeignKey("user.id"))
+    entity_id = sa.Column(sa.Integer, sa.ForeignKey("entity.id"))
+
+    due_date = sa.Column(sa.DateTime)
+    date_returned = sa.Column(sa.DateTime)
+
+    is_paid = sa.Column(sa.Boolean, default=False)
+    days_late = sa.Column(sa.Integer)

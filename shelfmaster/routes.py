@@ -1,203 +1,28 @@
-from flask import Flask, render_template, flash, redirect, url_for, request
-from flask_login import (
-    LoginManager,
-    login_user,
-    login_required,
-    logout_user,
-    current_user,
-    UserMixin,
-)
-
-from flask_sqlalchemy import SQLAlchemy
-from sqlalchemy import func
-
-from datetime import datetime, timedelta
-
-from forms import BorrowForm, ReturnForm, LoginForm
-from admin_forms import (
+from shelfmaster.forms import LoginForm, BorrowForm, ReturnForm
+from shelfmaster.admin_forms import (
     AddAdminsForm,
     AddBookForm,
     AddUserForm,
     CatalogForm,
     ReportsForm,
 )
-
-from excel_automation import read_booklist, read_namelist
-from helper_functions import find_dif
-
-import sqlalchemy as sa
-from sqlalchemy.orm import relationship
-from sqlalchemy import func
-from flask_login import UserMixin
-
+from shelfmaster.models import (
+    User,
+    Admin,
+    Entity,
+    TransactionLog,
+    AdminActionsLog,
+    FinesLog,
+)
+from shelfmaster import app, db
 from functools import wraps
+from sqlalchemy import func
+from flask import render_template, redirect, url_for, flash, request
+
+from flask_login import current_user, login_required, login_user, logout_user
+from datetime import datetime, timedelta
 from random import randint, choice
-
-app = Flask(__name__)
-app.config["SECRET_KEY"] = "cx8z351TS3V6HxsP1msE6ldiweAHGCqHRDYyGoBvuguX2LPs"
-app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///main.db"
-
-db = SQLAlchemy(app)
-login_manager = LoginManager()
-login_manager.init_app(app)
-login_manager.login_view = "admin_login"
-
-
-class User(db.Model):
-    id = sa.Column(sa.Integer, primary_key=True, unique=True)
-    username = sa.Column(sa.String(20), nullable=False, unique=True)
-    name = sa.Column(sa.String(32))
-    is_teacher = sa.Column(sa.Boolean)
-    class_section = sa.Column(sa.String(10))
-
-    borrowed_entities = relationship("Entity", backref="user", lazy=True)
-    transaction = relationship("TransactionLog", backref="user", lazy=True)
-    finee = relationship("FinesLog", backref="user", lazy=True)
-
-    def __repr__(self):
-        return f"ID: {str(self.id)}; {self.username}"
-
-
-class Admin(db.Model, UserMixin):
-    id = sa.Column(sa.Integer, primary_key=True, unique=True)
-    username = sa.Column(sa.String(40), nullable=False)
-    password = sa.Column(sa.String(64), nullable=False)
-
-    """
-    ROLE ID RUBRIK:
-
-    1: LIBRARIAN
-    - Can borrow/return books
-    - Can view books/students list
-    - Can add users
-    - Can delete users
-
-    2: ADMIN
-    - Cannot borrow/return books
-    - Can add books, add users, delete users
-    """
-    role_id = sa.Column(sa.Integer)
-
-    def __repr__(self):
-        return f"{str(self.id)}. {self.username} with {self.password}"
-
-
-class TransactionLog(db.Model):
-    id = sa.Column(sa.Integer, primary_key=True, unique=True)
-    user_id = sa.Column(sa.Integer, sa.ForeignKey("user.id"))
-    entity_id = sa.Column(sa.Integer, sa.ForeignKey("entity.id"))
-    borrowed_time = sa.Column(sa.DateTime, default=datetime.now)
-    due_date = sa.Column(
-        sa.DateTime, default=lambda: datetime.now() + timedelta(days=7)
-    )
-
-    def __repr__(self):
-        return f"{str(self.id)}"
-
-
-# class ReadingLog(db.Model):
-#     id = sa.Column(sa.Integer, primary_key=True, unique=True)
-#     user_id = sa.Column(sa.Integer, sa.ForeignKey("user.id")) # TODO must add relationships
-#     entity_id = sa.Column(sa.Integer, sa.ForeignKey("entity.id"))
-#     returned_time = sa.Column(sa.DateTime)
-#     librarian_remarks = sa.Column(sa.String(120))
-
-#     def __repr__(self):
-#         return f"{str(self.id)}"
-
-
-class FinesLog(db.Model):
-    id = sa.Column(sa.Integer, primary_key=True, unique=True)
-
-    user_id = sa.Column(sa.Integer, sa.ForeignKey("user.id"))
-    entity_id = sa.Column(sa.Integer, sa.ForeignKey("entity.id"))
-
-    due_date = sa.Column(sa.DateTime)
-    date_returned = sa.Column(sa.DateTime)
-
-    is_paid = sa.Column(sa.Boolean, default=False)
-    days_late = sa.Column(sa.Integer)
-
-
-class AdminActionsLog(db.Model):
-    id = sa.Column(sa.Integer, primary_key=True, unique=True)
-    username = sa.Column(sa.String(20))
-    action = sa.Column(sa.String(120))
-    time = sa.Column(sa.DateTime, default=datetime.now)
-
-    def __repr__(self):
-        return f"{self.username} performed {self.action}"
-
-
-class Entity(db.Model):
-    id = sa.Column(sa.Integer, primary_key=True, unique=True)
-    type = sa.Column(sa.String(40))
-    title = sa.Column(sa.String(100))
-    author = sa.Column(sa.String(100))
-    rack_number = sa.Column(sa.String(20))
-    shelf_number = sa.Column(sa.String(20))
-    accession_number = sa.Column(sa.String(25), unique=True)
-    call_number = sa.Column(sa.String(32))
-    publisher = sa.Column(sa.String(120))
-    place_of_publication = sa.Column(sa.String(64))
-    isbn = sa.Column(sa.String(20))
-    vendor = sa.Column(sa.String(32))
-    bill_number = sa.Column(sa.String(32))
-    bill_date = sa.Column(sa.DateTime)
-    amount = sa.Column(sa.String(10))
-    remarks = sa.Column(sa.String(120))
-    language = sa.Column(sa.String(32))
-    is_borrowed = sa.Column(sa.Boolean, default=False)
-    due_date = sa.Column(sa.DateTime)
-    date_added = sa.Column(sa.DateTime, default=datetime.now)
-    user_id = sa.Column(sa.Integer, sa.ForeignKey("user.id"))
-    transaction = relationship("TransactionLog", backref="entity", lazy=True)
-    fine = relationship("FinesLog", backref="entity", lazy=True)
-
-    def __repr__(self):
-        return f"{self.accession_number}"
-
-
-@login_manager.user_loader
-def load_user(user_id):
-    return Admin.query.get(int(user_id))
-
-
-def create_database():
-    with app.app_context():
-        db.create_all()
-
-        admin = Admin(username="rahulreji", password="power", role_id=2)
-        db.session.add(admin)
-        db.session.commit()
-
-        for usn_name in read_namelist():
-            u = User(
-                username=usn_name[0],
-                name=usn_name[1],
-                is_teacher=False,
-                class_section="4A",
-            )
-            db.session.add(u)
-            db.session.commit()
-
-        for book_details in read_booklist():
-            entity = Entity(
-                type="Book",
-                title=book_details["title"],
-                author=book_details["author"],
-                accession_number=book_details["accession_number"],
-                call_number=book_details["call_number"],
-                publisher=book_details["publisher"],
-                place_of_publication=book_details["place_of_publication"],
-                isbn=book_details["isbn"],
-                vendor=book_details["vendor"],
-                bill_number=book_details["bill_number"],
-                amount=book_details["price"],
-                language="English",
-            )
-            db.session.add(entity)
-            db.session.commit()
+from shelfmaster.excel_automation import read_booklist, read_namelist
 
 
 def super_admin_required(func):
@@ -209,6 +34,23 @@ def super_admin_required(func):
         return func(*args, **kwargs)
 
     return decorated_view
+
+
+def find_dif(datetime1, datetime2):
+    if datetime2 is None:
+        return False
+    if datetime1.date() > datetime2.date():
+        time_dif = datetime1 - datetime2
+        return time_dif.days
+    else:
+        return False
+
+
+@app.route("/")
+def home():
+    if current_user.is_authenticated:
+        return render_template("admin_tools.html", title="Admin Tools")
+    return render_template("home.html", title="Home")
 
 
 def borrow_book(user, entity):
@@ -223,13 +65,6 @@ def borrow_book(user, entity):
     db.session.add(entity)
     db.session.add(log)
     db.session.commit()
-
-
-@app.route("/")
-def home():
-    if current_user.is_authenticated:
-        return render_template("admin_tools.html", title="Admin Tools")
-    return render_template("home.html", title="Home")
 
 
 @app.route("/borrow/", methods=["GET", "POST"])
@@ -249,7 +84,6 @@ def borrow():
             return render_template("borrow.html", form=form, title="Borrow A Book")
 
         entity = Entity.query.filter_by(accession_number=form.book_id.data).first()
-        # TODO create borrow_() helper function to be DRY compliant
         if entity is None:
             form.book_id.errors.append("That book doesn't exist in the database yet.")
             return render_template("borrow.html", form=form, title="Borrow A Book")
@@ -442,7 +276,8 @@ def admin_login():
             db.session.add(log)
             db.session.commit()
             flash(f"Logged in")
-            return redirect(url_for("home"))
+            next_page = request.args.get("next")
+            return redirect(next_page if next_page else url_for("home"))
         else:
             flash("Incorrect username/password")
             return redirect(url_for("admin_login"))
@@ -495,6 +330,43 @@ def logout():
     return redirect(url_for("home"))
 
 
+def create_database():
+    with app.app_context():
+        db.create_all()
+
+        admin = Admin(username="rahulreji", password="power", role_id=2)
+        db.session.add(admin)
+        db.session.commit()
+
+        for usn_name in read_namelist():
+            u = User(
+                username=usn_name[0],
+                name=usn_name[1],
+                is_teacher=False,
+                class_section="4A",
+            )
+            db.session.add(u)
+            db.session.commit()
+
+        for book_details in read_booklist():
+            entity = Entity(
+                type="Book",
+                title=book_details["title"],
+                author=book_details["author"],
+                accession_number=book_details["accession_number"],
+                call_number=book_details["call_number"],
+                publisher=book_details["publisher"],
+                place_of_publication=book_details["place_of_publication"],
+                isbn=book_details["isbn"],
+                vendor=book_details["vendor"],
+                bill_number=book_details["bill_number"],
+                amount=book_details["price"],
+                language="English",
+            )
+            db.session.add(entity)
+            db.session.commit()
+
+
 @app.route("/create_db")
 def create_db():
     create_database()
@@ -509,6 +381,12 @@ def reports():
 
     if form.validate_on_submit():
         if form.report_type.data == "books":
+            # SELECT entities.*, COUNT(transaction_log.id) AS borrow_count
+            # FROM entities
+            # LEFT JOIN transaction_log ON entities.id = transaction_log.entity_id
+            # GROUP BY entities.id
+            # ORDER BY borrow_count DESC;
+
             most_read_books = (
                 db.session.query(
                     Entity, func.count(TransactionLog.id).label("borrow_count")
@@ -524,6 +402,12 @@ def reports():
                     "book_report.html", rep=most_read_books, title="Reports"
                 )
         elif form.report_type.data == "readers":
+            # SELECT users.*, COUNT(transaction_log.id) AS borrow_count
+            # FROM users
+            # LEFT JOIN transaction_log ON users.id = transaction_log.user_id
+            # GROUP BY users.id
+            # ORDER BY borrow_count DESC;
+
             most_avid_readers = (
                 db.session.query(
                     User, func.count(TransactionLog.id).label("borrow_count")
@@ -650,7 +534,3 @@ def over():
         db.session.commit()
 
     return redirect(url_for("view_books"))
-
-
-if __name__ == "__main__":
-    app.run(debug=True)
