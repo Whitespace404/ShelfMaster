@@ -9,3 +9,4 @@ bin.txt
 *.xlsx
 instance/main.db
 instance/
+.idea/

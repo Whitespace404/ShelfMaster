@@ -1,3 +1,11 @@
+from datetime import datetime, timedelta
+from random import randint, choice
+
+from flask import render_template, redirect, request, flash, url_for
+from flask_login import current_user, login_required, login_user, logout_user
+from sqlalchemy import func
+
+from shelfmaster import db, app
 from shelfmaster.forms import LoginForm, BorrowForm, ReturnForm
 from shelfmaster.admin_forms import (
     AddAdminsForm,
@@ -14,36 +22,12 @@ from shelfmaster.models import (
     AdminActionsLog,
     FinesLog,
 )
-from shelfmaster import app, db
-from functools import wraps
-from sqlalchemy import func
-from flask import render_template, redirect, url_for, flash, request
-
-from flask_login import current_user, login_required, login_user, logout_user
-from datetime import datetime, timedelta
-from random import randint, choice
-from shelfmaster.excel_automation import read_booklist, read_namelist
-
-
-def super_admin_required(func):
-    @wraps(func)
-    def decorated_view(*args, **kwargs):
-        if not current_user.is_authenticated or current_user.role_id < 2:
-            flash("You do not have permission to access this page.", "danger")
-            return redirect(url_for("admin_login"))
-        return func(*args, **kwargs)
-
-    return decorated_view
-
-
-def find_dif(datetime1, datetime2):
-    if datetime2 is None:
-        return False
-    if datetime1.date() > datetime2.date():
-        time_dif = datetime1 - datetime2
-        return time_dif.days
-    else:
-        return False
+from shelfmaster.utilities import (
+    super_admin_required,
+    find_dif,
+    borrow_book,
+    create_database,
+)
 
 
 @app.route("/")
@@ -51,20 +35,6 @@ def home():
     if current_user.is_authenticated:
         return render_template("admin_tools.html", title="Admin Tools")
     return render_template("home.html", title="Home")
-
-
-def borrow_book(user, entity):
-    """This function can be used to borrow a book. Takes two inputs,
-    a user object and a book object."""
-
-    entity.user = user
-    entity.is_borrowed = True
-    entity.due_date = datetime.now()
-
-    log = TransactionLog(user=user, entity=entity)
-    db.session.add(entity)
-    db.session.add(log)
-    db.session.commit()
 
 
 @app.route("/borrow/", methods=["GET", "POST"])
@@ -79,11 +49,11 @@ def borrow():
 
     if form.validate_on_submit():
         u = User.query.filter_by(username=form.usn.data).first()
+        entity = Entity.query.filter_by(accession_number=form.book_id.data).first()
+
         if u is None:
             form.usn.errors.append("USN does not exist")
             return render_template("borrow.html", form=form, title="Borrow A Book")
-
-        entity = Entity.query.filter_by(accession_number=form.book_id.data).first()
         if entity is None:
             form.book_id.errors.append("That book doesn't exist in the database yet.")
             return render_template("borrow.html", form=form, title="Borrow A Book")
@@ -92,15 +62,14 @@ def borrow():
                 f"{form.book_id.data} borrowed by {entity.user.name}."
             )
             return render_template("borrow.html", form=form, title="Borrow A Book")
-
-        if u.is_teacher == True:
+        if u.is_teacher:
             borrow_book(u, entity)
             flash(f"{entity.type} borrowed successfully.")
             return redirect(url_for("home"))
-        elif len(u.borrowed_entities) == 0:
+        elif (u.borrowed_entities) == 0:
             borrow_book(u, entity)
             flash(
-                f"{entity.type} borrowed successfully. Please return it before {entity.due_date.strftime('%d/%m/%y') }"
+                f"{entity.type} borrowed successfully. Please return it before {entity.due_date.strftime('%d/%m/%y')}"
             )
             return redirect(url_for("home"))
         else:
@@ -145,7 +114,7 @@ def return_():
                 db.session.add(fine)
                 db.session.commit()
 
-                flash(
+                flash(  # TODO update this fine message to show fine value according to fine db
                     f"{former_borrower.name} must pay a fine of Rs. {dif * 10}. The book was returned {dif} days late.",
                     "alert",
                 )
@@ -330,43 +299,6 @@ def logout():
     return redirect(url_for("home"))
 
 
-def create_database():
-    with app.app_context():
-        db.create_all()
-
-        admin = Admin(username="rahulreji", password="power", role_id=2)
-        db.session.add(admin)
-        db.session.commit()
-
-        for usn_name in read_namelist():
-            u = User(
-                username=usn_name[0],
-                name=usn_name[1],
-                is_teacher=False,
-                class_section="4A",
-            )
-            db.session.add(u)
-            db.session.commit()
-
-        for book_details in read_booklist():
-            entity = Entity(
-                type="Book",
-                title=book_details["title"],
-                author=book_details["author"],
-                accession_number=book_details["accession_number"],
-                call_number=book_details["call_number"],
-                publisher=book_details["publisher"],
-                place_of_publication=book_details["place_of_publication"],
-                isbn=book_details["isbn"],
-                vendor=book_details["vendor"],
-                bill_number=book_details["bill_number"],
-                amount=book_details["price"],
-                language="English",
-            )
-            db.session.add(entity)
-            db.session.commit()
-
-
 @app.route("/create_db")
 def create_db():
     create_database()
@@ -509,7 +441,7 @@ users = [6, 7, 8, 10, 11, 12, 2]
 
 @app.route("/populate_borrowed_books")
 def pop_books():
-    for book in book_ids:
+    for _ in book_ids:
         user = User.query.filter_by(id=choice(users)).first()
         b = Entity.query.filter_by(accession_number="4000").first()
 
