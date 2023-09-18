@@ -13,6 +13,7 @@ from shelfmaster.admin_forms import (
     AddUserForm,
     CatalogForm,
     ReportsForm,
+    FineReceivedForm,
 )
 from shelfmaster.models import (
     User,
@@ -105,6 +106,8 @@ def return_():
                 due_date=b.due_date,
                 date_returned=current_dt,
                 days_late=dif,
+                fine_amount=dif * 10,
+                amount_currently_due=dif * 10,
             )
             former_borrower = b.user
             b.is_borrowed = False
@@ -115,7 +118,7 @@ def return_():
                 db.session.commit()
 
                 flash(  # TODO update this fine message to show fine value according to fine db
-                    f"{former_borrower.name} must pay a fine of Rs. {dif * 10}. The book was returned {dif} days late.",
+                    f"{former_borrower.name} must pay a fine of Rs. {fine.amount_currently_due}. The book was returned {dif} days late.",
                     "alert",
                 )
         db.session.commit()
@@ -466,3 +469,40 @@ def over():
         db.session.commit()
 
     return redirect(url_for("view_books"))
+
+
+@app.route("/fine_received", methods=["GET", "POST"])
+def fine_received():
+    form = FineReceivedForm()
+
+    if request.method == "GET":
+        usn = request.args.get("usn")
+
+        if usn is not None:
+            form.payer.data = usn
+
+    if form.validate_on_submit():
+        user = User.query.filter_by(username=form.payer.data).first()
+        fine = FinesLog.query.filter_by(is_paid=False, user=user).first()
+
+        if fine.amount_currently_due == int(form.amount.data):
+            fine.is_paid = True
+            fine.amount_currently_due = 0
+            flash(f"Fine paid by {user.name} marked as paid.")
+
+        elif fine.amount_currently_due < int(form.amount.data):
+            fine.is_paid = True
+            fine.amount_currently_due = 0
+            flash("Excess amount paid")
+
+        elif fine.amount_currently_due > int(form.amount.data):
+            flash(
+                f"{fine.amount_currently_due - form.amount.data} Rs outstanding payment left. Payment marked as partially done"
+            )
+            fine.amount_currently_due = fine.amount_currently_due - int(
+                form.amount.data
+            )
+
+        db.session.commit()
+        return redirect(url_for("view_fine_log"))
+    return render_template("got_fine.html", form=form, title="Fine Slip")

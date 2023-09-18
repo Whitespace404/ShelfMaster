@@ -11,18 +11,43 @@
         <th>Late book</th>
         <th>Due Date</th>
         <th>Date returned</th>
+        <th>Days late</th>
         <th>Amount due</th>
+        <th>Is Paid?</th>
       </tr>
       {% for log in logs %}
-        <tr class="clickable-row" onclick="window.location='{{ url_for('view_entity', ac_number = log.entity.accession_number) }}'">
+        {% if log.is_paid %}
+        <tr class="borrowed-row">
+        {% else %}
+        <tr class="overdue-row" >
+        {% endif %}
           <td>{{ log.id }}</td>
           <td>{{ log.user.name }}</td>
-          <td>{{ log.entity.title }} by {{ log.entity.author }}</td>
+          <td>
+            <a href="{{ url_for('view_entity', ac_number = log.entity.accession_number) }}">{{ log.entity.title }} by {{ log.entity.author }}</a>
+          </td>
           {% set ddate = log.due_date %}
           {% set duedate = log.date_returned %}
           <td>{{ ddate.strftime('%d/%m/%Y') }}</td>
           <td>{{ duedate.strftime('%d/%m/%Y') }}</td>
-          <td>{{ log.days_late * 10 }} Rs.</td>
+          <td>{{ log.days_late }} days late</td>
+          {% if log.is_paid %}
+          <td>
+            {{ log.fine_amount }} Rs.
+          </td>
+          {% else %}
+          <td>
+            {{ log.amount_currently_due }} Rs.
+          </td>
+          {% endif %}
+          
+          {% if not log.is_paid %}
+          
+          <td><a href="{{ url_for('fine_received', usn=log.user.username) }}">Due</a></td>          
+          {% else %}
+          <td>Paid</td>    
+          {% endif %}
+
         </tr>
       {% endfor %}
     </table>

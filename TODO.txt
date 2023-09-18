@@ -2,10 +2,8 @@ reading log
 
 add column borrowed_time in entity table
 when book returned show rack and shelf number
-lookup book and find rack and shelf number
 
 Make acc. number be created using multiple dropdowns
-Generate fine slip for library late return
 
 Generate graphs to show library usage :0
 
@@ -17,14 +15,13 @@ average number of reads taken to complete
 for user stats show number of books read, number of late returns, 
 average days taken to return 
 
-view fines route where you can see all the fines paid 
 reading log is for returns, transaction log is for borrows
 
 reports
 - USER PAYING MOST FINES
 - CLASS PAYING MOST FINESs
 
-create borrow() helper function to be DRY compliant
 check if user is allowed to borrow the book using accession_number before borrowing
 
 account for holidays when counting fines
+check for book condition when returned, fine if not perfect

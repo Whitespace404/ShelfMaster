@@ -81,3 +81,11 @@ class ReportsForm(FlaskForm):
 
     report_type = SelectField("Report type", choices=options)
     submit = SubmitField("Generate reports")
+
+
+class FineReceivedForm(FlaskForm):
+    payer = StringField(
+        "Paid by (USN)"
+    )  # TODO make this a dropdown of outstanding fine users
+    amount = IntegerField("Amount received")
+    submit = SubmitField("Confirm")

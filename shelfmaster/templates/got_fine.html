@@ -1,0 +1,39 @@
+{% extends 'base.html' %}
+
+{% block content %}
+  <form action="" method="POST" class="styled-form">
+    <fieldset>
+      <legend>Fine Received</legend>
+      {{ form.hidden_tag() }}
+
+      {{ form.payer.label }}
+      {% if form.payer.errors %}
+        {{ form.payer(autocomplete = 'off') }}
+
+        {% for error in form.payer.errors %}
+          {% for line in error.split('-linebreak-') %}
+            <span class="form-error">{{ line }}</span>
+          {% endfor %}
+        {% endfor %}
+      {% else %}
+        {{ form.payer(autocomplete = 'off') }}
+      {% endif %}
+      <br />
+
+      {{ form.amount.label }}
+      {% if form.amount.errors %}
+        {{ form.amount(autocomplete = 'off') }}
+
+        {% for error in form.amount.errors %}
+          {% for line in error.split('-linebreak-') %}
+            <span class="form-error">{{ line }}</span>
+          {% endfor %}
+        {% endfor %}
+      {% else %}
+        {{ form.amount(autocomplete = 'off') }}
+      {% endif %}
+      <br />
+      <div class="submit-btn">{{ form.submit }}</div>
+    </fieldset>
+  </form>
+{% endblock %}

@@ -14,6 +14,7 @@ class User(db.Model):
 
     borrowed_entities = relationship("Entity", backref="user", lazy=True)
     transaction = relationship("TransactionLog", backref="user", lazy=True)
+    fines = relationship("FinesLog", backref="user", lazy=True)
 
     def __repr__(self):
         return f"ID: {str(self.id)}; {self.username}"
@@ -100,6 +101,7 @@ class Entity(db.Model):
     date_added = sa.Column(sa.DateTime, default=datetime.now)
     user_id = sa.Column(sa.Integer, sa.ForeignKey("user.id"))
     transaction = relationship("TransactionLog", backref="entity", lazy=True)
+    fines = relationship("FinesLog", backref="entity", lazy=True)
 
     def __repr__(self):
         return f"{self.accession_number}"
@@ -116,8 +118,13 @@ class FinesLog(db.Model):
     user_id = sa.Column(sa.Integer, sa.ForeignKey("user.id"))
     entity_id = sa.Column(sa.Integer, sa.ForeignKey("entity.id"))
 
+    borrowed_date = sa.Column(
+        sa.DateTime
+    )  # this just exists right now, not being used yet. will always be None
     due_date = sa.Column(sa.DateTime)
     date_returned = sa.Column(sa.DateTime)
 
     is_paid = sa.Column(sa.Boolean, default=False)
     days_late = sa.Column(sa.Integer)
+    fine_amount = sa.Column(sa.Integer)
+    amount_currently_due = sa.Column(sa.Integer)
