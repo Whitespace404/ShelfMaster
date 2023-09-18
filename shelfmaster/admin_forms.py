@@ -7,7 +7,7 @@ from wtforms import (
     SelectField,
     TextAreaField,
 )
-from wtforms.validators import DataRequired, Length, Regexp
+from wtforms.validators import DataRequired, Length
 
 
 class AddAdminsForm(FlaskForm):

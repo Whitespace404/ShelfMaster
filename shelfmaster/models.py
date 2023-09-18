@@ -1,3 +1,8 @@
+import sqlalchemy as sa
+from sqlalchemy.orm import relationship
+from flask_login import UserMixin
+from datetime import datetime, timedelta
+from shelfmaster import db, login_manager
 
 
 class User(db.Model):
@@ -103,3 +108,16 @@ class Entity(db.Model):
 @login_manager.user_loader
 def load_user(user_id):
     return Admin.query.get(int(user_id))
+
+
+class FinesLog(db.Model):
+    id = sa.Column(sa.Integer, primary_key=True, unique=True)
+
+    user_id = sa.Column(sa.Integer, sa.ForeignKey("user.id"))
+    entity_id = sa.Column(sa.Integer, sa.ForeignKey("entity.id"))
+
+    due_date = sa.Column(sa.DateTime)
+    date_returned = sa.Column(sa.DateTime)
+
+    is_paid = sa.Column(sa.Boolean, default=False)
+    days_late = sa.Column(sa.Integer)

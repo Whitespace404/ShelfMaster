@@ -9,12 +9,13 @@
     font-family: Quicksand;
     font-size: 36px;
     font-weight: 800;
+
+    /* outline: 3px solid limegreen !important; */
 }
 
 *::selection {
     background-color: var(--school-color);
 }
-
 
 h1 {
     font-size: 50px;
@@ -104,13 +105,12 @@ legend {
     margin-top: 20px;
     font-size: 25px;
     transition: 0.3s;
-    box-shadow: 0 5px 3px 0 rgba(0, 0, 0, 0.24), 0 5px 6px 0 rgba(0, 0, 0, 0.19);
-
 }
 
 #submit:hover {
-    transform: scale(1.03);
-    box-shadow: 0 8px 5px 0 rgba(0, 0, 0, 0.24), 0 8px 8px 0 rgba(0, 0, 0, 0.19);
+    filter: brightness(94%);
+    box-shadow: 0 5px 3px 0 rgba(0, 0, 0, 0.24), 0 5px 6px 0 rgba(0, 0, 0, 0.19);
+
 }
 
 #submit:active {
@@ -143,14 +143,6 @@ form {
     border-width: 8px;
     border-style: solid;
     background: transparent;
-}
-
-.styled-form>fieldset>input:focus {
-    transform: scaleX(1.04);
-    font-size: 34px;
-    border-image: linear-gradient(90deg, rgba(63, 94, 251, 1) 0%, rgba(252, 70, 107, 1) 100%) 30;
-    border-width: 8px;
-    border-style: solid;
 }
 
 fieldset {
@@ -288,7 +280,6 @@ td>a {
     border: 2px solid white;
     padding: 10px;
     width: 300px;
-    box-shadow: 0 3px 10px rgb(0 0 0 / 0.2);
     display: flex;
     flex-direction: column;
     text-align: center;
