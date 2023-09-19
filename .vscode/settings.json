@@ -1,6 +1,7 @@
 {
     "workbench.colorCustomizations": {
         "editorCursor.foreground": "#ffbb00",
+        // "editorError.foreground": "#ffffff00",
         "terminal.selectionBackground": "#94731abf"
     },
     "files.exclude": {

@@ -5,7 +5,7 @@ dist/
 env/
 bin.txt
 *.spec
-# .vscode/
+.vscode/
 *.xlsx
 instance/main.db
 instance/

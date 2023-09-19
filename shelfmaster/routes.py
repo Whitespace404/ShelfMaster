@@ -28,6 +28,7 @@ from shelfmaster.utilities import (
     find_dif,
     borrow_book,
     create_database,
+    find_bus_days,
 )
 
 
@@ -67,7 +68,7 @@ def borrow():
             borrow_book(u, entity)
             flash(f"{entity.type} borrowed successfully.")
             return redirect(url_for("home"))
-        elif (u.borrowed_entities) == 0:
+        elif len(u.borrowed_entities) == 0:
             borrow_book(u, entity)
             flash(
                 f"{entity.type} borrowed successfully. Please return it before {entity.due_date.strftime('%d/%m/%y')}"
@@ -94,31 +95,37 @@ def return_():
             return render_template("return.html", form=form, title="Return a Book")
 
         current_dt = datetime.now()
-        if not (dif := find_dif(current_dt, b.due_date)):
+        if not (dif := find_dif(current_dt, b.due_date)):  # TODO make this if not late
             former_borrower = b.user
             b.is_borrowed = False
             b.user = None
+            b.due_date = None
+            b.borrowed_date = None
             flash(f"Book borrowed by {former_borrower.name} was returned successfully.")
         else:
+            days_late = find_bus_days(b.borrowed_date, current_dt)
+            fine_amount = days_late * 10
             fine = FinesLog(
                 user=b.user,
                 entity=b,
                 due_date=b.due_date,
                 date_returned=current_dt,
-                days_late=dif,
-                fine_amount=dif * 10,
-                amount_currently_due=dif * 10,
+                days_late=days_late,
+                fine_amount=fine_amount,
+                amount_currently_due=fine_amount,
             )
             former_borrower = b.user
             b.is_borrowed = False
             b.user = None
+            b.due_date = None
+            b.borrowed_date = None
             flash(f"Book borrowed by {former_borrower.name} was returned successfully.")
             if not former_borrower.is_teacher:
                 db.session.add(fine)
                 db.session.commit()
 
                 flash(  # TODO update this fine message to show fine value according to fine db
-                    f"{former_borrower.name} must pay a fine of Rs. {fine.amount_currently_due}. The book was returned {dif} days late.",
+                    f"{former_borrower.name} must pay a fine of Rs. {fine.amount_currently_due}. The book was returned {days_late} days late.",
                     "alert",
                 )
         db.session.commit()
@@ -199,6 +206,7 @@ def view_admin_log():
 
 
 @app.route("/view_fine_log")
+@login_required
 def view_fine_log():
     logs = FinesLog.query.filter_by().all()
     return render_template("view_fine_log.html", logs=logs, title="Fine Logs")
@@ -226,6 +234,7 @@ def view_books():
 
 
 @app.route("/view_transactions")
+@login_required
 def view_transactions():
     transactions = TransactionLog.query.filter_by().all()
     return render_template(
@@ -311,6 +320,7 @@ def create_db():
 
 
 @app.route("/reports", methods=["GET", "POST"])
+@login_required
 def reports():
     form = ReportsForm()
 
@@ -461,7 +471,8 @@ def over():
         u = User.query.filter_by().first()
         entity.user = u
         entity.is_borrowed = True
-        early_date = datetime.now() - timedelta(days=3)
+        entity.borrowed_date = datetime.now()
+        early_date = datetime.now() - timedelta(days=5)
         entity.due_date = early_date
 
         t = TransactionLog(user=u, entity=entity, due_date=early_date)
@@ -472,6 +483,7 @@ def over():
 
 
 @app.route("/fine_received", methods=["GET", "POST"])
+@login_required
 def fine_received():
     form = FineReceivedForm()
 

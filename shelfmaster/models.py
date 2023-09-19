@@ -97,6 +97,7 @@ class Entity(db.Model):
     remarks = sa.Column(sa.String(120))
     language = sa.Column(sa.String(32))
     is_borrowed = sa.Column(sa.Boolean, default=False)
+    borrowed_date = sa.Column(sa.DateTime)
     due_date = sa.Column(sa.DateTime)
     date_added = sa.Column(sa.DateTime, default=datetime.now)
     user_id = sa.Column(sa.Integer, sa.ForeignKey("user.id"))

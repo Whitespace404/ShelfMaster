@@ -1,4 +1,4 @@
-from datetime import datetime
+from datetime import datetime, timedelta
 from functools import wraps
 
 import openpyxl
@@ -20,6 +20,30 @@ def super_admin_required(func):
     return decorated_view
 
 
+HOLIDAYS = [datetime(2023, 9, 18)]
+
+
+def is_weekend(day):
+    return day.weekday() >= 5
+
+
+def business_days_count(start_date, end_date, holidays):
+    days_count = 0
+    current_date = start_date
+
+    while current_date <= end_date:
+        if not is_weekend(current_date) and current_date not in holidays:
+            days_count += 1
+        current_date += timedelta(days=1)
+
+    return days_count
+
+
+def find_bus_days(datetime1, datetime2):
+    bdays = business_days_count(datetime1, datetime2, HOLIDAYS)
+    return bdays
+
+
 def find_dif(datetime1, datetime2):
     if datetime2 is None:
         return False
@@ -36,7 +60,8 @@ def borrow_book(user, entity):
 
     entity.user = user
     entity.is_borrowed = True
-    entity.due_date = datetime.now()
+    entity.borrowed_date = datetime.now()
+    entity.due_date = datetime.now() + timedelta(7)
 
     log = TransactionLog(user=user, entity=entity)
     db.session.add(entity)
