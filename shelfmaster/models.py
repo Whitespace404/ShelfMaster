@@ -129,3 +129,8 @@ class FinesLog(db.Model):
     days_late = sa.Column(sa.Integer)
     fine_amount = sa.Column(sa.Integer)
     amount_currently_due = sa.Column(sa.Integer)
+
+
+class Holidays(db.Model):
+    id = sa.Column(sa.Integer, primary_key=True, unique=True)
+    holiday = sa.Column(sa.DateTime)
