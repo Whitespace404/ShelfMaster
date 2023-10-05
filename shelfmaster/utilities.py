@@ -6,7 +6,7 @@ from flask import flash, redirect, url_for
 from flask_login import current_user
 
 from shelfmaster import db, app
-from shelfmaster.models import TransactionLog, Admin, User, Entity
+from shelfmaster.models import TransactionLog, Admin, User, Entity, Holidays
 
 
 def super_admin_required(func):
@@ -20,7 +20,6 @@ def super_admin_required(func):
     return decorated_view
 
 
-HOLIDAYS = [datetime(2023, 9, 18)]
 
 
 def is_weekend(day):
@@ -40,6 +39,7 @@ def business_days_count(start_date, end_date, holidays):
 
 
 def find_bus_days(datetime1, datetime2):
+    HOLIDAYS = [datetime(2023,9,18)]
     bdays = business_days_count(datetime1, datetime2, HOLIDAYS)
     return bdays
 

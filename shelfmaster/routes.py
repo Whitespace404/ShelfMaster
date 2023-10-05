@@ -14,6 +14,7 @@ from shelfmaster.admin_forms import (
     CatalogForm,
     ReportsForm,
     FineReceivedForm,
+    AddHolidayForm,
 )
 from shelfmaster.models import (
     User,
@@ -22,6 +23,7 @@ from shelfmaster.models import (
     TransactionLog,
     AdminActionsLog,
     FinesLog,
+    Holidays
 )
 from shelfmaster.utilities import (
     super_admin_required,
@@ -347,12 +349,6 @@ def reports():
                     "book_report.html", rep=most_read_books, title="Reports"
                 )
         elif form.report_type.data == "readers":
-            # SELECT users.*, COUNT(transaction_log.id) AS borrow_count
-            # FROM users
-            # LEFT JOIN transaction_log ON users.id = transaction_log.user_id
-            # GROUP BY users.id
-            # ORDER BY borrow_count DESC;
-
             most_avid_readers = (
                 db.session.query(
                     User, func.count(TransactionLog.id).label("borrow_count")
@@ -472,7 +468,7 @@ def over():
         entity.user = u
         entity.is_borrowed = True
         entity.borrowed_date = datetime.now()
-        early_date = datetime.now() - timedelta(days=5)
+        early_date = datetime.now() - timedelta(days=10)
         entity.due_date = early_date
 
         t = TransactionLog(user=u, entity=entity, due_date=early_date)
@@ -518,3 +514,21 @@ def fine_received():
         db.session.commit()
         return redirect(url_for("view_fine_log"))
     return render_template("got_fine.html", form=form, title="Fine Slip")
+
+
+@app.route("/add_holiday", methods=["GET", "POST"])
+def add_holiday():
+    form = AddHolidayForm()
+    if form.validate_on_submit():
+        h = Holidays.query.filter_by(holiday=form.date.data).first()
+        print(h)
+        if h is None: # TODO this doesnt work, duplicate holidays can be added - fix that
+            holiday = Holidays(holiday=form.date.data)
+            db.session.add(holiday)
+            db.session.commit()
+            flash(f"Holiday added for date {form.date.data}")
+        else:
+            flash(f"{form.date.data} is already a holiday ")
+        return redirect(url_for("home"))
+    return render_template("add_holiday.html", form=form)
+

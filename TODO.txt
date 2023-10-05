@@ -25,3 +25,5 @@ check if user is allowed to borrow the book using accession_number before borrow
 
 account for holidays when counting fines
 check for book condition when returned, fine if not perfect
+
+if one user has multiple fines, let them pay off multiple fines at the same time

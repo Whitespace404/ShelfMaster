@@ -5,6 +5,7 @@ from wtforms import (
     PasswordField,
     IntegerField,
     SelectField,
+    DateField,
     TextAreaField,
 )
 from wtforms.validators import DataRequired, Length
@@ -89,3 +90,10 @@ class FineReceivedForm(FlaskForm):
     )  # TODO make this a dropdown of outstanding fine users
     amount = IntegerField("Amount received")
     submit = SubmitField("Confirm")
+
+
+class AddHolidayForm(FlaskForm):
+    date = DateField("Holiday")
+    submit = SubmitField("Add Holiday")
+
+
