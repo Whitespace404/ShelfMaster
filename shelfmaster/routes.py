@@ -349,12 +349,6 @@ def reports():
                     "book_report.html", rep=most_read_books, title="Reports"
                 )
         elif form.report_type.data == "readers":
-            # SELECT users.*, COUNT(transaction_log.id) AS borrow_count
-            # FROM users
-            # LEFT JOIN transaction_log ON users.id = transaction_log.user_id
-            # GROUP BY users.id
-            # ORDER BY borrow_count DESC;
-
             most_avid_readers = (
                 db.session.query(
                     User, func.count(TransactionLog.id).label("borrow_count")
