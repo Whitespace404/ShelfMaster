@@ -27,3 +27,6 @@ account for holidays when counting fines
 check for book condition when returned, fine if not perfect
 
 if one user has multiple fines, let them pay off multiple fines at the same time
+
+add fine for damaged book, etc during confirm_return
+librarian should be able to manually waive fines

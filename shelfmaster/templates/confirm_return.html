@@ -1,0 +1,68 @@
+{% extends 'base.html' %}
+
+{% block content %}
+  <link rel="stylesheet" href="{{ url_for('static', filename = 'styles/style.css') }}" />
+  <div class="container" style="max-width: 68vw;">
+    <h1 class="details-title">Invoice</h1>
+
+    <div class="book-details">
+      <div class="row">
+        <div class="book-detail">
+          <h3>Book borrowed</h3>
+          <p>{{ book.title }}</p>
+        </div>
+        <div class="book-detail">
+          <h3>Author</h3>
+          <p>{{ book.author }}</p>
+        </div>
+      </div>
+      <div class="row">
+        <div class="book-detail">
+          <h3>Borrowed by</h3>
+          <p>{{ book.user.name }}</p>
+        </div>
+        <div class="book-detail">
+          <h3>Borrower USN</h3>
+          <p>{{ book.user.username }}</p>
+        </div>
+        <div class="book-detail">
+          <h3>Due date</h3>
+          <p>{{ book.due_date.strftime('%d/%m/%Y') }}</p>
+        </div>
+
+        <div class="book-detail">
+          <h3>Borrowed date</h3>
+          <p>{{ borrowed_time[- 1].borrowed_time.strftime('%d/%m/%Y') }}</p>
+        </div>
+      </div>
+    </div>
+
+    {% if fine_needed %}
+      <div class="row">
+        <div class="book-detail">
+          <h3>Days overdue</h3>
+          <p>{{ fine_details['days_late'] }}</p>
+        </div>
+        <div class="book-detail">
+          <h3>Fine amount</h3>
+          <p>{{ fine_details['amount'] }} &#8377;</p>
+        </div>
+      </div>
+    {% else %}
+      <h1 style="margin: 15px; color: green;">No fines to be paid.</h1>
+    {% endif %}
+
+    <form action="" method="POST">
+      {{ form.hidden_tag() }}
+      {{ form.librarian_remarks.label(class = 'return-remarks-label') }}
+      {{ form.librarian_remarks(autocomplete = 'off', class = 'return-remarks') }}
+
+      <div class="btn-platter">
+        <div>{{ form.submit(class = 'form-btn') }}</div>
+        <div>
+          <button class="form-btn print" onclick="window.print()">Print Invoice</button>
+        </div>
+      </div>
+    </form>
+  </div>
+{% endblock %}

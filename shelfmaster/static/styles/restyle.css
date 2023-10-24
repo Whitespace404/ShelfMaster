@@ -21,6 +21,15 @@
     padding: 2%;
 }
 
+.hero>h1 {
+    font-size: 6rem;
+    text-decoration: underline;
+}
+
+.hero>h2 {
+    font-size: 4rem;
+}
+
 .hero>h1,
 .hero>h2 {
     font-family: 'SF Pro Display';
@@ -146,14 +155,18 @@ td>a {
     align-items: center;
 }
 
-
 .borrowed-row {
     background: green;
+    color: white;
 }
 
 .overdue-row {
     background: red;
     color: white;
+}
+
+tr>td>a {
+    color: inherit;
 }
 
 .clickable-row:hover {
@@ -168,13 +181,15 @@ td>a {
 }
 
 .stat {
-    outline: 5px solid limegreen;
     width: 300px;
+    border: 5px solid rgb(90, 87, 87);
+    border-radius: 14px;
+    box-shadow: 0 5px 3px 0 rgba(0, 0, 0, 0.24), 0 5px 6px 0 rgba(0, 0, 0, 0.19);
 }
 
 .stat>h1 {
     padding: 50px;
-    font-size: 55px;
+    font-size: 65px;
     font-family: 'Special Elite';
     font-weight: 800;
 }
@@ -184,8 +199,47 @@ td>a {
     padding: 10px;
     font-family: Quicksand;
     font-weight: bolder;
+    margin-bottom: 30px;
 }
 
 form {
     font-size: 24px;
+}
+
+.details-title {
+    margin: 20px;
+}
+
+.return-remarks {
+    display: block;
+    font-size: 20px;
+    width: 97%;
+    padding: 10px;
+    background: #f9f9f9;
+    border: 1px solid #ccc;
+}
+
+.return-remarks-label {
+    font-weight: 800;
+    padding: 10px;
+    display: block;
+    background: #f9f9f9;
+    border: 1px solid #ccc;
+    border-radius: 10px;
+}
+
+.btn-platter {
+    display: flex;
+    justify-content: space-around;
+    margin-top: 30px;
+}
+
+.form-btn {
+    padding: 10px 30px;
+    font-size: 20px;
+    border-radius: 10px;
+}
+
+.form-btn:hover {
+    text-decoration: underline;
 }

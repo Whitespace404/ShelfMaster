@@ -31,6 +31,7 @@ from shelfmaster.utilities import (
     borrow_book,
     create_database,
     find_bus_days,
+    calculate_overdue_days,
 )
 
 
@@ -84,6 +85,7 @@ def borrow():
 
 
 @app.route("/return", methods=["GET", "POST"])
+@login_required
 def return_():
     form = ReturnForm()
 
@@ -96,52 +98,68 @@ def return_():
             form.book_id.errors.append("That book is not borrowed.")
             return render_template("return.html", form=form, title="Return a Book")
 
-        return redirect(url_for("confirm_return"), book=b)
+        return redirect(url_for("confirm_return", accession_number=b.accession_number))
 
     return render_template("return.html", form=form, title="Return a Book")
 
 
-@app.route("/confirm_return", methods=["GET", "POST"])
+@app.route("/confirm_return/<accession_number>", methods=["GET", "POST"])
 def confirm_return(accession_number):
-    b = Entity.query.filter_by(accession_number=form.book_id.data).first()
+    # TODO sanitize b here since this route can be accessed without redirect.
     form = ConfirmReturnForm()
+    b = Entity.query.filter_by(accession_number=accession_number).first()
+    is_fine_needed = None
     current_dt = datetime.now()
 
-    if not (dif := find_dif(current_dt, b.due_date)):  # TODO make this if not late
-        former_borrower = b.user
-        b.is_borrowed = False
-        b.user = None
-        b.due_date = None
-        b.borrowed_date = None
-        flash(f"Book borrowed by {former_borrower.name} was returned successfully.")
-    else:
-        days_late = find_bus_days(b.borrowed_date, current_dt)
-        fine_amount = days_late * 10
-        fine = FinesLog(
-            user=b.user,
-            entity=b,
-            due_date=b.due_date,
-            date_returned=current_dt,
-            days_late=days_late,
-            fine_amount=fine_amount,
-            amount_currently_due=fine_amount,
-        )
-        former_borrower = b.user
-        b.is_borrowed = False
-        b.user = None
-        b.due_date = None
-        b.borrowed_date = None
-        flash(f"Book borrowed by {former_borrower.name} was returned successfully.")
-        if not former_borrower.is_teacher:
-            db.session.add(fine)
-            db.session.commit()
+    overdue_days = calculate_overdue_days(current_dt, b.due_date)
 
-            flash(  # TODO update this fine message to show fine value according to fine db
-                f"{former_borrower.name} must pay a fine of Rs. {fine.amount_currently_due}. The book was returned {days_late} days late.",
-                "alert",
+    if overdue_days is None:  # then that means it was returned before time
+        is_fine_needed = False
+    else:  # that means there has to be a fine imposed
+        # that is only if it is a student (teachers can borrow without a due date)
+        # maybe TODO use ^^ to modify overdue function, can prevent this if condition
+        if not b.user.is_teacher:
+            is_fine_needed = True
+
+    borrowed_time = TransactionLog.query.filter_by(entity_id=b.id).all()
+    fine_details = {}
+
+    if is_fine_needed:
+        fine_details = {"days_late": overdue_days, "amount": overdue_days * 10}
+
+    if form.validate_on_submit():
+        if is_fine_needed:
+            fine_amount = overdue_days * 10
+            fine = FinesLog(
+                user=b.user,
+                entity=b,
+                due_date=b.due_date,
+                date_returned=current_dt,
+                days_late=overdue_days,
+                fine_amount=fine_amount,
+                amount_currently_due=fine_amount,
             )
-    db.session.commit()
-    return redirect(url_for("home"))
+            db.session.add(fine)
+        # return the book, with remarks. must have to make checkout_log work for remarks.
+        b.is_borrowed = False
+        b.user = None
+        b.due_date = None
+        b.borrowed_date = None
+
+        db.session.commit()
+
+        flash(f"Book was returned successfully.")
+        return redirect(url_for("home"))
+
+    return render_template(
+        "confirm_return.html",
+        book=b,
+        fine_details=fine_details,
+        form=form,
+        current_date=current_dt,
+        borrowed_time=borrowed_time,
+        fine_needed=is_fine_needed,
+    )
 
 
 @app.route("/add_admin", methods=["GET", "POST"])
@@ -408,7 +426,7 @@ def catalog():
             )
         else:
             flash("No results found")
-    return render_template("catalog.html", form=form)
+    return render_template("catalog.html", form=form, title="Search")
 
 
 @app.route("/view_entity/<ac_number>")

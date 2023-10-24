@@ -20,6 +20,12 @@ def super_admin_required(func):
     return decorated_view
 
 
+"""
+is_overdue(datetime2, datetime1)
+
+return number of days book is overdue by
+if its not overdue return None
+"""
 
 
 def is_weekend(day):
@@ -39,7 +45,7 @@ def business_days_count(start_date, end_date, holidays):
 
 
 def find_bus_days(datetime1, datetime2):
-    HOLIDAYS = [datetime(2023,9,18)]
+    HOLIDAYS = [datetime(2023, 9, 18)]
     bdays = business_days_count(datetime1, datetime2, HOLIDAYS)
     return bdays
 
@@ -52,6 +58,14 @@ def find_dif(datetime1, datetime2):
         return time_dif.days
     else:
         return False
+
+
+def calculate_overdue_days(returned_date, deadline):
+    if returned_date < deadline:
+        return None
+    else:
+        bus_days_overdue = find_bus_days(deadline, returned_date)
+        return bus_days_overdue
 
 
 def borrow_book(user, entity):
