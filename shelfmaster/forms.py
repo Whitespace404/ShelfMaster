@@ -1,5 +1,5 @@
 from flask_wtf import FlaskForm
-from wtforms import StringField, SubmitField, PasswordField, SelectField
+from wtforms import StringField, SubmitField, PasswordField, SelectField, TextAreaField
 from wtforms.validators import DataRequired
 from shelfmaster.models import Admin
 from shelfmaster import app
@@ -27,4 +27,9 @@ class BorrowForm(FlaskForm):
 
 class ReturnForm(FlaskForm):
     book_id = StringField("Accession Number", validators=[DataRequired()])
+    submit = SubmitField("Return")
+
+
+class ConfirmReturnForm(FlaskForm):
+    librarian_remarks = TextAreaField("Remarks")
     submit = SubmitField("Return")

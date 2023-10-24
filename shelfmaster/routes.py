@@ -6,7 +6,7 @@ from flask_login import current_user, login_required, login_user, logout_user
 from sqlalchemy import func
 
 from shelfmaster import db, app
-from shelfmaster.forms import LoginForm, BorrowForm, ReturnForm
+from shelfmaster.forms import LoginForm, BorrowForm, ReturnForm, ConfirmReturnForm
 from shelfmaster.admin_forms import (
     AddAdminsForm,
     AddBookForm,
@@ -23,7 +23,7 @@ from shelfmaster.models import (
     TransactionLog,
     AdminActionsLog,
     FinesLog,
-    Holidays
+    Holidays,
 )
 from shelfmaster.utilities import (
     super_admin_required,
@@ -96,43 +96,52 @@ def return_():
             form.book_id.errors.append("That book is not borrowed.")
             return render_template("return.html", form=form, title="Return a Book")
 
-        current_dt = datetime.now()
-        if not (dif := find_dif(current_dt, b.due_date)):  # TODO make this if not late
-            former_borrower = b.user
-            b.is_borrowed = False
-            b.user = None
-            b.due_date = None
-            b.borrowed_date = None
-            flash(f"Book borrowed by {former_borrower.name} was returned successfully.")
-        else:
-            days_late = find_bus_days(b.borrowed_date, current_dt)
-            fine_amount = days_late * 10
-            fine = FinesLog(
-                user=b.user,
-                entity=b,
-                due_date=b.due_date,
-                date_returned=current_dt,
-                days_late=days_late,
-                fine_amount=fine_amount,
-                amount_currently_due=fine_amount,
-            )
-            former_borrower = b.user
-            b.is_borrowed = False
-            b.user = None
-            b.due_date = None
-            b.borrowed_date = None
-            flash(f"Book borrowed by {former_borrower.name} was returned successfully.")
-            if not former_borrower.is_teacher:
-                db.session.add(fine)
-                db.session.commit()
+        return redirect(url_for("confirm_return"), book=b)
 
-                flash(  # TODO update this fine message to show fine value according to fine db
-                    f"{former_borrower.name} must pay a fine of Rs. {fine.amount_currently_due}. The book was returned {days_late} days late.",
-                    "alert",
-                )
-        db.session.commit()
-        return redirect(url_for("home"))
     return render_template("return.html", form=form, title="Return a Book")
+
+
+@app.route("/confirm_return", methods=["GET", "POST"])
+def confirm_return(accession_number):
+    b = Entity.query.filter_by(accession_number=form.book_id.data).first()
+    form = ConfirmReturnForm()
+    current_dt = datetime.now()
+
+    if not (dif := find_dif(current_dt, b.due_date)):  # TODO make this if not late
+        former_borrower = b.user
+        b.is_borrowed = False
+        b.user = None
+        b.due_date = None
+        b.borrowed_date = None
+        flash(f"Book borrowed by {former_borrower.name} was returned successfully.")
+    else:
+        days_late = find_bus_days(b.borrowed_date, current_dt)
+        fine_amount = days_late * 10
+        fine = FinesLog(
+            user=b.user,
+            entity=b,
+            due_date=b.due_date,
+            date_returned=current_dt,
+            days_late=days_late,
+            fine_amount=fine_amount,
+            amount_currently_due=fine_amount,
+        )
+        former_borrower = b.user
+        b.is_borrowed = False
+        b.user = None
+        b.due_date = None
+        b.borrowed_date = None
+        flash(f"Book borrowed by {former_borrower.name} was returned successfully.")
+        if not former_borrower.is_teacher:
+            db.session.add(fine)
+            db.session.commit()
+
+            flash(  # TODO update this fine message to show fine value according to fine db
+                f"{former_borrower.name} must pay a fine of Rs. {fine.amount_currently_due}. The book was returned {days_late} days late.",
+                "alert",
+            )
+    db.session.commit()
+    return redirect(url_for("home"))
 
 
 @app.route("/add_admin", methods=["GET", "POST"])
@@ -522,7 +531,9 @@ def add_holiday():
     if form.validate_on_submit():
         h = Holidays.query.filter_by(holiday=form.date.data).first()
         print(h)
-        if h is None: # TODO this doesnt work, duplicate holidays can be added - fix that
+        if (
+            h is None
+        ):  # TODO this doesnt work, duplicate holidays can be added - fix that
             holiday = Holidays(holiday=form.date.data)
             db.session.add(holiday)
             db.session.commit()
@@ -531,4 +542,3 @@ def add_holiday():
             flash(f"{form.date.data} is already a holiday ")
         return redirect(url_for("home"))
     return render_template("add_holiday.html", form=form)
-

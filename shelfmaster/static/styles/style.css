@@ -81,10 +81,6 @@ h3 {
     font-weight: 900;
 }
 
-*::selection {
-    color: white;
-}
-
 #submit {
     margin-top: 0;
     padding: 2% !important;
