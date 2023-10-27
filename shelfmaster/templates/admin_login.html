@@ -6,26 +6,29 @@
       <fieldset>
         <legend>Log In</legend>
         {{ form.hidden_tag() }}
-        {{ form.username.label }}
-        {% if form.username.errors %}
-          {{ form.username(autocomplete = 'off') }}
-          {% for error in form.username.errors %}
-            <span class="form-error">{{ error }}</span>
-          {% endfor %}
-        {% else %}
-          {{ form.username(autocomplete = 'off') }}
-        {% endif %}
-        <br />
-        {{ form.password.label }}
-        {% if form.password.errors %}
-          {{ form.password(autocomplete = 'off') }}
-          {% for error in form.password.errors %}
-            <span class="form-error">{{ error }}</span>
-          {% endfor %}
-        {% else %}
-          {{ form.password(autocomplete = 'off') }}
-        {% endif %}
-        <br />
+        <div class="form-container">
+          {{ form.username.label }}
+          {% if form.username.errors %}
+            {{ form.username(autocomplete = 'off') }}
+            {% for error in form.username.errors %}
+              <span class="form-error">{{ error }}</span>
+            {% endfor %}
+          {% else %}
+            {{ form.username(autocomplete = 'off') }}
+          {% endif %}
+          <br />
+          {{ form.password.label }}
+          {% if form.password.errors %}
+            {{ form.password(autocomplete = 'off') }}
+            {% for error in form.password.errors %}
+              <span class="form-error">{{ error }}</span>
+            {% endfor %}
+          {% else %}
+            {{ form.password(autocomplete = 'off') }}
+          {% endif %}
+          <br />
+        </div>
+        
         <div class="submit-btn">{{ form.submit }}</div>
       </fieldset>
     </form>
