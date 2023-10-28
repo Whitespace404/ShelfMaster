@@ -30,3 +30,5 @@ if one user has multiple fines, let them pay off multiple fines at the same time
 
 add fine for damaged book, etc during confirm_return
 librarian should be able to manually waive fines
+
+show reports on home page
