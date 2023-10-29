@@ -284,3 +284,10 @@ form {
 .styled-form label {
     max-width: min-content;
 }
+
+@media (prefers-reduced-motion) {
+    * {
+        transition: 0;
+        animation: none;
+    }
+}
