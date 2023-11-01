@@ -291,3 +291,60 @@ form {
         animation: none;
     }
 }
+
+.admin-tools-panel>div>a {
+    display: inline-block;
+    padding: 15px;
+    font-size: 22px;
+    font-weight: 800;
+    text-align: center;
+    background-color: #090B5C;
+    border-radius: 15px;
+    transition: 0.2s ease;
+    width: 225px;
+    max-width: 220px;
+    text-decoration: none;
+    color: white;
+}
+
+.admin-tools-panel>div>a:hover {
+    text-decoration: underline;
+}
+
+.admin-tools-panel>div>a:focus-visible {
+    outline: none;
+}
+
+.admin-tools-panel {
+    text-align: left;
+    display: flex;
+    justify-content: space-between;
+    gap: 5px;
+    margin: 10px;
+    margin-top: 10px;
+}
+
+.tool {
+    border: 2px dashed silver;
+    padding: 10px;
+    width: 300px;
+    display: flex;
+    flex-direction: column;
+    text-align: center;
+    align-items: center;
+}
+
+.tool>p {
+    font-size: 20px;
+    color: black;
+    padding: 10px;
+    line-height: 1.5;
+    margin-bottom: 0;
+}
+
+.tool>svg {
+    display: block;
+    fill: var(--school-yellow);
+    margin: 30px 0px;
+    height: 30px;
+}
