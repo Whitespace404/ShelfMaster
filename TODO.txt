@@ -32,3 +32,5 @@ add fine for damaged book, etc during confirm_return
 librarian should be able to manually waive fines
 
 show reports on home page
+
+send email to parent when fine is due
