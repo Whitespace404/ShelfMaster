@@ -2,11 +2,12 @@
 
 {% block content %}
   <div class="form">
-    <form action="" method="POST" class="add-book-form">
+    <form action="" method="POST" class="styled-form">
       <fieldset>
         <legend>Add a User</legend>
         {{ form.hidden_tag() }}
 
+        <div class="form-grid">
         {{ form.username.label }}
         {% if form.username.errors %}
           {{ form.username(autocomplete = 'off') }}
@@ -17,7 +18,6 @@
         {% else %}
           {{ form.username(autocomplete = 'off') }}
         {% endif %}
-        <br />
         {{ form.name.label }}
         {% if form.name.errors %}
           {{ form.name(autocomplete = 'off') }}
@@ -28,10 +28,8 @@
         {% else %}
           {{ form.name(autocomplete = 'off') }}
         {% endif %}
-        <br />
         {{ form.is_teacher.label }}
         {{ form.is_teacher }}
-        <br />
         <div id="hide-inputs">
           {{ form.class_section.label }}
           {% if form.class_section.errors %}
@@ -44,6 +42,7 @@
             {{ form.class_section(autocomplete = 'off') }}
           {% endif %}
         </div>
+      </div>
         <div class="submit-btn">{{ form.submit }}</div>
       </fieldset>
     </form>

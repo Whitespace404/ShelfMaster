@@ -281,10 +281,6 @@ form {
     margin-bottom: 10px;
 }
 
-.styled-form label {
-    max-width: min-content;
-}
-
 @media (prefers-reduced-motion) {
     * {
         transition: 0;
@@ -347,4 +343,9 @@ form {
     fill: var(--school-yellow);
     margin: 30px 0px;
     height: 30px;
+}
+
+.form-grid {
+    display: grid;
+    
 }

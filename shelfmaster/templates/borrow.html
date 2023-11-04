@@ -6,7 +6,7 @@
       <fieldset>
         <legend>Borrow A Book</legend>
         {{ form.hidden_tag() }}
-
+        <div class="form-grid">
         {{ form.usn.label }}
         {% if form.usn.errors %}
           {{ form.usn(autocomplete = 'off') }}
@@ -19,7 +19,6 @@
         {% else %}
           {{ form.usn(autocomplete = 'off') }}
         {% endif %}
-        <br />
         {{ form.book_id.label }}
         {% if form.book_id.errors %}
           {{ form.book_id(autocomplete = 'off') }}
@@ -30,7 +29,7 @@
         {% else %}
           {{ form.book_id(autocomplete = 'off') }}
         {% endif %}
-        <br />
+        </div>
         <div class="submit-btn">{{ form.submit }}</div>
       </fieldset>
     </form>
