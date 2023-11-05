@@ -6,39 +6,38 @@
       <fieldset>
         <legend>Add an Admin</legend>
         {{ form.hidden_tag() }}
+        <div class="form-grid">
+          {{ form.username.label }}
+          {% if form.username.errors %}
+            {{ form.username(autocomplete = 'off') }}
 
-        {{ form.username.label }}
-        {% if form.username.errors %}
-          {{ form.username(autocomplete = 'off') }}
+            {% for error in form.username.errors %}
+              <span class="form-error">{{ error }}</span>
+            {% endfor %}
+          {% else %}
+            {{ form.username(autocomplete = 'off') }}
+          {% endif %}
+          {{ form.password.label }}
+          {% if form.password.errors %}
+            {{ form.password(autocomplete = 'off') }}
 
-          {% for error in form.username.errors %}
-            <span class="form-error">{{ error }}</span>
-          {% endfor %}
-        {% else %}
-          {{ form.username(autocomplete = 'off') }}
-        {% endif %}
-        <br />
-        {{ form.password.label }}
-        {% if form.password.errors %}
-          {{ form.password(autocomplete = 'off') }}
+            {% for error in form.password.errors %}
+              <p>{{ error }}</p>
+            {% endfor %}
+          {% else %}
+            {{ form.password(autocomplete = 'off') }}
+          {% endif %}
+          {{ form.role.label }}
+          {% if form.role.errors %}
+            {{ form.role(autocomplete = 'off') }}
 
-          {% for error in form.password.errors %}
-            <p>{{ error }}</p>
-          {% endfor %}
-        {% else %}
-          {{ form.password(autocomplete = 'off') }}
-        {% endif %}
-        <br />
-        {{ form.role.label }}
-        {% if form.role.errors %}
-          {{ form.role(autocomplete = 'off') }}
-
-          {% for error in form.role.errors %}
-            <p>{{ error }}</p>
-          {% endfor %}
-        {% else %}
-          {{ form.role(autocomplete = 'off') }}
-        {% endif %}
+            {% for error in form.role.errors %}
+              <p>{{ error }}</p>
+            {% endfor %}
+          {% else %}
+            {{ form.role(autocomplete = 'off') }}
+          {% endif %}
+        </div>
         <div class="submit-btn">{{ form.submit }}</div>
       </fieldset>
     </form>

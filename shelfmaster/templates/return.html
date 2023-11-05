@@ -7,19 +7,20 @@
       <legend>Return A Book</legend>
       {{ form.hidden_tag() }}
 
-      {{ form.book_id.label }}
-      {% if form.book_id.errors %}
-        {{ form.book_id(autocomplete = 'off') }}
+      <div class="form-grid">
+        {{ form.book_id.label }}
+        {% if form.book_id.errors %}
+          {{ form.book_id(autocomplete = 'off') }}
 
-        {% for error in form.book_id.errors %}
-          {% for line in error.split('-linebreak-') %}
-            <span class="form-error">{{ line }}</span>
+          {% for error in form.book_id.errors %}
+            {% for line in error.split('-linebreak-') %}
+              <span class="form-error">{{ line }}</span>
+            {% endfor %}
           {% endfor %}
-        {% endfor %}
-      {% else %}
-        {{ form.book_id(autocomplete = 'off') }}
-      {% endif %}
-      <br />
+        {% else %}
+          {{ form.book_id(autocomplete = 'off') }}
+        {% endif %}
+      </div>
       <div class="submit-btn">{{ form.submit }}</div>
     </fieldset>
   </form>

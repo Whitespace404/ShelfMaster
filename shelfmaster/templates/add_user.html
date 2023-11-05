@@ -8,29 +8,28 @@
         {{ form.hidden_tag() }}
 
         <div class="form-grid">
-        {{ form.username.label }}
-        {% if form.username.errors %}
-          {{ form.username(autocomplete = 'off') }}
+          {{ form.username.label }}
+          {% if form.username.errors %}
+            {{ form.username(autocomplete = 'off') }}
 
-          {% for error in form.username.errors %}
-            <span class="form-error">{{ error }}</span>
-          {% endfor %}
-        {% else %}
-          {{ form.username(autocomplete = 'off') }}
-        {% endif %}
-        {{ form.name.label }}
-        {% if form.name.errors %}
-          {{ form.name(autocomplete = 'off') }}
+            {% for error in form.username.errors %}
+              <span class="form-error">{{ error }}</span>
+            {% endfor %}
+          {% else %}
+            {{ form.username(autocomplete = 'off') }}
+          {% endif %}
+          {{ form.name.label }}
+          {% if form.name.errors %}
+            {{ form.name(autocomplete = 'off') }}
 
-          {% for error in form.name.errors %}
-            <p>{{ error }}</p>
-          {% endfor %}
-        {% else %}
-          {{ form.name(autocomplete = 'off') }}
-        {% endif %}
-        {{ form.is_teacher.label }}
-        {{ form.is_teacher }}
-        <div id="hide-inputs">
+            {% for error in form.name.errors %}
+              <p>{{ error }}</p>
+            {% endfor %}
+          {% else %}
+            {{ form.name(autocomplete = 'off') }}
+          {% endif %}
+          {{ form.is_teacher.label }}
+          {{ form.is_teacher }}
           {{ form.class_section.label }}
           {% if form.class_section.errors %}
             {{ form.class_section(autocomplete = 'off') }}
@@ -42,11 +41,8 @@
             {{ form.class_section(autocomplete = 'off') }}
           {% endif %}
         </div>
-      </div>
         <div class="submit-btn">{{ form.submit }}</div>
       </fieldset>
     </form>
   </div>
-
-  <script src="{{ url_for('static', filename = 'js/add_user_form_script.js') }}"></script>
 {% endblock %}

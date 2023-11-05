@@ -36,3 +36,6 @@ show reports on home page
 send email to parent when fine is due
 
 HIDE inputs dont work
+
+make /add_entity redirect to different endpoints based on which entity
+see https://stackoverflow.com/questions/33769478/multi-part-form-using-flask-wtforms

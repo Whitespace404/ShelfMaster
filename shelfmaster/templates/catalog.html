@@ -5,35 +5,33 @@
     <fieldset>
       <legend>Catalog</legend>
       {{ form.hidden_tag() }}
+      <div class="form-grid">
+        {{ form.criteria.label }}
+        {% if form.criteria.errors %}
+          {{ form.criteria(autocomplete = 'off') }}
 
-      {{ form.criteria.label }}
-      {% if form.criteria.errors %}
-        {{ form.criteria(autocomplete = 'off') }}
-
-        {% for error in form.criteria.errors %}
-          {% for line in error.split('-linebreak-') %}
-            <span class="form-error">{{ line }}</span>
+          {% for error in form.criteria.errors %}
+            {% for line in error.split('-linebreak-') %}
+              <span class="form-error">{{ line }}</span>
+            {% endfor %}
           {% endfor %}
-        {% endfor %}
-      {% else %}
-        {{ form.criteria(autocomplete = 'off') }}
-      {% endif %}
-      <br />
+        {% else %}
+          {{ form.criteria(autocomplete = 'off') }}
+        {% endif %}
 
-      {{ form.query.label }}
-      {% if form.query.errors %}
-        {{ form.query(autocomplete = 'off') }}
+        {{ form.query.label }}
+        {% if form.query.errors %}
+          {{ form.query(autocomplete = 'off') }}
 
-        {% for error in form.query.errors %}
-          {% for line in error.split('-linebreak-') %}
-            <span class="form-error">{{ line }}</span>
+          {% for error in form.query.errors %}
+            {% for line in error.split('-linebreak-') %}
+              <span class="form-error">{{ line }}</span>
+            {% endfor %}
           {% endfor %}
-        {% endfor %}
-      {% else %}
-        {{ form.query(autocomplete = 'off') }}
-      {% endif %}
-      <br />
-
+        {% else %}
+          {{ form.query(autocomplete = 'off') }}
+        {% endif %}
+      </div>
       <div class="submit-btn">{{ form.submit }}</div>
     </fieldset>
   </form>
