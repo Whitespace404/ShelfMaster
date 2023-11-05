@@ -1,55 +1,50 @@
 <!DOCTYPE html>
 <html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="{{ url_for('static', filename = 'styles/restyle.css') }}" />
+    <link rel="shortcut icon" href="{{ url_for('static', filename = 'img/favicon.ico') }}" />
 
-  <link rel="stylesheet" href="{{ url_for('static', filename = 'styles/restyle.css') }}" />
-  <link rel="shortcut icon" href="{{ url_for('static', filename = 'favicon.ico') }}" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
 
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <title>ShelfMaster | {{ title }}</title>
+  </head>
 
-  <title>ShelfMaster | {{ title }}</title>
-</head>
-
-<body class="home-body" style="-ms-overflow-style: none;  scrollbar-width: none;">
-
-  <header id="showcase">
-    {% with messages = get_flashed_messages(with_categories = true) %}
-    {% if messages %}
-    {% for category, message in messages %}
-    <div class="flash-message {{ category }}">{{ message }}</div>
-    {% endfor %}
-    {% endif %}
-    {% endwith %}
-
-    <div class="main-container">
-      <div class="wrapper">
-        <a href="{{ url_for('home') }}">Home</a>
-        {% if current_user.role_id != 2 %}
-        <a href="{{ url_for('borrow') }}">Borrow</a>
-        <a href="{{ url_for('return_') }}">Return</a>
+  <body class="home-body">
+    <header id="showcase">
+      {% with messages = get_flashed_messages(with_categories = true) %}
+        {% if messages %}
+          {% for category, message in messages %}
+            <div class="flash-message {{ category }}">{{ message }}</div>
+          {% endfor %}
         {% endif %}
-        <a href="{{ url_for('catalog') }}">Catalog</a>
-        {% if current_user.is_authenticated %}
-        <a href="{{ url_for('logout') }}">Logout</a>
-        {% else %}
-        <a href="{{ url_for('admin_login') }}">Admin Login</a>
-        {% endif %}
-      </div>
+      {% endwith %}
 
-      <div class="hero">
-        <h1>Shelf Master.</h1>
-        <h2>Aiming to revolutionize library management at the Brigade School.</h2>
-        <div class="btn-holder">
-          <a href="{{ url_for('catalog') }}" class="cta-button">View catalog</a>
+      <div class="main-container">
+        <div class="wrapper home-wrapper">
+          <a href="{{ url_for('home') }}">Home</a>
+          {% if current_user.role_id != 2 %}
+            <a href="{{ url_for('borrow') }}">Borrow</a>
+            <a href="{{ url_for('return_') }}">Return</a>
+          {% endif %}
+          <a href="{{ url_for('catalog') }}">Catalog</a>
+          {% if current_user.is_authenticated %}
+            <a href="{{ url_for('logout') }}">Logout</a>
+          {% else %}
+            <a href="{{ url_for('admin_login') }}">Admin Login</a>
+          {% endif %}
+        </div>
+
+        <div class="hero">
+          <h1>Shelf Master.</h1>
+          <h2>Aiming to revolutionize library management at the Brigade School.</h2>
+          <div class="btn-holder">
+            <a href="{{ url_for('catalog') }}" class="cta-button">View catalog</a>
+          </div>
         </div>
       </div>
-    </div>
-
-  </header>
-
-</body>
-
+    </header>
+  </body>
 </html>

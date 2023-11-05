@@ -2,7 +2,7 @@
 
 {% block content %}
   <link rel="stylesheet" href="{{ url_for('static', filename = 'styles/style.css') }}" />
-  <div class="container" style="max-width: 68vw;">
+  <div class="container" id="print-area" style="max-width: 68vw;">
     <h1 class="details-title">Invoice</h1>
 
     <div class="book-details">
@@ -60,7 +60,7 @@
       <div class="btn-platter">
         <div>{{ form.submit(class = 'form-btn') }}</div>
         <div>
-          <button class="form-btn print" onclick="window.print()">Print Invoice</button>
+          <p id="submit" class="print" onclick="window.print()">Print Invoice</p>
         </div>
       </div>
     </form>

@@ -3,16 +3,16 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta name="description" content="ShelfMaster">
+    <meta name="description" content="ShelfMaster" />
     <link rel="stylesheet" href="{{ url_for('static', filename = 'styles/restyle.css') }}" />
-    <link rel="shortcut icon" href="{{ url_for('static', filename = 'favicon.ico') }}" />
+    <link rel="shortcut icon" href="{{ url_for('static', filename = 'img/favicon.ico') }}" />
 
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
 
     <title>ShelfMaster | {{ title }}</title>
   </head>
 
-  <body class="main-body" style="-ms-overflow-style: none;  scrollbar-width: none;">
+  <body class="main-body">
     {% with messages = get_flashed_messages(with_categories = true) %}
       {% if messages %}
         {% for category, message in messages %}
@@ -21,7 +21,7 @@
       {% endif %}
     {% endwith %}
 
-    <div class="wrapper">
+    <div class="wrapper no-print">
       <a href="{{ url_for('home') }}">Home</a>
       {% if current_user.role_id != 2 %}
         <a href="{{ url_for('borrow') }}">Borrow</a>

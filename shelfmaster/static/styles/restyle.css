@@ -2,6 +2,7 @@
     padding: 0;
     margin: 0;
     font-family: 'SF Pro Display';
+    box-sizing: border-box;
 }
 
 body {
@@ -9,10 +10,9 @@ body {
 }
 
 #showcase {
-    background: linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.65)), url("../home_bg.jpg");
+    background: linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.65)), url("../img/home_bg.jpg");
     background-size: cover;
     height: 100dvh;
-    overflow: hidden;
 }
 
 .hero {
@@ -27,11 +27,10 @@ body {
 
 .hero>h1 {
     font-size: 6rem;
-    text-decoration: underline;
 }
 
 .hero>h2 {
-    font-size: 4rem;
+    font-size: 3.6rem;
 }
 
 .hero>h1,
@@ -67,20 +66,27 @@ body {
     flex-direction: row;
     justify-content: space-between;
     padding: 5px;
+    background: #ff9900;
+}
 
+.home-wrapper {
     background: rgba(0, 0, 0, 0.65);
 }
 
-.wrapper>a {
+.wrapper a {
     font-size: 35px;
     font-family: 'SF Pro Display';
     font-weight: 800;
     text-decoration: none;
-    color: white;
+    color: black;
     display: inline-block;
     position: relative;
     transition: 0.1s ease-in-out;
     margin: 15px;
+}
+
+.home-wrapper a {
+    color: white;
 }
 
 div.wrapper>a:after {
@@ -264,13 +270,15 @@ form {
     margin: 0.9em 0em;
     background-color: rgb(255, 153, 0);
     border: 3px solid gray;
-    border-radius: 8px;
+    border-radius: 10px;
     font-size: 18px;
+    transition: 0.5s;
+    cursor: pointer;
 }
 
 #submit:hover {
     text-decoration: underline;
-    color: white;
+    border-radius: 5px;
 }
 
 .logo {
@@ -377,6 +385,14 @@ form {
 .entity-form fieldset {
     padding: 1em;
 }
+
+/* how to make this work */
+@media print {
+    .noprint {
+        display: none !important;
+    }
+}
+
 
 /* 
 .entity-form-grid {
