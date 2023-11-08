@@ -159,6 +159,7 @@ def confirm_return(accession_number):
         current_date=current_dt,
         borrowed_time=borrowed_time,
         fine_needed=is_fine_needed,
+        title="Invoice",
     )
 
 

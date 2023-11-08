@@ -209,7 +209,7 @@ tr>td>a {
 .stat>h3 {
     font-size: 34px;
     padding: 10px;
-    font-family: Quicksand;
+    font-family: 'SF Pro Display';
     font-weight: bolder;
     margin-bottom: 30px;
 }
@@ -385,14 +385,6 @@ form {
 .entity-form fieldset {
     padding: 1em;
 }
-
-/* how to make this work */
-@media print {
-    .noprint {
-        display: none !important;
-    }
-}
-
 
 /* 
 .entity-form-grid {

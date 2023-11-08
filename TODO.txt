@@ -39,3 +39,7 @@ HIDE inputs dont work
 
 make /add_entity redirect to different endpoints based on which entity
 see https://stackoverflow.com/questions/33769478/multi-part-form-using-flask-wtforms
+
+Newspaper tally 
+
+prevent closing of invoice tab without returning book
