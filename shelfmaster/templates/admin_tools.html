@@ -3,7 +3,7 @@
 {% block content %}
 <div class="stats">
   <div class="stat">
-    <h1 id="value-a">432</h1>
+    <h1 id="value-a">{{ books }}</h1>
     <h3>Books</h3>
   </div>
 
@@ -132,8 +132,8 @@
     const obj1 = document.getElementById("value-a");
     const obj2 = document.getElementById("value-b");
     const obj3 = document.getElementById("value-c");
-    animateValue(obj1, 400, 432, 1900);
-    animateValue(obj2, 0, 12, 1000);
-    animateValue(obj3, 15, 45, 1500);
+    animateValue(obj1, {{ books / 10 }}, {{ books }}, 300);
+    animateValue(obj2, 0, 12, 600);
+    animateValue(obj3, 15, 45, 1200);
     </script>
 {% endblock %}

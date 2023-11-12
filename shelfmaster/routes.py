@@ -30,7 +30,6 @@ from shelfmaster.utilities import (
     find_dif,
     borrow_book,
     create_database,
-    find_bus_days,
     calculate_overdue_days,
 )
 
@@ -38,7 +37,9 @@ from shelfmaster.utilities import (
 @app.route("/")
 def home():
     if current_user.is_authenticated:
-        return render_template("admin_tools.html", title="Admin Tools")
+        books = Entity.query.filter_by(type="Book").count()
+
+        return render_template("admin_tools.html", title="Admin Tools", books=books)
     return render_template("home.html", title="Home")
 
 
