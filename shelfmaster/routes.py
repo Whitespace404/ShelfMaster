@@ -126,7 +126,10 @@ def confirm_return(accession_number):
     fine_details = {}
 
     if is_fine_needed:
-        fine_details = {"days_late": overdue_days, "amount": overdue_days * 10}
+        fine_details: dict[str: int] = {
+            "days_late": overdue_days,
+            "amount": overdue_days * 10,
+        }
 
     if form.validate_on_submit():
         if is_fine_needed:
@@ -169,7 +172,7 @@ def confirm_return(accession_number):
 def add_admin():
     form = AddAdminsForm()
     if form.validate_on_submit():
-        role = 2 if form.role.data == "Super-Admin" else 1
+        role: int = 2 if form.role.data == "Super-Admin" else 1
         admin = Admin(
             username=form.username.data,
             password=form.password.data,
