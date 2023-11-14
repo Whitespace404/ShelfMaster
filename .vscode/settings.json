@@ -1,7 +1,6 @@
 {
     "workbench.colorCustomizations": {
         "editorCursor.foreground": "#ffbb00",
-        // "editorError.foreground": "#ffffff00",
         "terminal.selectionBackground": "#94731abf"
     },
     "files.exclude": {
@@ -13,5 +12,30 @@
         ".gitattributes": true,
         "**/build": true
     },
-    "python.analysis.typeCheckingMode": "off"
+    "python.analysis.typeCheckingMode": "off",
+    "workbench.iconTheme": "material-icon-theme",
+    "editor.fontSize": 19,
+    "editor.formatOnSave": true,
+    "terminal.integrated.fontSize": 22,
+    "[python]": {
+        "editor.formatOnType": true,
+        "editor.defaultFormatter": "ms-python.black-formatter"
+    },
+    "workbench.colorTheme": "Night Owl (No Italics)",
+    "editor.cursorWidth": 2,
+    "terminal.integrated.cursorBlinking": true,
+    "editor.cursorBlinking": "smooth",
+    "editor.cursorStyle": "line",
+    "[django-html]": {
+        "editor.quickSuggestions": {
+            "other": true,
+            "comments": true,
+            "strings": true
+        }
+    },
+    "terminal.integrated.lineHeight": 0.9,
+    "editor.lineHeight": 1.4,
+    "editor.fontFamily": "'Monaspace Argon', monospace",
+    "editor.fontWeight": 400,
+    "editor.fontLigatures": "'calt', 'liga', 'dlig', 'ss01', 'ss02', 'ss03', 'ss04', 'ss05', 'ss06', 'ss07', 'ss08'",
 }
