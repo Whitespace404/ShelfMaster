@@ -23,9 +23,11 @@
     },
     "workbench.colorTheme": "Night Owl (No Italics)",
     "editor.cursorWidth": 2,
+    "editor.cursorSmoothCaretAnimation": "on",
     "terminal.integrated.cursorBlinking": true,
-    "editor.cursorBlinking": "smooth",
-    "editor.cursorStyle": "line",
+    "editor.smoothScrolling": true,
+    "editor.cursorBlinking": "expand",
+    "editor.cursorStyle": "block",
     "[django-html]": {
         "editor.quickSuggestions": {
             "other": true,

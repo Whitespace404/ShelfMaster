@@ -6,7 +6,13 @@ from flask_login import current_user, login_required, login_user, logout_user
 from sqlalchemy import func
 
 from shelfmaster import db, app
-from shelfmaster.forms import LoginForm, BorrowForm, ReturnForm, ConfirmReturnForm
+from shelfmaster.forms import (
+    LoginForm,
+    BorrowForm,
+    ReturnForm,
+    ConfirmReturnForm,
+    SuggestBookForm,
+)
 from shelfmaster.admin_forms import (
     AddAdminsForm,
     AddBookForm,
@@ -126,7 +132,7 @@ def confirm_return(accession_number):
     fine_details = {}
 
     if is_fine_needed:
-        fine_details: dict[str: int] = {
+        fine_details: dict[str:int] = {
             "days_late": overdue_days,
             "amount": overdue_days * 10,
         }
@@ -299,6 +305,7 @@ def admin_login():
     return render_template("admin_login.html", form=form, title="Admin Login")
 
 
+# TODO multistep form here in order to add various types of objects
 @app.route("/add_entity", methods=["GET", "POST"])
 @super_admin_required
 def add_entity():
@@ -565,3 +572,12 @@ def add_holiday():
             flash(f"{form.date.data} is already a holiday ")
         return redirect(url_for("home"))
     return render_template("add_holiday.html", form=form)
+
+
+@app.route("/suggest_a_book", methods=["GET", "POST"])
+def suggest_a_book():
+    form = SuggestBookForm()
+
+    if form.validate_on_submit():
+        pass
+    return render_template("suggest_book.html", form=form)

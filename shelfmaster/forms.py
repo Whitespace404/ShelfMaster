@@ -33,3 +33,7 @@ class ReturnForm(FlaskForm):
 class ConfirmReturnForm(FlaskForm):
     librarian_remarks = TextAreaField("Remarks")
     submit = SubmitField("Return")
+
+
+class SuggestBookForm(FlaskForm):
+    pass  # TODO I stopped here
