@@ -36,4 +36,6 @@ class ConfirmReturnForm(FlaskForm):
 
 
 class SuggestBookForm(FlaskForm):
-    pass  # TODO I stopped here
+    book = StringField("Book")
+    
+    submit = SubmitField("Suggest")
