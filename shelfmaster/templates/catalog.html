@@ -32,7 +32,9 @@
           {{ form.query(autocomplete = 'off') }}
         {% endif %}
       </div>
-      <div class="submit-btn">{{ form.submit }}</div>
+      <div class="submit-btn">
+        {{ form.submit }} <a id="submit" href="{{ url_for('suggest_a_book') }}">Suggest a book</a>
+      </div>
     </fieldset>
   </form>
 {% endblock %}

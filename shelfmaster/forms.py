@@ -36,4 +36,9 @@ class ConfirmReturnForm(FlaskForm):
 
 
 class SuggestBookForm(FlaskForm):
-    pass  # TODO I stopped here
+    book = StringField("Name of the book*", validators=[DataRequired()])
+    author = StringField("Author")
+    reason = TextAreaField(
+        "Briefly explain why this book would be a valuable addition to our library."
+    )
+    submit = SubmitField("Submit")

@@ -5,6 +5,10 @@
     box-sizing: border-box;
 }
 
+a:visited {
+    color: inherit;
+}
+
 body {
     background: #F2F2F2;
 }
@@ -384,6 +388,20 @@ form {
 
 .entity-form fieldset {
     padding: 1em;
+}
+
+textarea#reason {
+    padding: 0.8rem;
+    height: 180px;
+    font-size: 22px;
+}
+
+div.form-grid>label:nth-child(5) {
+    font-size: 22px;
+}
+
+.textarea-form {
+    max-width: 60%;
 }
 
 /* 

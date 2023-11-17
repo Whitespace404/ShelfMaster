@@ -134,3 +134,7 @@ class FinesLog(db.Model):
 class Holidays(db.Model):
     id = sa.Column(sa.Integer, primary_key=True, unique=True)
     holiday = sa.Column(sa.DateTime)
+
+
+# class Suggestions(db.Model):
+#     pass

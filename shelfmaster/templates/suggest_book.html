@@ -1,25 +1,19 @@
 {% extends 'base.html' %}
 
 {% block content %}
-  <form action="" method="POST" class="styled-form">
+  <form action="" method="POST" class="styled-form textarea-form">
     <fieldset>
       <legend>Suggest a Book</legend>
       {{ form.hidden_tag() }}
 
-      <div class="form-grid">
-        {{ form.book_id.label }}
-        {% if form.book_id.errors %}
-          {{ form.book_id(autocomplete = 'off') }}
+      <div class="form-grid">{{ form.book.label }}
+        {{ form.book(autocomplete = 'off') }}
 
-          {% for error in form.book_id.errors %}
-            {% for line in error.split('-linebreak-') %}
-              <span class="form-error">{{ line }}</span>
-            {% endfor %}
-          {% endfor %}
-        {% else %}
-          {{ form.book_id(autocomplete = 'off') }}
-        {% endif %}
-      </div>
+        {{ form.author.label }}
+        {{ form.author(autocomplete = 'off') }}
+
+        {{ form.reason.label() }}
+        {{ form.reason(autocomplete = 'off') }}</div>
       <div class="submit-btn">{{ form.submit }}</div>
     </fieldset>
   </form>
