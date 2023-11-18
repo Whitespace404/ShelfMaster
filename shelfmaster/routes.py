@@ -583,7 +583,9 @@ def suggest_a_book():
         u = User.query.filter_by(username=form.usn.data).first()
         if u is None:
             form.usn.errors.append("That USN does not exist.")
-            return render_template("suggest_book.html", form=form)
+            return render_template(
+                "suggest_book.html", form=form, title="Request a Book"
+            )
 
         suggestion = Suggestions(
             user=u,
@@ -598,4 +600,4 @@ def suggest_a_book():
         flash("Book has been suggested successfully.")
         return redirect(url_for("catalog"))
 
-    return render_template("suggest_book.html", form=form)
+    return render_template("suggest_book.html", form=form, title="Request a Book")
