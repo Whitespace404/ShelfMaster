@@ -36,15 +36,10 @@ class ConfirmReturnForm(FlaskForm):
 
 
 class SuggestBookForm(FlaskForm):
-<<<<<<< HEAD
+    usn = StringField("Student USN", validators=[DataRequired()])
     book = StringField("Name of the book*", validators=[DataRequired()])
     author = StringField("Author")
     reason = TextAreaField(
         "Briefly explain why this book would be a valuable addition to our library."
     )
     submit = SubmitField("Submit")
-=======
-    book = StringField("Book")
-    
-    submit = SubmitField("Suggest")
->>>>>>> 1bb2a0c92f9c1966307044b1344ef129b9404ef4

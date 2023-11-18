@@ -15,6 +15,7 @@ class User(db.Model):
     borrowed_entities = relationship("Entity", backref="user", lazy=True)
     transaction = relationship("TransactionLog", backref="user", lazy=True)
     fines = relationship("FinesLog", backref="user", lazy=True)
+    suggestions = relationship("Suggestions", backref="user", lazy=True)
 
     def __repr__(self):
         return f"ID: {str(self.id)}; {self.username}"
@@ -136,5 +137,9 @@ class Holidays(db.Model):
     holiday = sa.Column(sa.DateTime)
 
 
-# class Suggestions(db.Model):
-#     pass
+class Suggestions(db.Model):
+    id = sa.Column(sa.Integer, primary_key=True, unique=True)
+    user_id = sa.Column(sa.Integer, sa.ForeignKey("user.id"))
+    book_name = sa.Column(sa.String(80))
+    author_name = sa.Column(sa.String(80))
+    submit_reason = sa.Column(sa.String(120))

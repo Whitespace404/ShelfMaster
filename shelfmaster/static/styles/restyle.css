@@ -404,6 +404,16 @@ div.form-grid>label:nth-child(5) {
     max-width: 60%;
 }
 
+.form-error {
+    color: red;
+    font-size: 17px;
+    font-weight: 600;
+}
+
+.errored-input {
+    border: 3px solid red;
+}
+
 /* 
 .entity-form-grid {
     display: grid;

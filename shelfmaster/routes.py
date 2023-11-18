@@ -30,6 +30,7 @@ from shelfmaster.models import (
     AdminActionsLog,
     FinesLog,
     Holidays,
+    Suggestions,
 )
 from shelfmaster.utilities import (
     super_admin_required,
@@ -579,5 +580,22 @@ def suggest_a_book():
     form = SuggestBookForm()
 
     if form.validate_on_submit():
-        pass
+        u = User.query.filter_by(username=form.usn.data).first()
+        if u is None:
+            form.usn.errors.append("That USN does not exist.")
+            return render_template("suggest_book.html", form=form)
+
+        suggestion = Suggestions(
+            user=u,
+            book_name=form.book.data,
+            author_name=form.author.data,
+            submit_reason=form.reason.data,
+        )
+
+        db.session.add(suggestion)
+        db.session.commit()
+
+        flash("Book has been suggested successfully.")
+        return redirect(url_for("catalog"))
+
     return render_template("suggest_book.html", form=form)

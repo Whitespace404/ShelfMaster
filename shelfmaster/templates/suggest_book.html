@@ -6,14 +6,28 @@
       <legend>Suggest a Book</legend>
       {{ form.hidden_tag() }}
 
-      <div class="form-grid">{{ form.book.label }}
+      <div class="form-grid">
+        {{ form.usn.label }}
+        {% if form.usn.errors %}
+          {{ form.usn(autocomplete = 'off', class = 'errored-input') }}
+
+          {% for error in form.usn.errors %}
+            {% for line in error.split('-linebreak-') %}
+              <span class="form-error">{{ line }}</span>
+            {% endfor %}
+          {% endfor %}
+        {% else %}
+          {{ form.usn(autocomplete = 'off') }}
+        {% endif %}
+        {{ form.book.label }}
         {{ form.book(autocomplete = 'off') }}
 
         {{ form.author.label }}
         {{ form.author(autocomplete = 'off') }}
 
         {{ form.reason.label() }}
-        {{ form.reason(autocomplete = 'off') }}</div>
+        {{ form.reason(autocomplete = 'off') }}
+      </div>
       <div class="submit-btn">{{ form.submit }}</div>
     </fieldset>
   </form>
