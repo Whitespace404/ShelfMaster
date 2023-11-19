@@ -1,0 +1,24 @@
+{% extends 'base.html' %}
+
+{% block content %}
+  <div class="table-div">
+    <table class="admin-logs">
+      <tr>
+        <th>Sl no</th>
+        <th>Suggested by</th>
+        <th>Book name</th>
+        <th>Author</th>
+        <th>Reason</th>
+      </tr>
+      {% for suggestion in suggestions %}
+        <tr>
+          <td>{{ suggestion.id }}</td>
+          <td>{{ suggestion.user.name }}</td>
+          <td>{{ suggestion.book_name }}</td>
+          <td>{{ suggestion.author_name }}</td>
+          <td class="submit-reason">{{ suggestion.submit_reason }}</td>
+        </tr>
+      {% endfor %}
+    </table>
+  </div>
+{% endblock %}

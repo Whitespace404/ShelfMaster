@@ -1,7 +1,6 @@
 {
     "workbench.colorCustomizations": {
-        "editorCursor.foreground": "#ffbb00",
-        "terminal.selectionBackground": "#94731abf"
+        "editorCursor.foreground": "#ffbb00"
     },
     "files.exclude": {
         "**/.git": true,
@@ -12,7 +11,6 @@
         ".gitattributes": true,
         "**/build": true
     },
-    "python.analysis.typeCheckingMode": "off",
     "workbench.iconTheme": "material-icon-theme",
     "editor.fontSize": 17,
     "editor.formatOnSave": true,
@@ -39,6 +37,6 @@
     "terminal.integrated.lineHeight": 0.9,
     "editor.lineHeight": 1.4,
     "editor.fontFamily": "'Monaspace Neon Var', 'Courier New', monospace",
-    "editor.fontWeight": 400,
+    "editor.fontWeight": 450,
     "editor.fontLigatures": "'calt', 'liga', 'dlig', 'ss01', 'ss02', 'ss03', 'ss04', 'ss05', 'ss06', 'ss07', 'ss08'",
 }

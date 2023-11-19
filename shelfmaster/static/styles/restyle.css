@@ -414,6 +414,15 @@ div.form-grid>label:nth-child(5) {
     border: 3px solid red;
 }
 
+.submit-reason {
+    border-collapse: collapse;
+    word-wrap: break-word;
+    overflow: visible;
+    white-space: unset;
+    font-size: 19px;
+    max-width: 40vw;
+}
+
 /* 
 .entity-form-grid {
     display: grid;

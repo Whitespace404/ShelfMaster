@@ -557,6 +557,7 @@ def fine_received():
 
 
 @app.route("/add_holiday", methods=["GET", "POST"])
+@login_required
 def add_holiday():
     form = AddHolidayForm()
     if form.validate_on_submit():
@@ -601,3 +602,12 @@ def suggest_a_book():
         return redirect(url_for("catalog"))
 
     return render_template("suggest_book.html", form=form, title="Request a Book")
+
+
+@app.route("/view_suggestions")
+def view_suggestions():
+    suggestions = Suggestions.query.all()
+
+    return render_template(
+        "suggestions.html", title="View Book Requests", suggestions=suggestions
+    )
