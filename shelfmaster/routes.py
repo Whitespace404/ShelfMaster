@@ -45,8 +45,15 @@ from shelfmaster.utilities import (
 def home():
     if current_user.is_authenticated:
         books = Entity.query.filter_by(type="Book").count()
-
-        return render_template("admin_tools.html", title="Admin Tools", books=books)
+        transactions = TransactionLog.query.count()
+        users = User.query.count()
+        return render_template(
+            "admin_tools.html",
+            title="Admin Tools",
+            books=books,
+            transactions=transactions,
+            users=users,
+        )
     return render_template("home.html", title="Home")
 
 
@@ -368,12 +375,6 @@ def reports():
 
     if form.validate_on_submit():
         if form.report_type.data == "books":
-            # SELECT entities.*, COUNT(transaction_log.id) AS borrow_count
-            # FROM entities
-            # LEFT JOIN transaction_log ON entities.id = transaction_log.entity_id
-            # GROUP BY entities.id
-            # ORDER BY borrow_count DESC;
-
             most_read_books = (
                 db.session.query(
                     Entity, func.count(TransactionLog.id).label("borrow_count")
@@ -562,7 +563,6 @@ def add_holiday():
     form = AddHolidayForm()
     if form.validate_on_submit():
         h = Holidays.query.filter_by(holiday=form.date.data).first()
-        print(h)
         if (
             h is None
         ):  # TODO this doesnt work, duplicate holidays can be added - fix that
@@ -607,7 +607,6 @@ def suggest_a_book():
 @app.route("/view_suggestions")
 def view_suggestions():
     suggestions = Suggestions.query.all()
-
     return render_template(
         "suggestions.html", title="View Book Requests", suggestions=suggestions
     )
