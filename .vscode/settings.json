@@ -1,6 +1,6 @@
 {
     "workbench.colorCustomizations": {
-        "editorCursor.foreground": "#ffbb00"
+        "editorCursor.foreground": "#56CD49EE"
     },
     "files.exclude": {
         "**/.git": true,

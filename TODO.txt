@@ -19,7 +19,7 @@ reading log is for returns, transaction log is for borrows
 
 reports
 - USER PAYING MOST FINES
-- CLASS PAYING MOST FINESs
+- CLASS PAYING MOST FINES
 
 check if user is allowed to borrow the book using accession_number before borrowing
 

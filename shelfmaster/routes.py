@@ -4,6 +4,7 @@ from random import randint, choice
 from flask import render_template, redirect, request, flash, url_for
 from flask_login import current_user, login_required, login_user, logout_user
 from sqlalchemy import func
+from const import ROLE_PERMS
 
 from shelfmaster import db, app
 from shelfmaster.forms import (
@@ -71,6 +72,15 @@ def borrow():
         u = User.query.filter_by(username=form.usn.data).first()
         entity = Entity.query.filter_by(accession_number=form.book_id.data).first()
 
+        # age_category = entity.call_number.split("/")[0]
+
+        # ROLE_PERMS.index(age_category)
+
+        # Now find the ROLE PERM of the user using the database
+        # and then compare if it is equal or lesser than the 
+        # previous user and then compile the results
+        # GOANBOYLERED
+
         if u is None:
             form.usn.errors.append("USN does not exist")
             return render_template("borrow.html", form=form, title="Borrow A Book")
@@ -87,6 +97,7 @@ def borrow():
             flash(f"{entity.type} borrowed successfully.")
             return redirect(url_for("home"))
         elif len(u.borrowed_entities) == 0:
+            # if entity.call_number
             borrow_book(u, entity)
             flash(
                 f"{entity.type} borrowed successfully. Please return it before {entity.due_date.strftime('%d/%m/%y')}"
