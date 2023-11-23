@@ -10,3 +10,4 @@ bin.txt
 instance/main.db
 instance/
 .idea/
+.env

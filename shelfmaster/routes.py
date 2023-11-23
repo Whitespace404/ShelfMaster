@@ -3,10 +3,10 @@ from random import randint, choice
 
 from flask import render_template, redirect, request, flash, url_for
 from flask_login import current_user, login_required, login_user, logout_user
+from flask_mail import Message
 from sqlalchemy import func
-from const import ROLE_PERMS
 
-from shelfmaster import db, app
+from shelfmaster import db, app, mail
 from shelfmaster.forms import (
     LoginForm,
     BorrowForm,
@@ -40,6 +40,7 @@ from shelfmaster.utilities import (
     create_database,
     calculate_overdue_days,
 )
+from shelfmaster.const import ROLE_PERMS
 
 
 @app.route("/")
@@ -77,7 +78,7 @@ def borrow():
         # ROLE_PERMS.index(age_category)
 
         # Now find the ROLE PERM of the user using the database
-        # and then compare if it is equal or lesser than the 
+        # and then compare if it is equal or lesser than the
         # previous user and then compile the results
         # GOANBOYLERED
 
@@ -621,3 +622,19 @@ def view_suggestions():
     return render_template(
         "suggestions.html", title="View Book Requests", suggestions=suggestions
     )
+
+
+@app.route("/test_email")
+def test_email():
+    msg = Message(
+        "Hello",
+        sender="severusvirtanen@gmail.com",
+        recipients=["rahulrejitbsm@gmail.com"],
+    )
+
+    msg.html = "<h1> <em> this works </em> </h1>"
+
+    mail.send(msg)
+
+    flash("Message sent successfully.")
+    return redirect(url_for("home"))
