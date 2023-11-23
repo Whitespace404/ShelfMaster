@@ -629,7 +629,6 @@ def test_email():
     msg = Message(
         "Hello",
         sender="severusvirtanen@gmail.com",
-        recipients=["rahulrejitbsm@gmail.com"],
     )
 
     msg.html = "<h1> <em> this works </em> </h1>"
