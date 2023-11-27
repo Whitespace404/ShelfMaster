@@ -11,3 +11,5 @@ instance/main.db
 instance/
 .idea/
 .env
+credentials.json
+token.json

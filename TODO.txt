@@ -46,3 +46,5 @@ prevent closing of invoice tab without returning book
 use web scraping to instantly find the book that you search for.
 
 use .errored-input class for every errored input in form.
+
+create permalink for invoice, and redirect to that in email
