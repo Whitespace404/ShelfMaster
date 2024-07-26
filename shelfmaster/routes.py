@@ -41,6 +41,7 @@ from shelfmaster.utilities import (
     create_database,
     calculate_overdue_days,
 )
+from shelfmaster.utilities_master import read_booklist
 from shelfmaster.email import send_html_email
 from shelfmaster.const import ROLE_PERMS
 
@@ -652,3 +653,9 @@ def view_suggestions():
     return render_template(
         "suggestions.html", title="View Book Requests", suggestions=suggestions
     )
+
+
+@app.route("/add_t")
+def add_t():
+    read_booklist()
+    return "sucess"
