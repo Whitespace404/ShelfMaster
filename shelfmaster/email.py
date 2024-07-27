@@ -1,13 +1,10 @@
 import os
 import smtplib
 import ssl
-import dotenv
 
 from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
 
-
-dotenv.load_dotenv()
 SMTP_SERVER = "smtp.gmail.com"
 PORT = 587
 EMAIL = os.environ.get("EMAIL_ADRESS")

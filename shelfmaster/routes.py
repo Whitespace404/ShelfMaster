@@ -42,7 +42,6 @@ from shelfmaster.utilities import (
     calculate_overdue_days,
 )
 from shelfmaster.utilities_master import read_booklist
-from shelfmaster.email import send_html_email
 from shelfmaster.const import ROLE_PERMS
 
 
@@ -174,33 +173,6 @@ def confirm_return(accession_number):
             )
             db.session.add(fine)
 
-            dotenv.load_dotenv()
-            RECEIVER = os.getenv("RECEIVER")
-            html_body = f"""<!DOCTYPE html>
-<body>
-    Dear Parent, <br> <br>
-
-    We would like to bring to your attention that your ward, {b.user.name}, has recently returned
-    a library book later than the due date. As a result, <strong> a fine of {fine_amount} Rs has been incurred </strong>
-    on their library account. <br>
-    <br> 
-    Details of the late return are as follows: <br> <br>
-
-    Book Title: {b.title} <br>
-    Due Date: {b.due_date.strftime("%d-%m-%Y")} <br> 
-    Actual Return Date: {current_dt.strftime("%d-%m-%Y")} <br> <br>
-    The fine for the late return is {fine_amount} Rs, and we kindly request that you settle
-    this amount at your earliest convenience. You or your ward can make the payment at the
-    library during regular operating hours. <br> <br>
-
-    Please note that library books must be returned within 7 days of the issuing date.
-</body></html>
-"""
-            send_html_email(
-                subject="Notice of Library Fine for Late Book Return",
-                html=html_body,
-                receiver_email=RECEIVER,
-            )
         # return the book, with remarks. must have to make checkout_log work for remarks.
         b.is_borrowed = False
         b.user = None

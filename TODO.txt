@@ -7,8 +7,6 @@ Make acc. number be created using multiple dropdowns
 
 Generate graphs to show library usage :0
 
-while hiding #hide-inputs tag make sure to clear whatever data already entered
-
 in `view_entity.html` show some stats about book such as number of reads,
 average number of reads taken to complete
 
@@ -48,3 +46,5 @@ use web scraping to instantly find the book that you search for.
 use .errored-input class for every errored input in form.
 
 create permalink for invoice, and redirect to that in email
+librarian must be able to override fines with reason
+update book details 
