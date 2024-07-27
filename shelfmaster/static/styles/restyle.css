@@ -30,11 +30,12 @@ body {
 }
 
 .hero>h1 {
-    font-size: 6rem;
+    margin-top: 2.4rem;
+    font-size: 5rem;
 }
 
 .hero>h2 {
-    font-size: 3.6rem;
+    font-size: 3rem;
 }
 
 .hero>h1,
@@ -49,26 +50,31 @@ body {
 }
 
 .cta-button {
-    color: white;
     font-family: 'SF Pro Display';
-    font-size: 42px;
+    font-size: 30px;
     text-decoration: none;
-    background: red;
+    background: rgba(255, 0, 0, 0);
     padding-left: 3%;
     padding-right: 3%;
     padding-top: 2%;
     padding-bottom: 2%;
     border-radius: 10px;
+    color: rgba(255, 255, 255, 1);
+    transition: 0.2s;
+    border: 3px solid #ff5e19;
 }
 
 .cta-button:hover {
-    text-decoration: underline;
+    background: #ff5e19;
+    cursor: pointer;
+    transform: translateY(-0.1em);
+    box-shadow: rgba(255, 213, 213, 0.23) 0px 10px 36px 0px, rgba(255, 213, 213, 0.23) 0px 0px 0px 1px;
 }
 
 .wrapper {
     display: flex;
     flex-direction: row;
-    justify-content: space-between;
+    justify-content: space-evenly;
     padding: 5px;
     background: #ff9900;
 }
@@ -78,7 +84,7 @@ body {
 }
 
 .wrapper a {
-    font-size: 35px;
+    font-size: 27px;
     font-family: 'SF Pro Display';
     font-weight: 800;
     text-decoration: none;
@@ -127,7 +133,6 @@ div.wrapper>a:hover:after {
 }
 
 table {
-    font-size: 20px;
     border: 3px solid black;
     margin: 10px;
     color: black;
@@ -146,10 +151,10 @@ th {
 
 td,
 th {
-    font-size: 20px;
+    font-size: 16px;
     border: 3px solid black;
     border-collapse: collapse;
-    padding: 10px;
+    padding: 7px;
     text-align: left;
     text-overflow: ellipsis;
     overflow: hidden;
@@ -421,6 +426,42 @@ div.form-grid>label:nth-child(5) {
     white-space: unset;
     font-size: 19px;
     max-width: 40vw;
+}
+
+.pagination {
+    margin-bottom: 25px;
+    margin-top: 25px;
+}
+
+.pagination a {
+    text-align: center;
+    color: blue;
+}
+
+.center-container {
+    display: grid;
+    place-content: center;
+}
+
+.pagination a {
+    font-size: 14px;
+    color: black;
+    text-decoration: none;
+    border: 2px solid #090B5C;
+    padding: 7px;
+    margin: 2px;
+    transition: 0.2s;
+}
+
+.pagination a:hover {
+    background: #090B5C;
+    color: white;
+    text-decoration: underline;
+}
+
+.pagination .pagenum-current {
+    background: #090B5C;
+    color: white;
 }
 
 /* 

@@ -10,11 +10,11 @@
         <th>Class and Section</th>
         <th>Book borrowed</th>
       </tr>
-      {% for log in logs %}
+      {% for log in logs.items %}
         <tr>
           <td>{{ log.id }}</td>
           <td>
-            <a href="{{ url_for('view_user', usn = log.username) }}">{{ log.username }}</a>
+            <a href="{{ url_for('view_user', usn=log.username) }}">{{ log.username }}</a>
           </td>
           <td>{{ log.name }}</td>
           <td>{{ log.class_section }}</td>
@@ -22,7 +22,7 @@
             <td></td>
           {% else %}
             {% if log.is_teacher == False %}
-              <td>{{ log.borrowed_entities[0] }}</td>
+              <td>{{ log.borrowed_entities.0 }}</td>
             {% else %}
               <td>{{ log.borrowed_entities }}</td>
             {% endif %}
@@ -30,5 +30,21 @@
         </tr>
       {% endfor %}
     </table>
+  </div>
+
+  <div class="center-container">
+    <div class="pagination">
+      {% for pagenum in logs.iter_pages(left_edge=1, right_edge=1, left_current=1, right_current=2) %}
+        {% if pagenum %}
+          {% if logs.page == pagenum %}
+            <a href="{{ url_for('view_all_users', page=pagenum) }}" class="pagenum-current">{{ pagenum }}</a>
+          {% else %}
+            <a href="{{ url_for('view_all_users', page=pagenum) }}">{{ pagenum }}</a>
+          {% endif %}
+        {% else %}
+          ...
+        {% endif %}
+      {% endfor %}
+    </div>
   </div>
 {% endblock %}

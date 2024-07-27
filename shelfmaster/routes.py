@@ -255,7 +255,8 @@ def add_user():
 @app.route("/view_all_users")
 @login_required
 def view_all_users():
-    logs = User.query.filter_by().all()
+    page = request.args.get("page", default=1, type=int)
+    logs = User.query.paginate(page=page, per_page=40)
     return render_template("view_users.html", logs=logs, title="Users List")
 
 

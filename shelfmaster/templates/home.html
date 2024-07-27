@@ -4,8 +4,8 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
-    <link rel="stylesheet" href="{{ url_for('static', filename = 'styles/restyle.css') }}" />
-    <link rel="shortcut icon" href="{{ url_for('static', filename = 'img/favicon.ico') }}" />
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles/restyle.css') }}" />
+    <link rel="shortcut icon" href="{{ url_for('static', filename='img/favicon.ico') }}" />
 
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
 
@@ -14,7 +14,7 @@
 
   <body class="home-body">
     <header id="showcase">
-      {% with messages = get_flashed_messages(with_categories = true) %}
+      {% with messages=get_flashed_messages(with_categories=true) %}
         {% if messages %}
           {% for category, message in messages %}
             <div class="flash-message {{ category }}">{{ message }}</div>
@@ -41,7 +41,7 @@
           <h1>Shelf Master.</h1>
           <h2>Aiming to revolutionize library management at the Brigade School.</h2>
           <div class="btn-holder">
-            <a href="{{ url_for('catalog') }}" class="cta-button">View catalog</a>
+            <button onclick="location.href='{{ url_for('catalog') }}'" class="cta-button">View catalog</button>
           </div>
         </div>
       </div>
