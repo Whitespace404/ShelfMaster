@@ -2,24 +2,6 @@ import openpyxl
 from shelfmaster.models import User, Entity
 from shelfmaster import app, db
 
-# def create_database():
-#     with app.app_context():
-#         db.create_all()
-
-#         admin = Admin(username="rahulreji", password="power", role_id=2)
-#         db.session.add(admin)
-#         db.session.commit()
-
-#         for usn_name in read_namelist():
-# u = User(
-#     username=usn_name[0],
-#     name=usn_name[1],
-#     is_teacher=False,
-#     class_section="4A",
-# )
-# db.session.add(u)
-# db.session.commit()
-
 # for book_details in read_booklist():
 #     entity = Entity(
 #         type="Book",
@@ -54,44 +36,73 @@ def convert_name(name):
 
 
 def read_booklist():
-    wb = openpyxl.load_workbook("Master copy 22-23 (3).xlsx")
+    wb = openpyxl.load_workbook("booklist.xlsx")
+    result_dicts = []
     sheet = wb["1to4852"]
-
-    result_dict = []
-    for row in sheet.iter_rows(min_row=1, values_only=True):
+    for row in sheet.iter_rows(min_row=2, values_only=True):
         details = dict()
-        details["accession_number"] = row[0]
-        name = row[2]
-        details["author"] = convert_name(name)
+
+        details["accession_number"] = row[1]
+        details["author"] = convert_name(row[2])
         details["title"] = convert_name(row[3])
         details["call_number"] = row[4]
         details["publisher"] = row[5]
-        details["place_of_publication"] = row[7]
         details["isbn"] = row[6]
         details["vendor"] = row[7]
         details["bill_number"] = row[8]
+        details["bill_date"] = row[9]
         details["price"] = row[10]
-        if row is not None:
-            result_dict.append(details)
+        details["place_of_publication"] = row[11]  # "location"
+        details["remarks"] = row[12]
+        details["language"] = row[13]
+        if any(details.values()):
+            result_dicts.append(details)
 
-    with app.app_context():
-        for book_details in result_dict:
-            entity = Entity(
-                type="Book",
-                title=book_details["title"],
-                author=book_details["author"],
-                accession_number=book_details["accession_number"],
-                call_number=book_details["call_number"],
-                publisher=book_details["publisher"],
-                place_of_publication=book_details["place_of_publication"],
-                isbn=book_details["isbn"],
-                vendor=book_details["vendor"],
-                bill_number=book_details["bill_number"],
-                amount=book_details["price"],
-                language="English",
-            )
-            db.session.add(entity)
-            db.session.commit()
+    return result_dicts
+
+    # sheet = wb["4853- 14925"]
+    # for row in sheet.iter_rows(min_row=3, values_only=True):
+    #     details = dict()
+
+    #     details["accession_number"] = row[0]
+    #     details["author"] = convert_name(row[1])
+    #     details["title"] = convert_name(row[2])
+    #     details["call_number"] = row[3]
+    #     details["publisher"] = row[4]
+    #     details["isbn"] = row[5]
+    #     details["vendor"] = row[6]
+    #     details["bill_number"] = row[7]
+    #     details["bill_date"] = row[8]
+    #     details["price"] = row[9]
+    #     details["place_of_publication"] = row[10]  # "location"
+    #     details["remarks"] = row[11]
+    #     details["language"] = row[12]
+    #     if any(details.values()):
+    #         result_dicts.append(details)
+
+    # return result_dicts
+
+    # sheet = wb["14926-15874"]
+    # for row in sheet.iter_rows(min_row=3, values_only=True):
+    #     details = dict()
+
+    #     details["accession_number"] = row[0]
+    #     details["author"] = convert_name(row[1])
+    #     details["title"] = convert_name(row[2])
+    #     details["call_number"] = row[3]
+    #     details["publisher"] = row[4]
+    #     details["isbn"] = row[5]
+    #     details["vendor"] = row[6]
+    #     details["bill_number"] = row[7]
+    #     details["bill_date"] = row[8]
+    #     details["price"] = row[9]
+    #     details["place_of_publication"] = row[10]  # "location"
+    #     details["remarks"] = row[11]
+    #     details["language"] = row[12]
+    #     if any(details.values()):
+    #         result_dicts.append(details)
+
+    # return result_dicts
 
 
 def read_namelist():

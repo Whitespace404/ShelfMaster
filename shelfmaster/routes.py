@@ -40,7 +40,7 @@ from shelfmaster.utilities import (
     create_database,
     calculate_overdue_days,
 )
-from shelfmaster.utilities_master import read_namelist
+from shelfmaster.utilities_master import read_namelist, read_booklist
 from shelfmaster.const import ROLE_PERMS
 
 
@@ -641,3 +641,31 @@ def upload_namelist():
         flash("Added to database successfully.")
         return redirect(url_for("home"))
     return render_template("confirm_results.html", results=results)
+
+
+@app.route("/upload_booklist", methods=["GET", "POST"])
+def upload_booklist():
+    results = read_booklist()
+    if request.method == "POST":
+        for result in results:
+            e = Entity(
+                type="Book",
+                accession_number=result["accession_number"],
+                author=result["author"],
+                title=result["title"],
+                call_number=result["call_number"],
+                publisher=result["publisher"],
+                isbn=result["isbn"],
+                vendor=result["vendor"],
+                bill_number=result["bill_number"],
+                bill_date=result["bill_date"],
+                price=result["price"],
+                remarks=result["remarks"],
+                language=result["language"],
+                place_of_publication=result["place_of_publication"],
+            )
+            db.session.add(e)
+            db.session.commit()
+        flash("Added to database successfully.")
+        return redirect(url_for("home"))
+    return render_template("confirm_bookresults.html", results=results)

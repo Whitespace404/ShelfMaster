@@ -1,0 +1,46 @@
+{% extends 'base.html' %}
+
+{% block content %}
+  <div class="table-div">
+    <table class="admin-logs">
+      <tr>
+        <th>Sl no</th>
+        <th>Acc No.</th>
+        <th>Author</th>
+        <th>Title</th>
+        <th>Call number</th>
+        <th>Publisher</th>
+        <th>ISBN</th>
+        <th>Vendor</th>
+        <th>Bill number</th>
+        <th>Bill date</th>
+        <th>Price</th>
+        <th>Place of publication</th>
+        <th>Remarks</th>
+        <th>Language</th>
+      </tr>
+      {% for log in results %}
+        <tr>
+          <td>{{ loop.index }}</td>
+          <td>{{ log.accession_number }}</td>
+          <td>{{ log.author }}</td>
+          <td>{{ log.title }}</td>
+          <td>{{ log.call_number }}</td>
+          <td>{{ log.publisher }}</td>
+          <td>{{ log.isbn }}</td>
+          <td>{{ log.vendor }}</td>
+          <td>{{ log.bill_number }}</td>
+          <td>{{ log.bill_date }}</td>
+          <td>{{ log.price }}</td>
+          <td>{{ log.place_of_publication }}</td>
+          <td>{{ log.remarks }}</td>
+          <td>{{ log.language }}</td>
+        </tr>
+      {% endfor %}
+    </table>
+  </div>
+
+  <form action="" method="POST">
+    <input type="submit" />
+  </form>
+{% endblock %}
