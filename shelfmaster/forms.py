@@ -7,7 +7,10 @@ from shelfmaster import app
 
 class LoginForm(FlaskForm):
     with app.app_context():
-        admins = Admin().query.filter_by().all()
+        try:
+            admins = Admin().query.filter_by().all()
+        except:  # todo remove open except
+            admins = []
         admins_usernames = [a.username for a in admins]
 
     username = SelectField(choices=admins_usernames)

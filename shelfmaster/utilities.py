@@ -91,34 +91,6 @@ def create_database():
         db.session.add(admin)
         db.session.commit()
 
-        for usn_name in read_namelist():
-            u = User(
-                username=usn_name[0],
-                name=usn_name[1],
-                is_teacher=False,
-                class_section="4A",
-            )
-            db.session.add(u)
-            db.session.commit()
-
-        for book_details in read_booklist():
-            entity = Entity(
-                type="Book",
-                title=book_details["title"],
-                author=book_details["author"],
-                accession_number=book_details["accession_number"],
-                call_number=book_details["call_number"],
-                publisher=book_details["publisher"],
-                place_of_publication=book_details["place_of_publication"],
-                isbn=book_details["isbn"],
-                vendor=book_details["vendor"],
-                bill_number=book_details["bill_number"],
-                amount=book_details["price"],
-                language="English",
-            )
-            db.session.add(entity)
-            db.session.commit()
-
 
 def convert_name(name):
     try:

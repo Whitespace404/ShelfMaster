@@ -2,7 +2,6 @@ from datetime import datetime, timedelta
 from random import randint, choice
 import os
 
-import dotenv
 from flask import render_template, redirect, request, flash, url_for
 from flask_login import current_user, login_required, login_user, logout_user
 from sqlalchemy import func
@@ -41,7 +40,7 @@ from shelfmaster.utilities import (
     create_database,
     calculate_overdue_days,
 )
-from shelfmaster.utilities_master import read_booklist
+from shelfmaster.utilities_master import read_namelist
 from shelfmaster.const import ROLE_PERMS
 
 
@@ -82,7 +81,6 @@ def borrow():
         # Now find the ROLE PERM of the user using the database
         # and then compare if it is equal or lesser than the
         # previous user and then compile the results
-        # GOANBOYLERED
 
         if u is None:
             form.usn.errors.append("USN does not exist")
@@ -627,7 +625,19 @@ def view_suggestions():
     )
 
 
-@app.route("/add_t")
-def add_t():
-    read_booklist()
-    return "sucess"
+@app.route("/upload_namelist", methods=["GET", "POST"])
+def upload_namelist():
+    results = read_namelist()
+    if request.method == "POST":
+        for result in results:
+            u = User(
+                class_section=result[0],
+                username=result[1],
+                name=result[2],
+                is_teacher=False,
+            )
+            db.session.add(u)
+            db.session.commit()
+        flash("Added to database successfully.")
+        return redirect(url_for("home"))
+    return render_template("confirm_results.html", results=results)

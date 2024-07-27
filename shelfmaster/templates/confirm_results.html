@@ -1,0 +1,26 @@
+{% extends 'base.html' %}
+
+{% block content %}
+  <div class="table-div">
+    <table class="admin-logs">
+      <tr>
+        <th>Sl no</th>
+        <th>Class</th>
+        <th>USN</th>
+        <th>Name</th>
+      </tr>
+      {% for log in results %}
+        <tr>
+          <td>{{ loop.index }}</td>
+          <td>{{ log.0 }}</td>
+          <td>{{ log.1 }}</td>
+          <td>{{ log.2 }}</td>
+        </tr>
+      {% endfor %}
+    </table>
+  </div>
+
+  <form action="" method="POST">
+    <input type="submit" />
+  </form>
+{% endblock %}

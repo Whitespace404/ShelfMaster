@@ -1,16 +1,4 @@
 {
-  "workbench.colorCustomizations": {
-    "editorCursor.foreground": "#56CD49EE"
-  },
-  "files.exclude": {
-    "**/.git": true,
-    "**/.DS_Store": true,
-    "**/Thumbs.db": true,
-    "**/__pycache__": true,
-    "**/env": true,
-    ".gitattributes": true,
-    "**/build": true
-  },
   "workbench.iconTheme": "material-icon-theme",
   "editor.fontSize": 17,
   "editor.formatOnSave": true,
@@ -21,12 +9,8 @@
   },
   "workbench.colorTheme": "Night Owl (No Italics)",
   "editor.cursorWidth": 2,
-  "editor.cursorSmoothCaretAnimation": "on",
   "terminal.integrated.cursorBlinking": true,
   "terminal.integrated.cursorStyle": "line",
-  "editor.smoothScrolling": true,
-  "editor.cursorBlinking": "expand",
-  "editor.cursorStyle": "block",
   "[django-html]": {
     "editor.quickSuggestions": {
       "other": true,
@@ -34,7 +18,7 @@
       "strings": true
     }
   },
-  "terminal.integrated.lineHeight": 0.9,
+  "terminal.integrated.lineHeight": 1.2,
   "editor.lineHeight": 1.4,
   "editor.fontFamily": "'Monaspace Neon', Consolas, 'Courier New', monospace",
   "editor.fontWeight": 450,

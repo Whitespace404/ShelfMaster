@@ -11,32 +11,32 @@ from shelfmaster import app, db
 #         db.session.commit()
 
 #         for usn_name in read_namelist():
-            # u = User(
-            #     username=usn_name[0],
-            #     name=usn_name[1],
-            #     is_teacher=False,
-            #     class_section="4A",
-            # )
-            # db.session.add(u)
-            # db.session.commit()
+# u = User(
+#     username=usn_name[0],
+#     name=usn_name[1],
+#     is_teacher=False,
+#     class_section="4A",
+# )
+# db.session.add(u)
+# db.session.commit()
 
-        # for book_details in read_booklist():
-        #     entity = Entity(
-        #         type="Book",
-        #         title=book_details["title"],
-        #         author=book_details["author"],
-        #         accession_number=book_details["accession_number"],
-        #         call_number=book_details["call_number"],
-        #         publisher=book_details["publisher"],
-        #         place_of_publication=book_details["place_of_publication"],
-        #         isbn=book_details["isbn"],
-        #         vendor=book_details["vendor"],
-        #         bill_number=book_details["bill_number"],
-        #         amount=book_details["price"],
-        #         language="English",
-        #     )
-        #     db.session.add(entity)
-        #     db.session.commit()
+# for book_details in read_booklist():
+#     entity = Entity(
+#         type="Book",
+#         title=book_details["title"],
+#         author=book_details["author"],
+#         accession_number=book_details["accession_number"],
+#         call_number=book_details["call_number"],
+#         publisher=book_details["publisher"],
+#         place_of_publication=book_details["place_of_publication"],
+#         isbn=book_details["isbn"],
+#         vendor=book_details["vendor"],
+#         bill_number=book_details["bill_number"],
+#         amount=book_details["price"],
+#         language="English",
+#     )
+#     db.session.add(entity)
+#     db.session.commit()
 
 
 def convert_name(name):
@@ -93,21 +93,33 @@ def read_booklist():
             db.session.add(entity)
             db.session.commit()
 
-def read_namelist():
-    wb = openpyxl.load_workbook("../../BOOK ISSUE 24-25 - Copy.xlsx")
-    sheet = wb["9"]
 
-    result_list = []
-    for row in sheet.iter_rows(min_row=2, values_only=True):
-        result_list.append((row[1], row[2], row[3]))
-        if row[1] and row[2] and row[3]:
-            if row[0] != "SL NO":
-                with app.app_context():
-                    u = User(
-                            username=row[2],
-                            name=row[3],
-                            is_teacher=False,
-                            class_section=row[1],
-                        )
-                    db.session.add(u)
-                    db.session.commit()
+def read_namelist():
+    workbook = openpyxl.load_workbook("namelist.xlsx")
+    results = []
+    for std in range(2, 13):
+        sheet = workbook[str(std)]
+
+        blanks = 0
+        current_class = None
+        skip_next = False
+
+        for row in sheet.iter_rows(min_row=1, values_only=True):  # first row ignored
+            if not any(row):
+                blanks += 1
+                if blanks == 2:  # two blank rows indicate end of class
+                    current_class = None
+                continue
+            else:
+                blanks = 0
+
+            if row[0] and not all(row[1:3]):  # (<class>, None, None)
+                current_class = row[0]
+                skip_next = True  # next will be the header
+                continue
+            elif skip_next:
+                skip_next = False
+                continue  # skips the header
+            else:
+                results.append([current_class, row[1], row[2]])
+    return results
