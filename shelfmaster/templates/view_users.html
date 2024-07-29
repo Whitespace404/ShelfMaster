@@ -1,50 +1,79 @@
 {% extends 'base.html' %}
 
 {% block content %}
-  <div class="table-div">
-    <table class="admin-logs">
-      <tr>
-        <th>Sl no</th>
-        <th>USN</th>
-        <th>Name</th>
-        <th>Class and Section</th>
-        <th>Book borrowed</th>
-      </tr>
-      {% for log in logs.items %}
-        <tr>
-          <td>{{ log.id }}</td>
-          <td>
-            <a href="{{ url_for('view_user', usn=log.username) }}">{{ log.username }}</a>
-          </td>
-          <td>{{ log.name }}</td>
-          <td>{{ log.class_section }}</td>
-          {% if not log.borrowed_entities %}
-            <td></td>
-          {% else %}
-            {% if log.is_teacher == False %}
-              <td>{{ log.borrowed_entities.0 }}</td>
-            {% else %}
-              <td>{{ log.borrowed_entities }}</td>
-            {% endif %}
-          {% endif %}
-        </tr>
-      {% endfor %}
-    </table>
-  </div>
+<div class="table-div">
+  <table class="admin-logs">
+    <tr>
+      <th>Sl no</th>
+      <th>USN</th>
+      <th>Name</th>
+      <th>
+        <select id="customdropdown">
+          <option data-url="{{ url_for('view_all_users', class=None) }}">Class and Section</option>
+          <option data-url="{{ url_for('view_all_users', class='12A') }}">12A</option>
+          <option data-url="{{ url_for('view_all_users', class='12B') }}">12B</option>
+        </select>
+      </th>
+      <th>Book borrowed</th>
+    </tr>
+    {% for log in logs.items %}
+    <tr>
+      <td>{{ loop.index }}</td>
+      <td>
+        <a href="{{ url_for('view_user', usn=log.username) }}">{{ log.username }}</a>
+      </td>
+      <td>{{ log.name }}</td>
+      <td>{{ log.class_section }}</td>
+      {% if not log.borrowed_entities %}
+      <td>
+        {% set link = url_for('borrow', usn=log.username) %}
+        <a href="{{ link }}">Issue book for this user</a>
+      </td>
+      {% else %}
+      {% if log.is_teacher == False %}
+      <td>{{ log.borrowed_entities.0 }}</td>
+      {% else %}
+      <td>{{ log.borrowed_entities }}</td>
+      {% endif %}
+      {% endif %}
+    </tr>
+    {% endfor %}
+  </table>
+</div>
 
-  <div class="center-container">
-    <div class="pagination">
-      {% for pagenum in logs.iter_pages(left_edge=1, right_edge=1, left_current=1, right_current=2) %}
-        {% if pagenum %}
-          {% if logs.page == pagenum %}
-            <a href="{{ url_for('view_all_users', page=pagenum) }}" class="pagenum-current">{{ pagenum }}</a>
-          {% else %}
-            <a href="{{ url_for('view_all_users', page=pagenum) }}">{{ pagenum }}</a>
-          {% endif %}
-        {% else %}
-          ...
-        {% endif %}
-      {% endfor %}
-    </div>
+<div class="center-container">
+  <div class="pagination">
+    {% for pagenum in logs.iter_pages(left_edge=1, right_edge=1, left_current=1, right_current=2) %}
+    {% if pagenum %}
+    {% if logs.page == pagenum %}
+    <a href="{{ url_for('view_all_users', page=pagenum) }}" class="pagenum-current">{{ pagenum }}</a>
+    {% else %}
+    <a href="{{ url_for('view_all_users', page=pagenum) }}">{{ pagenum }}</a>
+    {% endif %}
+    {% else %}
+    ...
+    {% endif %}
+    {% endfor %}
   </div>
+</div>
+
+<script>
+
+  // function redirect() {
+  //   var dropdown = document.getElementById('customdropdown')
+  //   var selectedOption = dropdown.options[dropdown.selectedIndex]
+  //   var redirectUrl = selectedOption.value
+  //   window.location.href = redirectUrl
+  // }
+
+  const dropdown = document.getElementById('customdropdown');
+
+  dropdown.addEventListener('click', (event) => {
+    const selectedOption = event.target;
+    if (selectedOption.tagName === 'OPTION') {
+      const redirectUrl = selectedOption.dataset.url;
+      window.location.href = redirectUrl;
+    }
+  })
+</script>
 {% endblock %}

@@ -65,10 +65,13 @@ def borrow():
     form = BorrowForm()
 
     if request.method == "GET":
-        accession_number = request.args.get("accession_number")
+        accession_number = request.args.get("accession_number", type=int)
+        usn = request.args.get("usn")
 
         if accession_number is not None:
             form.book_id.data = accession_number
+        if usn is not None:
+            form.usn.data = usn
 
     if form.validate_on_submit():
         u = User.query.filter_by(username=form.usn.data).first()
@@ -256,7 +259,13 @@ def add_user():
 @login_required
 def view_all_users():
     page = request.args.get("page", default=1, type=int)
-    logs = User.query.paginate(page=page, per_page=40)
+    class_section = request.args.get("class")
+    if not class_section:
+        logs = User.query.paginate(page=page, per_page=40)
+    else:
+        logs = User.query.filter_by(class_section=class_section).paginate(
+            page=page, per_page=40
+        )
     return render_template("view_users.html", logs=logs, title="Users List")
 
 
@@ -284,7 +293,8 @@ def view_all_admins():
 @app.route("/view_books")
 @login_required
 def view_books():
-    books = Entity.query.filter_by().all()
+    page = request.args.get("page", default=1, type=int)
+    books = Entity.query.paginate(page=page, per_page=40)
     current_date = datetime.now()
     return render_template(
         "view_entities.html",

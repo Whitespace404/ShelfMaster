@@ -43,4 +43,21 @@
     {% endfor %}
   </table>
 </div>
+
+
+<div class="center-container">
+  <div class="pagination">
+    {% for pagenum in books.iter_pages(left_edge=1, right_edge=1, left_current=1, right_current=2) %}
+      {% if pagenum %}
+        {% if books.page == pagenum %}
+          <a href="{{ url_for('view_books', page=pagenum) }}" class="pagenum-current">{{ pagenum }}</a>
+        {% else %}
+          <a href="{{ url_for('view_books', page=pagenum) }}">{{ pagenum }}</a>
+        {% endif %}
+      {% else %}
+        ...
+      {% endif %}
+    {% endfor %}
+  </div>
+</div>
 {% endblock %}

@@ -49,6 +49,9 @@ create permalink for invoice, and redirect to that in email
 librarian must be able to override fines with reason
 update book details 
 
+show duplicate books only once
+return redirect to page you were previously on while borrowing book
+
 Tarishka 4A does not have a USN; was not added to db
 Amay Hazela is in both 3C and 3B; name was deleted from 3C
 Book 5534: Jungle Book (Class-VI) mistakenly assigned accession number 5334
