@@ -2,7 +2,7 @@ from datetime import datetime, timedelta
 from random import randint, choice
 import os
 
-from flask import render_template, redirect, request, flash, url_for
+from flask import render_template, redirect, request, flash, url_for, jsonify
 from flask_login import current_user, login_required, login_user, logout_user
 from sqlalchemy import func
 
@@ -111,7 +111,8 @@ def borrow():
             form.usn.errors.append(
                 "You have already borrowed a book. -linebreak- Return it and try again. "
             )
-    return render_template("borrow.html", form=form, title="Borrow A Book")
+    users = User.query.all()
+    return render_template("borrow.html", form=form, title="Borrow A Book", users=users)
 
 
 @app.route("/return", methods=["GET", "POST"])
@@ -428,6 +429,8 @@ def reports():
                 return render_template(
                     "readers_report.html", rep=most_avid_readers, title="Reports"
                 )
+        elif form.report_type.data == "fines":
+            return redirect(url_for("view_fine_log"))
     return render_template("reports_form.html", form=form, title="Generate a Report")
 
 
@@ -443,12 +446,13 @@ SEARCH_TYPE_MAPPING: dict = {
 @app.route("/catalog", methods=["GET", "POST"])
 def catalog():
     form = CatalogForm()
+    page = request.args.get("page", default=1, type=int)
     if form.validate_on_submit():
         if form.criteria.data in SEARCH_TYPE_MAPPING:
             search_attribute = SEARCH_TYPE_MAPPING[form.criteria.data]
             q = Entity.query.filter(
                 search_attribute.ilike(f"%{form.query.data}%")
-            ).all()
+            ).paginate(page=page, per_page=40)
         else:
             q = []
 
@@ -680,3 +684,11 @@ def upload_booklist():
         flash("Added to database successfully.")
         return redirect(url_for("home"))
     return render_template("confirm_bookresults.html", results=results)
+
+
+@app.route("/autocomplete")
+def autocomplete():
+    query = request.args.get("query")
+    users = User.query.filter(User.username.like(f"%{query}%")).all()
+    suggestions = [user.username for user in users]
+    return jsonify(suggestions)

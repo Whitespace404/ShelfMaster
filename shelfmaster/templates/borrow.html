@@ -1,6 +1,14 @@
 {% extends 'base.html' %}
 
 {% block content %}
+
+  <datalist id="namelist">
+    {% for user in users %}
+      <option value="{{ user.username }}">{{ user.name }} {{ user.class_section }}</option>
+    {% endfor %}
+  </datalist>
+
+
   <div class="form">
     <form action="" method="POST" class="styled-form">
       <fieldset>
@@ -17,7 +25,7 @@
             {% endfor %}
           {% endfor %}
         {% else %}
-          {{ form.usn(autocomplete = 'off') }}
+          {{ form.usn(autocomplete = 'off', placeholder='Start typing..', list='namelist') }}
         {% endif %}
         {{ form.book_id.label }}
         {% if form.book_id.errors %}
