@@ -84,15 +84,18 @@
           </div>
         </div>
       </div>
-      {% if e %}
+      <div class="button-container">
+        {% if e %}
         {% if not (e[- 1].user == e[- 1].entity.user) %}
           {% set link = url_for('borrow', accession_number = book.accession_number) %}
-          <a href="{{ link }}" id="submit" style="padding: 3%">Borrow this book</a>
+          <a href="{{ link }}" id="borrow-btn">Borrow this book</a>
         {% endif %}
       {% else %}
         {% set link = url_for('borrow', accession_number = book.accession_number) %}
-        <a href="{{ link }}" id="submit" style="padding: 3%">Borrow this book</a>
+        <a href="{{ link }}" id="borrow-btn">Borrow this book</a>
       {% endif %}
+      </div>
     </div>
+    
   </div>
 {% endblock %}

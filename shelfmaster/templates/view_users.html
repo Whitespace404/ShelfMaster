@@ -8,12 +8,8 @@
       <th>USN</th>
       <th>Name</th>
       <th>
-        <select id="customdropdown">
-          <option data-url="{{ url_for('view_all_users', class=None) }}">Class and Section</option>
-          <option data-url="{{ url_for('view_all_users', class='12A') }}">12A</option>
-          <option data-url="{{ url_for('view_all_users', class='12B') }}">12B</option>
-        </select>
-      </th>
+        Class and Section
+        </th>
       <th>Book borrowed</th>
     </tr>
     {% for log in logs.items %}

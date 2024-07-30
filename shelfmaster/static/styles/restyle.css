@@ -84,7 +84,7 @@ body {
 }
 
 .wrapper a {
-    font-size: 27px;
+    font-size: 24px;
     font-family: 'SF Pro Display';
     font-weight: 800;
     text-decoration: none;
@@ -291,9 +291,10 @@ form {
 }
 
 .logo {
-    font-size: 54px;
-    margin: 0.8em 0.5em;
+    font-size: 45px;
+        margin: 1em 0.5em;
     font-family: 'SF Pro Display';
+    text-align: center;
 }
 
 .form-container {
@@ -464,6 +465,52 @@ div.form-grid>label:nth-child(5) {
     color: white;
 }
 
+.login-form-container {
+    display: grid;
+    place-items: center;
+}
+
+.login-form input,
+.login-form select,
+.login-form option {
+    min-width: 20vw;
+    padding: 10px;
+    margin-top: 10px;
+}
+
+.login-form fieldset {
+    padding: 20px;
+}
+
+.login-form-container .login-form {
+    font-size: 20px;
+}
+
+#borrow-btn {
+    color: aliceblue;
+    background: #090B5C;
+    border-radius: 3px;
+    text-align: center;
+    padding: 10px;
+    text-decoration: none;
+    max-width: fit-content;
+    padding: 15px 40px;
+    transition: 0.3s;
+}
+
+#borrow-btn:hover {
+    text-decoration: underline;
+    box-shadow: 0 5px 3px 0 rgba(0, 0, 0, 0.24), 0 5px 6px 0 rgba(0, 0, 0, 0.19);
+}
+
+.container h1 {
+    padding-bottom: 20px;
+}
+
+.button-container {
+    text-align: center;
+    margin: 15px 0px;
+}
 /* 
 .entity-form-grid {
     display: grid;
