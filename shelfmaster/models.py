@@ -14,6 +14,7 @@ class User(db.Model):
 
     borrowed_entities = relationship("Entity", backref="user", lazy=True)
     transaction = relationship("TransactionLog", backref="user", lazy=True)
+    checkout = relationship("ReturnLog", backref="user", lazy=True)
     fines = relationship("FinesLog", backref="user", lazy=True)
     suggestions = relationship("Suggestions", backref="user", lazy=True)
 
@@ -58,15 +59,15 @@ class TransactionLog(db.Model):
         return f"{str(self.id)}"
 
 
-# class ReadingLog(db.Model):
-#     id = sa.Column(sa.Integer, primary_key=True, unique=True)
-#     user_id = sa.Column(sa.Integer, sa.ForeignKey("user.id")) # TODO must add relationships
-#     entity_id = sa.Column(sa.Integer, sa.ForeignKey("entity.id"))
-#     returned_time = sa.Column(sa.DateTime)
-#     librarian_remarks = sa.Column(sa.String(120))
+class ReturnLog(db.Model):
+    id = sa.Column(sa.Integer, primary_key=True, unique=True)
+    user_id = sa.Column(sa.Integer, sa.ForeignKey("user.id"))
+    entity_id = sa.Column(sa.Integer, sa.ForeignKey("entity.id"))
+    returned_time = sa.Column(sa.DateTime)
+    librarian_remarks = sa.Column(sa.String(120))
 
-#     def __repr__(self):
-#         return f"{str(self.id)}"
+    def __repr__(self):
+        return f"{str(self.id)}"
 
 
 class AdminActionsLog(db.Model):
@@ -105,6 +106,7 @@ class Entity(db.Model):
     date_added = sa.Column(sa.DateTime, default=datetime.now)
     user_id = sa.Column(sa.Integer, sa.ForeignKey("user.id"))
     transaction = relationship("TransactionLog", backref="entity", lazy=True)
+    checkout = relationship("ReturnLog", backref="entity", lazy=True)
     fines = relationship("FinesLog", backref="entity", lazy=True)
 
     def __repr__(self):

@@ -156,9 +156,10 @@ th {
     border-collapse: collapse;
     padding: 7px;
     text-align: left;
-    text-overflow: ellipsis;
+    /* text-overflow: ellipsis;
     overflow: hidden;
     white-space: nowrap;
+        */
 }
 
 td.td-title {
@@ -511,9 +512,35 @@ div.form-grid>label:nth-child(5) {
     text-align: center;
     margin: 15px 0px;
 }
-/* 
+#hidden-tr td {
+    border: 0;
+}
+
+.mini-form {
+    font-size: 16px;
+}
+
+.issue-btn {
+    display: block;
+    margin-top: 10px;
+}
 .entity-form-grid {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
     grid-gap: 1rem;
-} */
+}
+
+.entity-form input {
+    padding: 5px;
+    font-size: 16px;
+}
+
+.entity-form {
+    font-size: 14px;
+}
+
+#remarks {
+    padding: 0.8rem;
+    height: 50px;
+    font-size: 14px;
+}

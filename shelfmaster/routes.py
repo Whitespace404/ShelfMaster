@@ -32,6 +32,7 @@ from shelfmaster.models import (
     FinesLog,
     Holidays,
     Suggestions,
+    ReturnLog,
 )
 from shelfmaster.utilities import (
     super_admin_required,
@@ -92,9 +93,16 @@ def borrow():
             form.book_id.errors.append("That book doesn't exist in the database yet.")
             return render_template("borrow.html", form=form, title="Borrow A Book")
         if entity.is_borrowed:
-            form.book_id.errors.append(
-                f"{form.book_id.data} borrowed by {entity.user.name}."
-            )
+            if entity.user.username == form.usn.data:
+                # TODO test this: renewing book
+                entity.due_date = datetime.now() + timedelta(days=7)
+                db.session.commit()
+                flash(f"Return date extended to {entity.due_date.strftime('%d/%m/%y')}")
+                return redirect(url_for("home"))
+            else:
+                form.book_id.errors.append(
+                    f"{form.book_id.data} borrowed by {entity.user.name}."
+                )
             return render_template("borrow.html", form=form, title="Borrow A Book")
         if u.is_teacher:
             borrow_book(u, entity)
@@ -134,11 +142,12 @@ def return_():
     return render_template("return.html", form=form, title="Return a Book")
 
 
-@app.route("/confirm_return/<accession_number>", methods=["GET", "POST"])
+@app.route("/confirm_return/<int:accession_number>", methods=["GET", "POST"])
 def confirm_return(accession_number):
-    # TODO sanitize b here since this route can be accessed without redirect.
     form = ConfirmReturnForm()
     b = Entity.query.filter_by(accession_number=accession_number).first()
+    if not b.due_date:
+        return "error book was not borrowed"
     is_fine_needed = None
     current_dt = datetime.now()
 
@@ -175,7 +184,14 @@ def confirm_return(accession_number):
             )
             db.session.add(fine)
 
-        # return the book, with remarks. must have to make checkout_log work for remarks.
+        return_ = ReturnLog(
+            user=b.user,
+            entity=b,
+            returned_time=current_dt,
+            librarian_remarks=form.librarian_remarks.data,
+        )
+        db.session.add(return_)
+
         b.is_borrowed = False
         b.user = None
         b.due_date = None
@@ -256,18 +272,37 @@ def add_user():
     return render_template("add_user.html", form=form, title="Add a User")
 
 
-@app.route("/view_all_users")
+@app.route("/view_all_users", methods=["GET", "POST"])
 @login_required
 def view_all_users():
+    if request.method == "POST":
+        return redirect(url_for("view_all_users", clas=request.form["clas"]))
     page = request.args.get("page", default=1, type=int)
-    class_section = request.args.get("class")
+    class_section = request.args.get("clas")
+    # TODO redo this logic
     if not class_section:
-        logs = User.query.paginate(page=page, per_page=40)
+        if request.args.get("borrowed_only"):
+            logs = User.query.filter(User.borrowed_entities != None).paginate(
+                page=page, per_page=40
+            )
+        else:
+            logs = User.query.paginate(page=page, per_page=40)
     else:
-        logs = User.query.filter_by(class_section=class_section).paginate(
-            page=page, per_page=40
-        )
-    return render_template("view_users.html", logs=logs, title="Users List")
+        if request.args.get("borrowed_only"):
+            logs = User.query.filter(User.borrowed_entities != None).paginate(
+                page=page, per_page=40
+            )
+        else:
+            logs = User.query.filter_by(class_section=class_section).paginate(
+                page=page, per_page=40
+            )
+    classes = db.session.query(User.class_section).distinct().all()
+    return render_template(
+        "view_users.html",
+        logs=logs,
+        title="Users List",
+        classes=classes,
+    )
 
 
 @app.route("/view_admin_log")
@@ -295,7 +330,13 @@ def view_all_admins():
 @login_required
 def view_books():
     page = request.args.get("page", default=1, type=int)
-    books = Entity.query.paginate(page=page, per_page=40)
+    borrowed_only = request.args.get("borrowed_only")
+    if not borrowed_only:
+        books = Entity.query.paginate(page=page, per_page=40)
+    else:
+        books = Entity.query.filter(Entity.is_borrowed == True).paginate(
+            page=page, per_page=40
+        )
     current_date = datetime.now()
     return render_template(
         "view_entities.html",
@@ -536,8 +577,8 @@ def over():
         u = User.query.filter_by().first()
         entity.user = u
         entity.is_borrowed = True
-        entity.borrowed_date = datetime.now()
-        early_date = datetime.now() - timedelta(days=10)
+        entity.borrowed_date = datetime.now() - timedelta(days=8)
+        early_date = datetime.now() - timedelta(days=1)
         entity.due_date = early_date
 
         t = TransactionLog(user=u, entity=entity, due_date=early_date)

@@ -43,7 +43,7 @@
           <div class="table-container">
             <table>
               <thead>
-                <th class="title-row">Title</th>
+                <th>Title</th>
                 <th>Author</th>
                 <th>Date borrowed</th>
               </thead>
@@ -59,7 +59,9 @@
             </table>
           </div>
           {% set link = url_for('borrow', usn=user.username) %}
-          <a href="{{ link }}" id="submit" style="padding: 3%">Issue book for this user</a>
+          <div class="btn-container">
+            <a href="{{ link }}" id="borrow-btn" class="issue-btn">Issue book for this user</a>
+          </div>
         </div>
       </div>
     </div>

@@ -3,13 +3,32 @@
 {% block content %}
 <div class="table-div">
   <table class="admin-logs">
+    <tr id="hidden-tr">
+      <td></td>
+      <td></td>
+      <td></td>
+      <td>
+        <form action="" method="POST" class="mini-form">
+          <select name="clas" id="clas">
+            <option value="">Filter by class</option>
+            {% for class in classes %}
+              <option value="{{ class[0] }}">{{ class[0] }}</option>
+            {% endfor %}
+          </select>
+          <input type="submit" value="&check;">
+        </form>
+      </td>
+      <td>
+        <a href="{{ url_for('view_all_users', borrowed_only=True) }}">
+          Show only borrowers
+        </a>
+      </td>
+    </tr>
     <tr>
       <th>Sl no</th>
       <th>USN</th>
       <th>Name</th>
-      <th>
-        Class and Section
-        </th>
+      <th>Class and Section</th>
       <th>Book borrowed</th>
     </tr>
     {% for log in logs.items %}
@@ -53,23 +72,4 @@
   </div>
 </div>
 
-<script>
-
-  // function redirect() {
-  //   var dropdown = document.getElementById('customdropdown')
-  //   var selectedOption = dropdown.options[dropdown.selectedIndex]
-  //   var redirectUrl = selectedOption.value
-  //   window.location.href = redirectUrl
-  // }
-
-  const dropdown = document.getElementById('customdropdown');
-
-  dropdown.addEventListener('click', (event) => {
-    const selectedOption = event.target;
-    if (selectedOption.tagName === 'OPTION') {
-      const redirectUrl = selectedOption.dataset.url;
-      window.location.href = redirectUrl;
-    }
-  })
-</script>
 {% endblock %}
