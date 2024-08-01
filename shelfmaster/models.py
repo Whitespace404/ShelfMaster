@@ -7,6 +7,7 @@ from shelfmaster import db, login_manager
 
 class User(db.Model):
     id = sa.Column(sa.Integer, primary_key=True, unique=True)
+    # rollno = sa.Column(sa.Integer)
     username = sa.Column(sa.String(20), nullable=False, unique=True)
     name = sa.Column(sa.String(32))
     is_teacher = sa.Column(sa.Boolean)
