@@ -87,7 +87,7 @@ def create_database():
     with app.app_context():
         db.create_all()
 
-        admin = Admin(username="rahulreji", password="power", role_id=2)
+        admin = Admin(username="admin", password="power", role_id=2)
         db.session.add(admin)
         db.session.commit()
 
