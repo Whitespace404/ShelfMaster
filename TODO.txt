@@ -64,4 +64,10 @@ dont allow user to borrow book again
 firebase?
 daily transaction list show
 
+
+database backup
+
+report gene
+books available, purchased books, lost books, missing books, total books
+
 database backup
