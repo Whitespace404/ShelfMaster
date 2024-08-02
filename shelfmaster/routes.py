@@ -107,14 +107,14 @@ def borrow():
         if u.is_teacher:
             borrow_book(u, entity)
             flash(f"{entity.type} borrowed successfully.")
-            return redirect(url_for("home"))
+            return redirect(url_for("borrow"))
         elif len(u.borrowed_entities) == 0:
             # if entity.call_number
             borrow_book(u, entity)
             flash(
                 f"{entity.type} borrowed successfully. Please return it before {entity.due_date.strftime('%d/%m/%y')}"
             )
-            return redirect(url_for("home"))
+            return redirect(url_for("borrow"))
         else:
             form.usn.errors.append(
                 "You have already borrowed a book. -linebreak- Return it and try again. "
@@ -411,7 +411,7 @@ def add_entity():
         db.session.commit()
 
         flash(f"{form.type.data} added successfully")
-        return redirect(url_for("home"))
+        return redirect(url_for("add_entity"))
     return render_template("add_entity.html", form=form, title="Add an Entity")
 
 
@@ -641,7 +641,7 @@ def add_holiday():
             flash(f"Holiday added for date {form.date.data}")
         else:
             flash(f"{form.date.data} is already a holiday ")
-        return redirect(url_for("home"))
+        return redirect(url_for("add_holiday"))
     return render_template("add_holiday.html", form=form)
 
 
@@ -712,13 +712,15 @@ def upload_booklist():
                 call_number=result["call_number"],
                 publisher=result["publisher"],
                 isbn=result["isbn"],
-                vendor=result["vendor"],
-                bill_number=result["bill_number"],
-                bill_date=result["bill_date"],
-                price=result["price"],
-                remarks=result["remarks"],
-                language=result["language"],
-                place_of_publication=result["place_of_publication"],
+
+                # If D- prefixed books, comment the following lines
+                # vendor=result["vendor"],
+                # bill_number=result["bill_number"],
+                # bill_date=result["bill_date"],
+                # price=result["price"],
+                # remarks=result["remarks"],
+                # language=result["language"],
+                # place_of_publication=result["place_of_publication"],
             )
             db.session.add(e)
             db.session.commit()

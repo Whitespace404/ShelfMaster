@@ -53,6 +53,18 @@ show duplicate books only once
 return redirect to page you were previously on while borrowing book
 
 Tarishka 4A does not have a USN; was not added to db
-Amay Hazela is in both 3C and 3B; name was deleted from 3C
-Book 5534: Jungle Book (Class-VI) mistakenly assigned accession number 5334
-Books 14926 to 15874 not added because of duplicate accession numbers
+
+show users with outstanding returns
+remove users, remove books
+edit book details
+
+add rollnumber to database for user
+dont allow user to borrow book again 
+
+firebase?
+daily transaction list show
+
+database backup
+
+report gene
+books available, purchased books, lost books, missing books, total books

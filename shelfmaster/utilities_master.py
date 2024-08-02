@@ -60,27 +60,27 @@ def read_booklist():
 
     # return result_dicts
 
-    sheet = wb["4853- 14925"]
-    for row in sheet.iter_rows(min_row=3, values_only=True):
-        details = dict()
+    # sheet = wb["4853- 14925"]
+    # for row in sheet.iter_rows(min_row=3, values_only=True):
+    #     details = dict()
 
-        details["accession_number"] = row[0]
-        details["author"] = convert_name(row[1])
-        details["title"] = convert_name(row[2])
-        details["call_number"] = row[3]
-        details["publisher"] = row[4]
-        details["isbn"] = row[5]
-        details["vendor"] = row[6]
-        details["bill_number"] = row[7]
-        details["bill_date"] = row[8]
-        details["price"] = row[9]
-        details["place_of_publication"] = row[10]  # "location"
-        details["remarks"] = row[11]
-        details["language"] = row[12]
-        if any(details.values()):
-            result_dicts.append(details)
+    #     details["accession_number"] = row[0]
+    #     details["author"] = convert_name(row[1])
+    #     details["title"] = convert_name(row[2])
+    #     details["call_number"] = row[3]
+    #     details["publisher"] = row[4]
+    #     details["isbn"] = row[5]
+    #     details["vendor"] = row[6]
+    #     details["bill_number"] = row[7]
+    #     details["bill_date"] = row[8]
+    #     details["price"] = row[9]
+    #     details["place_of_publication"] = row[10]  # "location"
+    #     details["remarks"] = row[11]
+    #     details["language"] = row[12]
+    #     if any(details.values()):
+    #         result_dicts.append(details)
 
-    return result_dicts
+    # return result_dicts
 
     # sheet = wb["14926-15874"]
     # for row in sheet.iter_rows(min_row=3, values_only=True):
@@ -102,7 +102,22 @@ def read_booklist():
     #     if any(details.values()):
     #         result_dicts.append(details)
 
-    # return result_dicts
+    sheet = wb["Donated Acc. no"]
+    for row in sheet.iter_rows(min_row=308, values_only=True): # 2, then 308
+        details = dict()
+
+        details["accession_number"] = row[1]
+        details["author"] = convert_name(row[3])
+        details["title"] = convert_name(row[2])
+        details["call_number"] = row[7]
+        details["publisher"] = row[4]
+        details["isbn"] = row[5]
+        if row[6] is not None and row[6] != "-":
+            details["vendor"] = "Donated by " + row[6]
+        if any(details.values()):
+            result_dicts.append(details)
+
+    return result_dicts
 
 
 def read_namelist():
