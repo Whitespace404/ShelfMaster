@@ -58,7 +58,8 @@ def home():
             transactions=transactions,
             users=users,
         )
-    return render_template("home.html", title="Home")
+    year = date.today().year
+    return render_template("home.html", title="Home", year=year)
 
 
 @app.route("/borrow/", methods=["GET", "POST"])
@@ -723,3 +724,8 @@ def view_defaulters():
         Entity.is_borrowed == True, Entity.due_date <= today
     )
     return render_template("view_defaulters.html", logs=logs)
+
+
+@app.route("/privacy_policy")
+def privacy_policy():
+    return render_template("privacy_policy.html")
