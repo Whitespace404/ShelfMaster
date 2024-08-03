@@ -9,7 +9,7 @@
         <th>Name</th>
         <th>Accession Number</th>
         <th>Borrowed Time</th>
-        <th>Due Time</th>
+        <th>Due Date</th>
       </tr>
       {% for log in transactions %}
         <tr>
@@ -18,7 +18,7 @@
           <td>{{ log.user.name }}</td>
           <td>{{ log.entity.accession_number }}</td>
           <td>{{ log.borrowed_time.strftime('%d/%m/%Y %I:%M %p') }}</td>
-          <td>{{ log.due_date.strftime('%d/%m/%Y %I:%M %p') }}</td>
+          <td>{{ log.due_date.strftime('%d/%m/%Y') }}</td>
         </tr>
       {% endfor %}
     </table>

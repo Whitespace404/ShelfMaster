@@ -1,4 +1,4 @@
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, date
 from random import randint, choice
 import os
 
@@ -297,10 +297,11 @@ def view_all_users():
                 page=page, per_page=40
             )
     classes = db.session.query(User.class_section).distinct().all()
+    title = f"| {class_section}" if class_section else None
     return render_template(
         "view_users.html",
         logs=logs,
-        title="Users List",
+        title=title,
         classes=classes,
     )
 
@@ -359,7 +360,7 @@ def view_transactions():
 @app.route("/view_daily_transactions")
 @login_required
 def view_daily_transactions():
-    today = datetime.now().date() - timedelta(2)
+    today = datetime.now().date()
 
     transactions = TransactionLog.query.filter(
         func.date(TransactionLog.borrowed_time) == today
@@ -556,18 +557,6 @@ def view_user(usn):
     return redirect(url_for("view_all_users"))
 
 
-@app.route("/populate_shelf_rack_numbers")
-def pop_():
-    entities = Entity.query.all()
-    for entity in entities:
-        entity.shelf_number = randint(1, 25)
-        entity.rack_number = randint(1, 4)
-
-        db.session.commit()
-
-    return redirect(url_for("home"))
-
-
 @app.route("/populate_overdue_books")
 def over():
     with app.app_context():
@@ -725,3 +714,12 @@ def upload_booklist():
         flash("Added to database successfully.")
         return redirect(url_for("home"))
     return render_template("confirm_bookresults.html", results=results)
+
+
+@app.route("/view_defaulters")
+def view_defaulters():
+    today = datetime.combine(date.today(), datetime.max.time())
+    logs = User.query.join(Entity, User.borrowed_entities).filter(
+        Entity.is_borrowed == True, Entity.due_date <= today
+    )
+    return render_template("view_defaulters.html", logs=logs)

@@ -14,7 +14,9 @@ class User(db.Model):
     class_section = sa.Column(sa.String(10))
 
     borrowed_entities = relationship("Entity", backref="user", lazy=True)
-    transaction = relationship("TransactionLog", backref="user", lazy=True)
+    transaction = relationship(
+        "TransactionLog", backref="user", lazy=True, uselist=False
+    )
     checkout = relationship("ReturnLog", backref="user", lazy=True)
     fines = relationship("FinesLog", backref="user", lazy=True)
     suggestions = relationship("Suggestions", backref="user", lazy=True)
