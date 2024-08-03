@@ -69,6 +69,12 @@
         <p>View a log of both paid and unpaid fines</p>
       </div>
     </div>
+    <div class="row">
+      <div class="tool">
+        <a href="{{ url_for('view_daily_transactions') }}" class="btn btn-primary">View Transactions</a>
+        <p>View daily transactions</p>
+      </div>
+    </div>
 
     {% if current_user.role_id >= 2 %}
     <div class="admin-tools-panel">
@@ -114,6 +120,7 @@
         <a href="{{ url_for('add_holiday') }}" class="btn btn-primary">Add Holiday</a>
         <p>Add a school holiday. Fines will not include holidays. Weekends are automatically included.</p>
       </div>
+      
     </div>
   {% endif %}
 
@@ -133,7 +140,7 @@
     const obj1 = document.getElementById("value-a");
     const obj2 = document.getElementById("value-b");
     const obj3 = document.getElementById("value-c");
-    animateValue(obj1, {{ books / 10 }}, {{ books }}, 1200);
+    animateValue(obj1, {{ books / 10 }}, {{ books }}, 1000);
     animateValue(obj2, {{ transactions / 10 }}, {{ transactions }}, 600);
     animateValue(obj3, {{ users / 10 }}, {{ users }}, 300);
     </script>

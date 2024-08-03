@@ -356,6 +356,20 @@ def view_transactions():
     )
 
 
+@app.route("/view_daily_transactions")
+@login_required
+def view_daily_transactions():
+    today = datetime.now().date() - timedelta(2)
+
+    transactions = TransactionLog.query.filter(
+        func.date(TransactionLog.borrowed_time) == today
+    ).all()
+
+    return render_template(
+        "view_transaction_log.html", transactions=transactions, title="Transaction Log"
+    )
+
+
 @app.route("/admin_login", methods=["GET", "POST"])
 def admin_login():
     if current_user.is_authenticated:
@@ -554,22 +568,6 @@ def pop_():
     return redirect(url_for("home"))
 
 
-book_ids = [11075, 14646, 14647, 13372, 12894, 12893]
-users = [6, 7, 8, 10, 11, 12, 2]
-
-
-@app.route("/populate_borrowed_books")
-def pop_books():
-    for _ in book_ids:
-        user = User.query.filter_by(id=choice(users)).first()
-        b = Entity.query.filter_by(accession_number="4000").first()
-
-        t = TransactionLog(user=user, entity=b)
-        db.session.add(t)
-        db.session.commit()
-    return redirect(url_for("home"))
-
-
 @app.route("/populate_overdue_books")
 def over():
     with app.app_context():
@@ -727,11 +725,3 @@ def upload_booklist():
         flash("Added to database successfully.")
         return redirect(url_for("home"))
     return render_template("confirm_bookresults.html", results=results)
-
-
-@app.route("/autocomplete")
-def autocomplete():
-    query = request.args.get("query")
-    users = User.query.filter(User.username.like(f"%{query}%")).all()
-    suggestions = [user.username for user in users]
-    return jsonify(suggestions)

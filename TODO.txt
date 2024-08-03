@@ -71,3 +71,4 @@ report gene
 books available, purchased books, lost books, missing books, total books
 
 database backup
+defaulters list to submit to class teacher
