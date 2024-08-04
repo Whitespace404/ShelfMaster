@@ -2,7 +2,7 @@ from datetime import datetime, timedelta, date
 from random import randint, choice
 import os
 
-from flask import render_template, redirect, request, flash, url_for, jsonify
+from flask import render_template, redirect, request, flash, url_for
 from flask_login import current_user, login_required, login_user, logout_user
 from sqlalchemy import func
 
@@ -40,6 +40,7 @@ from shelfmaster.utilities import (
     borrow_book,
     create_database,
     calculate_overdue_days,
+    time_ago,
 )
 from shelfmaster.utilities_master import read_namelist, read_booklist
 from shelfmaster.const import ROLE_PERMS
@@ -51,12 +52,19 @@ def home():
         books = Entity.query.filter_by(type="Book").count()
         transactions = TransactionLog.query.count()
         users = User.query.count()
+        borrowers = TransactionLog.query.distinct().count()
+        tlog = TransactionLog.query.order_by(TransactionLog.id.desc()).limit(6).all()
+        rlog = ReturnLog.query.order_by(ReturnLog.id.desc()).limit(6).all()
         return render_template(
             "admin_tools.html",
             title="Admin Tools",
             books=books,
             transactions=transactions,
             users=users,
+            borrowers=borrowers,
+            tlog=tlog,
+            rlog=rlog,
+            time_ago=time_ago,
         )
     year = date.today().year
     return render_template("home.html", title="Home", year=year)
