@@ -117,7 +117,7 @@ div.wrapper>a:hover:after {
     transform-origin: bottom left;
 }
 
-.flash-message {
+.flash-message-home {
     background: rgba(0, 0, 0, 0.5);
     margin-top: 0;
     padding: 15px;
@@ -128,8 +128,13 @@ div.wrapper>a:hover:after {
     font-size: 23px;
 }
 
+.flash-message {
+    background: #708D81;
+    border-style: none;
+}
 .message {
     color: white;
+    
 }
 
 table {
@@ -194,18 +199,18 @@ tr>td>a {
 .clickable-row:hover {
     cursor: pointer;
 }
-
+/* 
 .stats {
-    display: flex;
+    display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        grid-template-rows: repeat(2, 1fr);
     justify-content: space-evenly;
-    margin: 45px 0px;
     text-align: center;
 }
 
 .stat {
     width: 300px;
-    border: 5px solid rgb(90, 87, 87);
-    border-radius: 14px;
+    border: 2px solid rgb(90, 87, 87);
     box-shadow: 0 5px 3px 0 rgba(0, 0, 0, 0.24), 0 5px 6px 0 rgba(0, 0, 0, 0.19);
 }
 
@@ -224,6 +229,7 @@ tr>td>a {
     margin-bottom: 30px;
 }
 
+*/
 form {
     font-size: 24px;
 }
@@ -318,7 +324,7 @@ form {
     }
 }
 
-.admin-tools-panel>div>a {
+/* .admin-tools-panel>div>a {
     display: inline-block;
     padding: 15px;
     font-size: 22px;
@@ -375,6 +381,7 @@ form {
     height: 30px;
 }
 
+*/
 .form-grid {
     display: grid;
 
@@ -512,6 +519,7 @@ div.form-grid>label:nth-child(5) {
     text-align: center;
     margin: 15px 0px;
 }
+
 #hidden-tr td {
     border: 0;
 }
@@ -524,6 +532,7 @@ div.form-grid>label:nth-child(5) {
     display: block;
     margin-top: 10px;
 }
+
 .entity-form-grid {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
@@ -544,6 +553,7 @@ div.form-grid>label:nth-child(5) {
     height: 50px;
     font-size: 14px;
 }
+
 .footer {
     background-color: rgba(0, 0, 0, 0.212);
     color: rgba(255, 255, 255, 0.433);
@@ -578,4 +588,165 @@ div.form-grid>label:nth-child(5) {
         margin-top: 10px;
         margin-bottom: 10px;
     }
+}
+.grid-container {
+    display: grid;
+    grid-template-columns: 1.2fr 4fr;
+}
+
+
+nav.admin-tools-panel {
+    background-color: #001427;
+    min-height: 100vh;
+}
+
+nav.admin-tools-panel {
+    svg {
+        fill: #F4D58D;
+        height: 1.4em;
+    }
+
+    .small-logo {
+        color: white;
+        text-align: center;
+        margin-top: 50px;
+        margin-bottom: 50px;
+    }
+
+    .logo-text {
+        margin-top: 10px;
+        font-size: 30px;
+
+        a {
+            color: white;
+            text-decoration: none;
+        }
+    }
+
+    .logout-link {
+        color: white;
+    }
+}
+
+nav.admin-tools-panel div.small-logo svg {
+    height: 5em;
+}
+
+.navbar-links a {
+    color: white;
+    display: block;
+    padding: 14px;
+    text-decoration: none;
+}
+
+.navbar-links>svg {
+    fill: #F4D58D;
+    height: 1em;
+}
+
+.navbar-links {
+    display: grid;
+    align-items: center;
+    justify-content: center;
+    margin-left: 13px;
+}
+
+.navbar-link,
+.logout-link {
+    display: grid;
+    align-items: center;
+    grid-template-columns: 1fr 6fr;
+    padding: 0 30px;
+    transition: 0.2s;
+    border-radius: 7px;
+}
+
+.navbar-link:hover {
+    a {
+        color: #001427;
+    }
+
+    svg {
+        fill: #001427;
+    }
+}
+
+.navbar-link:hover {
+    cursor: pointer;
+    background: #f4d58dd1;
+}
+
+.logout-link:hover {
+    background: #BF0603;
+
+    svg {
+        fill: white;
+    }
+}
+
+.dashboard {
+    /* display: grid; */
+    /* margin-left: 20px; */
+    margin-bottom: 20px;
+}
+
+.dashboard .banner {
+    display: grid;
+    align-items: center;
+    height: min-content;
+    padding: 10px;
+    font-weight: 800;
+    font-size: 18px;
+}
+
+.banner h1 {
+    margin-top: 18px;
+    margin-left: 18px;
+    margin-bottom: 30px;
+}
+
+.stats {
+    display: flex;
+    justify-content: space-evenly;
+    gap: 10px;
+}
+
+
+.stat {
+    height: fit-content;
+    padding: 10px 30px;
+    border-radius: 15px;
+    width: 256px;
+    height: 130px;
+    display: flex;
+    flex-direction: column;
+    align-items: baseline;
+}
+
+.stat h1 {
+    margin-top: 15px;
+    font-size: 38px;
+}
+
+.stat h3 {
+    font-size: 22px;
+    margin-top: 10px;
+}
+
+.stats>div:nth-child(1) {
+    background-color: #708D81;
+}
+
+.stats>div:nth-child(2) {
+    background-color: #F4D58D;
+}
+
+.stats>div:nth-child(3) {
+    background-color: #BF0603;
+    color: white;
+}
+
+.stats>div:nth-child(4) {
+    background-color: #8D0801;
+    color: white;
 }

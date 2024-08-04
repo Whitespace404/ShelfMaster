@@ -17,7 +17,7 @@
       {% with messages=get_flashed_messages(with_categories=true) %}
         {% if messages %}
           {% for category, message in messages %}
-            <div class="flash-message {{ category }}">{{ message }}</div>
+            <div class="flash-message-home {{ category }}">{{ message }}</div>
           {% endfor %}
         {% endif %}
       {% endwith %}
@@ -46,7 +46,7 @@
         </div>
       </div>
       <div class="footer">
-        Developed and tested by Rahul Thekkevilakom Reji | Copyright &#169; {{ year }} All Rights Reserved | <a href="{{ url_for('privacy_policy')}}" class="footer-link">Privacy Policy</a> | <a href="" class="footer-link">Terms of Service</a>
+        Developed by Rahul Thekkevilakom Reji | Copyright &#169; {{ year }} All Rights Reserved | <a href="{{ url_for('privacy_policy')}}" class="footer-link">Privacy Policy</a> | <a href="" class="footer-link">Terms of Service</a>
       </div>
     </header>
     
