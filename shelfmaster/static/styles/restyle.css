@@ -666,7 +666,6 @@ nav.admin-tools-panel div.small-logo svg {
     grid-template-columns: 1fr 6fr;
     padding: 0 30px;
     transition: 0.2s;
-    border-radius: 7px;
 }
 
 .navbar-link:hover {
