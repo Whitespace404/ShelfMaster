@@ -737,3 +737,8 @@ def view_defaulters():
 @app.route("/privacy_policy")
 def privacy_policy():
     return render_template("privacy_policy.html")
+
+
+@app.route("/about_the_dev")
+def about_the_dev():
+    return render_template("about_the_dev.html")
