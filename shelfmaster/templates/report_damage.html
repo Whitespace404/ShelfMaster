@@ -1,0 +1,59 @@
+{% extends 'base.html' %}
+
+{% block content %}
+  <form action="" method="POST" class="styled-form textarea-form">
+    <fieldset>
+      <legend>Report Damage</legend>
+      {{ form.hidden_tag() }}
+
+      <div class="form-grid">
+        {{ form.usn.label }}
+        {% if form.usn.errors %}
+          {{ form.usn(autocomplete = 'off', class = 'errored-input') }}
+
+          {% for error in form.usn.errors %}
+            {% for line in error.split('-linebreak-') %}
+              <span class="form-error">{{ line }}</span>
+            {% endfor %}
+          {% endfor %}
+        {% else %}
+          {{ form.usn(autocomplete = 'off') }}
+        {% endif %}
+
+        {{ form.book_id.label }}
+        {% if form.book_id.errors %}
+          {{ form.book_id(autocomplete = 'off', class = 'errored-input') }}
+
+          {% for error in form.book_id.errors %}
+            {% for line in error.split('-linebreak-') %}
+              <span class="form-error">{{ line }}</span>
+            {% endfor %}
+          {% endfor %}
+        {% else %}
+          {{ form.book_id(autocomplete = 'off') }}
+        {% endif %}
+
+        {{ form.type_of_damage.label }}
+        {{ form.type_of_damage }}
+
+        {{ form.fine_amt.label }}
+        {% if form.fine_amt.errors %}
+          {{ form.fine_amt(autocomplete = 'off', class = 'errored-input') }}
+
+          {% for error in form.fine_amt.errors %}
+            {% for line in error.split('-linebreak-') %}
+              <span class="form-error">{{ line }}</span>
+            {% endfor %}
+          {% endfor %}
+        {% else %}
+          {{ form.fine_amt(autocomplete = 'off') }}
+        {% endif %}
+
+        {{ form.remarks.label }}
+        {{ form.remarks }}
+
+      </div>
+      <div class="submit-btn">{{ form.submit }}</div>
+    </fieldset>
+  </form>
+{% endblock %}

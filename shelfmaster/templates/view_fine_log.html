@@ -26,11 +26,22 @@
         <a href="{{ url_for('view_entity', ac_number = log.entity.accession_number) }}">{{ log.entity.title }} by {{
           log.entity.author }}</a>
       </td>
+      {% if log.due_date %}
       {% set ddate = log.due_date %}
       {% set duedate = log.date_returned %}
-      <td>{{ ddate.strftime('%d/%m/%Y') }}</td>
-      <td>{{ duedate.strftime('%d/%m/%Y') }}</td>
+      
+        <td>{{ ddate.strftime('%d/%m/%Y') }}</td>
+        <td>{{ duedate.strftime('%d/%m/%Y') }}</td>
+      {% else %}
+        <td>NA</td>
+        <td>NA</td>
+      {% endif %}
+      {% if log.days_late %}
       <td>{{ log.days_late }} days late</td>
+      {% else %}
+      <td>Damage/Lost</td>
+      {% endif %}
+
       {% if log.is_paid %}
       <td>
         {{ log.fine_amount }} Rs.

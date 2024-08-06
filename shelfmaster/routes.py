@@ -13,6 +13,7 @@ from shelfmaster.forms import (
     ReturnForm,
     ConfirmReturnForm,
     SuggestBookForm,
+    ReportDamageForm,
 )
 from shelfmaster.admin_forms import (
     AddAdminsForm,
@@ -200,6 +201,10 @@ def confirm_return(accession_number):
             librarian_remarks=form.librarian_remarks.data,
         )
         db.session.add(return_)
+
+        if form.librarian_remarks.data:
+            cdate = datetime.now().date()
+            b.remarks = "\n" + str(cdate) + " | " + form.remarks.data
 
         b.is_borrowed = False
         b.user = None
@@ -739,6 +744,28 @@ def privacy_policy():
     return render_template("privacy_policy.html")
 
 
-@app.route("/about_the_dev")
-def about_the_dev():
-    return render_template("about_the_dev.html")
+@app.route("/report_damage", methods=["GET", "POST"])
+def report_damage():
+    form = ReportDamageForm()
+    if request.method == "GET":
+        acc_no = request.args.get("accession_number")
+        if acc_no:
+            form.book_id.data = acc_no
+    if form.validate_on_submit():
+        user = User.query.filter_by(username=form.usn.data).first()
+        book = Entity.query.filter_by(accession_number=form.book_id.data).first()
+
+        current_dt = datetime.now().date()
+        book.remarks += "\n" + str(current_dt) + " | " + form.remarks.data
+
+        fine = FinesLog(
+            user=user,
+            entity=book,
+            fine_amount=form.fine_amt.data,
+            amount_currently_due=form.fine_amt.data,
+        )
+        db.session.add(fine)
+        db.session.commit()
+
+        return redirect(url_for("view_fine_log"))
+    return render_template("report_damage.html", form=form)

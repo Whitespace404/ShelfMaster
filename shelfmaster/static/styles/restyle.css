@@ -8,7 +8,7 @@
     --denim: #001427;
     --gamboge: #f0a202ff;
     --tangerine: #f18805ff;
-    --cinnabar: #d95d39ff;
+    --cinnabar: #cc2e00;
     --blue-munsell: #7B9E89;
 }
 
@@ -161,12 +161,16 @@ table {
     border-collapse: collapse;
 }
 
+a#submit {
+    text-decoration: none;
+    color: black;
+}
 th {
     position: sticky;
-    background: rgb(16, 35, 126);
+    background: var(--denim);
     top: 0;
     color: white;
-    border-bottom: 5px solid rgb(34, 1, 197);
+    border-bottom: 5px solid var(--denim);
 }
 
 td,
@@ -341,6 +345,11 @@ form {
     }
 }
 
+@media (print) {
+    nav.admin-tools-panel {
+        display: none !important;
+    }
+}
 /* .admin-tools-panel>div>a {
     display: inline-block;
     padding: 15px;
@@ -846,3 +855,6 @@ nav.admin-tools-panel div.small-logo svg {
 
 }
 */
+.button-container a#borrow-btn.danger-btn {
+    background-color: var(--cinnabar);
+}

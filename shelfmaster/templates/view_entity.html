@@ -94,6 +94,8 @@
         {% set link = url_for('borrow', accession_number = book.accession_number) %}
         <a href="{{ link }}" id="borrow-btn">Borrow this book</a>
       {% endif %}
+
+      <a href="{{url_for('report_damage', accession_number=book.accession_number)}}" id="borrow-btn" class="danger-btn">Report Damage</a>
       </div>
     </div>
     

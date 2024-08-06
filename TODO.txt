@@ -1,9 +1,6 @@
-reading log
 
 add column borrowed_time in entity table
 when book returned show rack and shelf number
-
-Make acc. number be created using multiple dropdowns
 
 Generate graphs to show library usage :0
 
@@ -12,8 +9,6 @@ average number of reads taken to complete
 
 for user stats show number of books read, number of late returns, 
 average days taken to return 
-
-reading log is for returns, transaction log is for borrows
 
 reports
 - USER PAYING MOST FINES
@@ -24,16 +19,11 @@ check if user is allowed to borrow the book using accession_number before borrow
 account for holidays when counting fines
 check for book condition when returned, fine if not perfect
 
-if one user has multiple fines, let them pay off multiple fines at the same time
-
+do not let borrow book if fine outstanding
 add fine for damaged book, etc during confirm_return
 librarian should be able to manually waive fines
 
 show reports on home page
-
-send email to parent when fine is due
-
-HIDE inputs dont work
 
 make /add_entity redirect to different endpoints based on which entity
 see https://stackoverflow.com/questions/33769478/multi-part-form-using-flask-wtforms
@@ -46,13 +36,12 @@ use web scraping to instantly find the book that you search for.
 use .errored-input class for every errored input in form.
 
 create permalink for invoice, and redirect to that in email
-librarian must be able to override fines with reason
 update book details 
+holidays does not work
 
 show duplicate books only once
-return redirect to page you were previously on while borrowing book
 
-Tarishka 4A does not have a USN; was not added to db
+-> Tarishka 4A does not have a USN; was not added to db
 
 show users with outstanding returns
 remove users, remove books
@@ -64,11 +53,11 @@ dont allow user to borrow book again
 firebase?
 daily transaction list show
 
-
 database backup
 
 report gene
 books available, purchased books, lost books, missing books, total books
 
-database backup
 defaulters list to submit to class teacher
+report damage in book
+delete books, delete user
