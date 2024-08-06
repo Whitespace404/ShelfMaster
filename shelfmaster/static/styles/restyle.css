@@ -698,7 +698,7 @@ nav.admin-tools-panel div.small-logo svg {
 }
 
 .logout-link:hover {
-    background: var(--cinnabar);
+    background: red;
 
     svg {
         fill: white;
@@ -819,18 +819,7 @@ nav.admin-tools-panel div.small-logo svg {
     text-overflow: ellipsis;
 }
 
-
-.small-logo {
-    display: block;
-    transition: 2s;
-    animation: keerthanafiresarocketshipatthenearsidecornerofthescreen 2s infinite linear;
-    animation-play-state: running;
-
-}
-
-.small-logo {}
-
-@keyframes keerthanafiresarocketshipatthenearsidecornerofthescreen {
+/* @keyframes keerthanafiresarocketshipatthenearsidecornerofthescreen {
     0% {
         position: relative;
     }
@@ -856,3 +845,4 @@ nav.admin-tools-panel div.small-logo svg {
     }
 
 }
+*/
