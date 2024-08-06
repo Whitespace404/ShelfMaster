@@ -294,6 +294,7 @@ def view_all_users():
     page = request.args.get("page", default=1, type=int)
     class_section = request.args.get("clas")
     # TODO redo this logic
+
     if not class_section:
         if request.args.get("borrowed_only"):
             logs = User.query.filter(User.borrowed_entities != None).paginate(
@@ -317,6 +318,7 @@ def view_all_users():
         logs=logs,
         title=title,
         classes=classes,
+        class_section=class_section,
     )
 
 
@@ -769,3 +771,16 @@ def report_damage():
 
         return redirect(url_for("view_fine_log"))
     return render_template("report_damage.html", form=form)
+
+
+@app.route("/delete_class")
+def delete_class():
+    class_ = request.args.get("class")
+    users = User.query.filter_by(class_section=class_).all()
+
+    for user in users:
+        db.session.delete(user)
+    db.session.commit()
+
+    flash(f"Deleted class {class_}")
+    return redirect(url_for("view_all_users"))

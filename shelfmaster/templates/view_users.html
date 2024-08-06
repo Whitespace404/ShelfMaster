@@ -1,75 +1,76 @@
 {% extends 'base.html' %}
 
 {% block content %}
-<div class="table-div">
-  <table class="admin-logs">
-    <tr id="hidden-tr">
-      <td></td>
-      <td></td>
-      <td></td>
-      <td>
-        <form action="" method="POST" class="mini-form">
-          <select name="clas" id="clas">
-            <option value="">Filter by class</option>
-            {% for class in classes %}
-              <option value="{{ class[0] }}">{{ class[0] }}</option>
-            {% endfor %}
-          </select>
-          <input type="submit" value="&check;">
-        </form>
-      </td>
-      <td>
-        <a href="{{ url_for('view_all_users', borrowed_only=True) }}">
-          Show only borrowers
-        </a>
-      </td>
-    </tr>
-    <tr>
-      <th>Sl no</th>
-      <th>USN</th>
-      <th>Name</th>
-      <th>Class and Section</th>
-      <th>Book borrowed</th>
-    </tr>
-    {% for log in logs.items %}
-    <tr>
-      <td>{{ loop.index }}</td>
-      <td>
-        <a href="{{ url_for('view_user', usn=log.username) }}">{{ log.username }}</a>
-      </td>
-      <td>{{ log.name }}</td>
-      <td>{{ log.class_section }}</td>
-      {% if not log.borrowed_entities %}
-      <td>
-        {% set link = url_for('borrow', usn=log.username) %}
-        <a href="{{ link }}">Issue book for this user</a>
-      </td>
-      {% else %}
-      {% if log.is_teacher == False %}
-      <td>{{ log.borrowed_entities.0 }}</td>
-      {% else %}
-      <td>{{ log.borrowed_entities }}</td>
-      {% endif %}
-      {% endif %}
-    </tr>
-    {% endfor %}
-  </table>
-</div>
-
-<div class="center-container">
-  <div class="pagination">
-    {% for pagenum in logs.iter_pages(left_edge=1, right_edge=1, left_current=1, right_current=2) %}
-    {% if pagenum %}
-    {% if logs.page == pagenum %}
-    <a href="{{ url_for('view_all_users', page=pagenum) }}" class="pagenum-current">{{ pagenum }}</a>
-    {% else %}
-    <a href="{{ url_for('view_all_users', page=pagenum) }}">{{ pagenum }}</a>
-    {% endif %}
-    {% else %}
-    ...
-    {% endif %}
-    {% endfor %}
+  <div class="table-div">
+    <table class="admin-logs">
+      <tr id="hidden-tr">
+        <td></td>
+        <td></td>
+        <td>
+          {% if class_section %}
+            <a href="{{url_for('delete_class', class=class_section)}}">Delete class</a>
+          {% endif %}
+        </td>
+        <td>
+          <form action="" method="POST" class="mini-form">
+            <select name="clas" id="clas">
+              <option value="">Filter by class</option>
+              {% for class in classes %}
+                <option value="{{ class.0 }}">{{ class.0 }}</option>
+              {% endfor %}
+            </select>
+            <input type="submit" value="&check;" />
+          </form>
+        </td>
+        <td>
+          <a href="{{ url_for('view_all_users', borrowed_only=True) }}">Show only borrowers</a>
+        </td>
+      </tr>
+      <tr>
+        <th>Sl no</th>
+        <th>USN</th>
+        <th>Name</th>
+        <th>Class and Section</th>
+        <th>Book borrowed</th>
+      </tr>
+      {% for log in logs.items %}
+        <tr>
+          <td>{{ loop.index }}</td>
+          <td>
+            <a href="{{ url_for('view_user', usn=log.username) }}">{{ log.username }}</a>
+          </td>
+          <td>{{ log.name }}</td>
+          <td>{{ log.class_section }}</td>
+          {% if not log.borrowed_entities %}
+            <td>
+              {% set link = url_for('borrow', usn=log.username) %}
+              <a href="{{ link }}">Issue book for this user</a>
+            </td>
+          {% else %}
+            {% if log.is_teacher == False %}
+              <td>{{ log.borrowed_entities.0 }}</td>
+            {% else %}
+              <td>{{ log.borrowed_entities }}</td>
+            {% endif %}
+          {% endif %}
+        </tr>
+      {% endfor %}
+    </table>
   </div>
-</div>
 
+  <div class="center-container">
+    <div class="pagination">
+      {% for pagenum in logs.iter_pages(left_edge=1, right_edge=1, left_current=1, right_current=2) %}
+        {% if pagenum %}
+          {% if logs.page == pagenum %}
+            <a href="{{ url_for('view_all_users', page=pagenum) }}" class="pagenum-current">{{ pagenum }}</a>
+          {% else %}
+            <a href="{{ url_for('view_all_users', page=pagenum) }}">{{ pagenum }}</a>
+          {% endif %}
+        {% else %}
+          ...
+        {% endif %}
+      {% endfor %}
+    </div>
+  </div>
 {% endblock %}

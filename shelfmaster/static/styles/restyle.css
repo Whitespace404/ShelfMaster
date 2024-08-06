@@ -6,8 +6,8 @@
     --diol-color: #8d0801; */
 
     --denim: #001427;
-    --gamboge: #f0a202ff;
-    --tangerine: #f18805ff;
+    --gamboge: #f18805ff;
+        --tangerine: #f0a202ff;
     --cinnabar: #cc2e00;
     --blue-munsell: #7B9E89;
 }
@@ -140,15 +140,16 @@ div.wrapper>a:hover:after {
     font-family: 'SF Pro Display';
     font-weight: 800;
     font-size: 23px;
+    color: white;
 }
 
 .flash-message {
-    background: var(--gamboge);
+    background: var(--tangerine);
     border-style: none;
+    color: black;
 }
 
 .message {
-    color: white;
 
 }
 

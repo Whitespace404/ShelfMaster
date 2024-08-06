@@ -41,7 +41,12 @@
             {{ form.class_section(autocomplete = 'off') }}
           {% endif %}
         </div>
-        <div class="submit-btn">{{ form.submit }}</div>
+        <div class="submit-btn">
+          {{ form.submit }}
+          <a href="" id="submit">
+            Upload xlsx
+          </a>
+        </div>
       </fieldset>
     </form>
   </div>
