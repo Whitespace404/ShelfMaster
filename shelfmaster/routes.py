@@ -53,7 +53,7 @@ def home():
         books = Entity.query.filter_by(type="Book").count()
         transactions = TransactionLog.query.count()
         users = User.query.count()
-        borrowers = TransactionLog.query.distinct().count()
+        borrowers = Entity.query.filter_by(is_borrowed=True).count()
         tlog = TransactionLog.query.order_by(TransactionLog.id.desc()).limit(6).all()
         rlog = ReturnLog.query.order_by(ReturnLog.id.desc()).limit(6).all()
         return render_template(
@@ -635,9 +635,8 @@ def add_holiday():
     form = AddHolidayForm()
     if form.validate_on_submit():
         h = Holidays.query.filter_by(holiday=form.date.data).first()
-        if (
-            h is None
-        ):  # TODO this doesnt work, duplicate holidays can be added - fix that
+        if (h is None):
+            # TODO this doesnt work, duplicate holidays can be added - fix that
             holiday = Holidays(holiday=form.date.data)
             db.session.add(holiday)
             db.session.commit()
@@ -758,7 +757,7 @@ def report_damage():
         book = Entity.query.filter_by(accession_number=form.book_id.data).first()
 
         current_dt = datetime.now().date()
-        book.remarks += "\n" + str(current_dt) + " | " + form.remarks.data
+        book.remarks += f"\n {str(current_dt)} | {form.remarks.data}"
 
         fine = FinesLog(
             user=user,

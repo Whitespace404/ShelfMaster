@@ -61,3 +61,6 @@ books available, purchased books, lost books, missing books, total books
 defaulters list to submit to class teacher
 report damage in book
 delete books, delete user
+
+add support for borrowing same book again
+fine calculation is incorrect
