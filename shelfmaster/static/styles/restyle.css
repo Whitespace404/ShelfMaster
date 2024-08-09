@@ -149,8 +149,11 @@ div.wrapper>a:hover:after {
     color: black;
 }
 
+<<<<<<< HEAD
 .message {}
 
+=======
+>>>>>>> cb2232d0692ef0b9f66d05adc9fdfd983233b829
 table {
     border: 3px solid black;
     margin: 10px;
