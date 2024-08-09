@@ -64,3 +64,24 @@ delete books, delete user
 
 add support for borrowing same book again
 fine calculation is incorrect
+
+what happens when the librarian is absent?
+
+export data as xlsx
+pagination doesnt work
+log admin actions in descending order
+
+group navbar items based on action type
+colour coding EVERYWHERE
+notifications for pending returns
+
+monthly fine report + monthly report
+search option for due books, fines
+
+search fines by USN 
+check call number before borrowing book
+
+monthly:
+
+- classwise how many books borrowed each class
+- every fine each month report 
