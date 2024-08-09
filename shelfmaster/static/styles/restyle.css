@@ -7,7 +7,7 @@
 
     --denim: #001427;
     --gamboge: #f18805ff;
-        --tangerine: #f0a202ff;
+    --tangerine: #f0a202ff;
     --cinnabar: #cc2e00;
     --blue-munsell: #7B9E89;
 }
@@ -149,10 +149,6 @@ div.wrapper>a:hover:after {
     color: black;
 }
 
-.message {
-
-}
-
 table {
     border: 3px solid black;
     margin: 10px;
@@ -166,6 +162,7 @@ a#submit {
     text-decoration: none;
     color: black;
 }
+
 th {
     position: sticky;
     background: var(--denim);
@@ -351,6 +348,7 @@ form {
         display: none !important;
     }
 }
+
 /* .admin-tools-panel>div>a {
     display: inline-block;
     padding: 15px;
