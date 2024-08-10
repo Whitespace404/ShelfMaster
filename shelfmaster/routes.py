@@ -736,8 +736,8 @@ def view_defaulters():
     today = datetime.combine(date.today(), datetime.max.time())
     logs = User.query.join(Entity, User.borrowed_entities).filter(
         Entity.is_borrowed == True, Entity.due_date <= today
-    )
-    return render_template("view_defaulters.html", logs=logs)
+    ).order_by(User.class_section, User.name)
+    return render_template("view_defaulters.html", logs=logs, title="Pending Returns")
 
 
 @app.route("/privacy_policy")
