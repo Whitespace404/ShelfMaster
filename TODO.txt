@@ -1,85 +1,41 @@
 
-add column borrowed_time in entity table
-when book returned show rack and shelf number
-
-Generate graphs to show library usage :0
-
+POSSIBLE REPORTS
 in `view_entity.html` show some stats about book such as number of reads,
 average number of reads taken to complete
+for user stats show number of books read, number of late returns
+books available, purchased books, lost books, missing books, total books
+classwise how many books borrowed by each grade (monthly)
+all fines received each month report 
 
-for user stats show number of books read, number of late returns, 
-average days taken to return 
-
-reports
-- USER PAYING MOST FINES
-- CLASS PAYING MOST FINES
-
-check if user is allowed to borrow the book using accession_number before borrowing
-
-account for holidays when counting fines
-check for book condition when returned, fine if not perfect
-
-do not let borrow book if fine outstanding
-add fine for damaged book, etc during confirm_return
+add column borrowed_time in entity table
+check if user is allowed to borrow book using call number before borrowing book
+do not let user borrow book if fine outstanding
 librarian should be able to manually waive fines
 
-show reports on home page
-
-make /add_entity redirect to different endpoints based on which entity
-see https://stackoverflow.com/questions/33769478/multi-part-form-using-flask-wtforms
-
 prevent closing of invoice tab without returning book
-use web scraping to instantly find the book that you search for.
-
+show the book that you search for to confirm before borrowing
 use .errored-input class for every errored input in form.
 
 create permalink for invoice, and redirect to that in email
-update book details 
+edit user attributes, edit book attributes
+
+ERRORS
 holidays does not work
-
-show duplicate books only once
-
--> Tarishka 4A does not have a USN; was not added to db
-
-show users with outstanding returns
-remove users, remove books
-edit book details
+Tarishka 4A does not have a USN; was not added to db
+fine calculation is incorrect
+pagination breaks url where filter present
 
 add rollnumber to database for user
-dont allow user to borrow book again 
+how to delete users, delete books
+renew borrowed book
 
 firebase?
-daily transaction list show
-
 database backup
+fine calculation when librarian is absent?
 
-report gene
-books available, purchased books, lost books, missing books, total books
-
-defaulters list to submit to class teacher
-report damage in book
-delete books, delete user
-
-add support for borrowing same book again
-fine calculation is incorrect
-
-what happens when the librarian is absent?
-
-export data as xlsx
-pagination doesnt work
+export every table as xlsx option
 log admin actions in descending order
-
 group navbar items based on action type
-colour coding EVERYWHERE
 notifications for pending returns
-
-monthly fine report + monthly report
 search option for due books, fines
-
 search fines by USN 
-check call number before borrowing book
-
-monthly:
-
-- classwise how many books borrowed each class
-- every fine each month report 
