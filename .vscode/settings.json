@@ -1,6 +1,6 @@
 {
   "workbench.iconTheme": "material-icon-theme",
-  "editor.fontSize": 18,
+  "editor.fontSize": 16,
   "editor.formatOnSave": true,
   "terminal.integrated.fontSize": 17,
   "[python]": {
@@ -19,8 +19,8 @@
     }
   },
   "terminal.integrated.lineHeight": 1.2,
-  "editor.lineHeight": 1.4,
+  "editor.lineHeight": 1.5,
   "editor.fontFamily": "'Monaspace Neon Var', Consolas, 'Courier New', monospace",
-  "editor.fontWeight": 600,
+  "editor.fontWeight": 500,
   "editor.fontLigatures": "'calt', 'liga', 'dlig', 'ss01', 'ss02', 'ss03', 'ss04', 'ss05', 'ss06', 'ss07', 'ss08'"
 }
