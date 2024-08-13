@@ -1,10 +1,4 @@
 :root {
-    /* --denim: #001427;
-    --gamboge: #708d81;
-    --tangerine: #f4d58d;
-    --cinnabar: #bf0603;
-    --diol-color: #8d0801; */
-
     --denim: #001427;
     --gamboge: #f18805ff;
     --tangerine: #f0a202ff;
@@ -217,37 +211,6 @@ tr>td>a {
     cursor: pointer;
 }
 
-/* 
-.stats {
-    display: grid;
-        grid-template-columns: repeat(4, 1fr);
-        grid-template-rows: repeat(2, 1fr);
-    justify-content: space-evenly;
-    text-align: center;
-}
-
-.stat {
-    width: 300px;
-    border: 2px solid rgb(90, 87, 87);
-    box-shadow: 0 5px 3px 0 rgba(0, 0, 0, 0.24), 0 5px 6px 0 rgba(0, 0, 0, 0.19);
-}
-
-.stat>h1 {
-    padding: 50px;
-    font-size: 65px;
-    font-family: 'Special Elite';
-    font-weight: 800;
-}
-
-.stat>h3 {
-    font-size: 34px;
-    padding: 10px;
-    font-family: 'SF Pro Display';
-    font-weight: bolder;
-    margin-bottom: 30px;
-}
-
-*/
 form {
     font-size: 24px;
 }
@@ -349,64 +312,6 @@ form {
     }
 }
 
-/* .admin-tools-panel>div>a {
-    display: inline-block;
-    padding: 15px;
-    font-size: 22px;
-    font-weight: 800;
-    text-align: center;
-    background-color: #090B5C;
-    border-radius: 15px;
-    transition: 0.2s ease;
-    width: 225px;
-    max-width: 220px;
-    text-decoration: none;
-    color: white;
-}
-
-.admin-tools-panel>div>a:hover {
-    text-decoration: underline;
-}
-
-.admin-tools-panel>div>a:focus-visible {
-    outline: none;
-}
-
-.admin-tools-panel {
-    text-align: left;
-    display: flex;
-    justify-content: space-between;
-    gap: 5px;
-    margin: 10px;
-    margin-top: 10px;
-}
-
-.tool {
-    border: 2px dashed silver;
-    padding: 10px;
-    width: 300px;
-    display: flex;
-    flex-direction: column;
-    text-align: center;
-    align-items: center;
-}
-
-.tool>p {
-    font-size: 20px;
-    color: black;
-    padding: 10px;
-    line-height: 1.5;
-    margin-bottom: 0;
-}
-
-.tool>svg {
-    display: block;
-    fill: var(--school-yellow);
-    margin: 30px 0px;
-    height: 30px;
-}
-
-*/
 .form-grid {
     display: grid;
 
@@ -606,18 +511,18 @@ div.form-grid>label:nth-child(5) {
     margin-left: 300px;
     text-align: justify;
     line-height: 1.3em;
+}
 
-    h1,
-    h2,
-    h3 {
-        margin-top: 20px;
-        margin-bottom: 20px;
-    }
+.privacy-policy h1,
+.privacy-policy h2,
+.privacy-policy h3 {
+    margin-top: 20px;
+    margin-bottom: 20px;
+}
 
-    li {
-        margin-top: 10px;
-        margin-bottom: 10px;
-    }
+.privacy-policy li {
+    margin-top: 10px;
+    margin-bottom: 10px;
 }
 
 .grid-container {
@@ -631,32 +536,30 @@ nav.admin-tools-panel {
     min-height: 100vh;
 }
 
-nav.admin-tools-panel {
-    svg {
-        fill: var(--tangerine);
-        height: 1.4em;
-    }
+nav.admin-tools-panel svg {
+    fill: var(--tangerine);
+    height: 1.4em;
+}
 
-    .small-logo {
-        color: white;
-        text-align: center;
-        margin-top: 50px;
-        margin-bottom: 50px;
-    }
+nav.admin-tools-panel .small-logo {
+    color: white;
+    text-align: center;
+    margin-top: 50px;
+    margin-bottom: 50px;
+}
 
-    .logo-text {
-        margin-top: 10px;
-        font-size: 30px;
+nav.admin-tools-panel .logo-text {
+    margin-top: 10px;
+    font-size: 30px;
+}
 
-        a {
-            color: white;
-            text-decoration: none;
-        }
-    }
+nav.admin-tools-panel .logo-text a {
+    color: white;
+    text-decoration: none;
+}
 
-    .logout-link {
-        color: white;
-    }
+nav.admin-tools-panel .logout-link {
+    color: white;
 }
 
 nav.admin-tools-panel div.small-logo svg {
@@ -690,14 +593,12 @@ nav.admin-tools-panel div.small-logo svg {
     transition: 0.2s;
 }
 
-.navbar-link:hover {
-    a {
-        color: var(--denim);
-    }
+.navbar-link:hover a {
+    color: var(--denim);
+}
 
-    svg {
-        fill: var(--denim);
-    }
+.navbar-link:hover svg {
+    fill: var(--denim);
 }
 
 .navbar-link:hover {
@@ -707,10 +608,10 @@ nav.admin-tools-panel div.small-logo svg {
 
 .logout-link:hover {
     background: red;
+}
 
-    svg {
-        fill: white;
-    }
+.logout-link:hover svg {
+    fill: white;
 }
 
 .dashboard {
@@ -827,33 +728,39 @@ nav.admin-tools-panel div.small-logo svg {
     text-overflow: ellipsis;
 }
 
-/* @keyframes keerthanafiresarocketshipatthenearsidecornerofthescreen {
-    0% {
-        position: relative;
-    }
-
-    10% {
-        transform: rotate(-2deg);
-    }
-
-    15% {
-        transform: rotate(2deg);
-    }
-
-    20% {
-        transform: rotate(-2deg);
-    }
-
-    22% {
-        transform: rotate(2deg);
-    }
-
-    28% {
-        transform: rotate(-2deg);
-    }
-
-}
-*/
 .button-container a#borrow-btn.danger-btn {
     background-color: var(--cinnabar);
+}
+
+.upload-details {
+    font-size: 17px;
+    margin-top: 50px;
+    margin-bottom: 50px;
+    margin-right: 300px;
+    margin-left: 300px;
+    text-align: justify;
+    line-height: 1.3em;
+}
+
+input[type='file'] {
+    font-size: 17px;
+}
+
+input#file-upload-button {
+    background-color: var(--tangerine);
+}
+
+#upload {
+    padding: 10px 20px;
+    margin-top: 10px;
+    background-color: var(--gamboge);
+    outline: 0;
+    border: 0;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 17px;
+}
+
+#upload:hover {
+    text-decoration: underline;
 }

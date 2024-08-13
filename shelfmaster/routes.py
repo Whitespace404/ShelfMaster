@@ -2,9 +2,10 @@ from datetime import datetime, timedelta, date
 from random import randint, choice
 import os
 
-from flask import render_template, redirect, request, flash, url_for
+from flask import render_template, redirect, request, flash, url_for, abort
 from flask_login import current_user, login_required, login_user, logout_user
-from sqlalchemy import func
+from sqlalchemy import func, desc
+from werkzeug.utils import secure_filename
 
 from shelfmaster import db, app
 from shelfmaster.forms import (
@@ -43,7 +44,7 @@ from shelfmaster.utilities import (
     calculate_overdue_days,
     time_ago,
 )
-from shelfmaster.utilities_master import read_namelist, read_booklist
+from shelfmaster.utilities_master import read_namelist_from_upload, read_booklist
 from shelfmaster.const import ROLE_PERMS
 
 
@@ -325,7 +326,7 @@ def view_all_users():
 @app.route("/view_admin_log")
 @super_admin_required
 def view_admin_log():
-    logs = AdminActionsLog.query.filter_by().all()
+    logs = AdminActionsLog.query.filter_by().order_by(desc(AdminActionsLog.id))
     return render_template("admin_log.html", logs=logs, title="Admin Logs")
 
 
@@ -683,22 +684,22 @@ def view_suggestions():
     )
 
 
-@app.route("/upload_namelist", methods=["GET", "POST"])
-def upload_namelist():
-    results = read_namelist()
-    if request.method == "POST":
-        for result in results:
-            u = User(
-                class_section=result[0],
-                username=result[1],
-                name=result[2],
-                is_teacher=False,
-            )
-            db.session.add(u)
-            db.session.commit()
-        flash("Added to database successfully.")
-        return redirect(url_for("home"))
-    return render_template("confirm_results.html", results=results)
+# @app.route("/upload_namelist", methods=["GET", "POST"])
+# def upload_namelist():
+# results = read_namelist()
+# if request.method == "POST":
+#     for result in results:
+#         u = User(
+#             class_section=result[0],
+#             username=result[1],
+#             name=result[2],
+#             is_teacher=False,
+#         )
+#         db.session.add(u)
+#         db.session.commit()
+#     flash("Added to database successfully.")
+#     return redirect(url_for("home"))
+# return render_template("confirm_results.html", results=results)
 
 
 @app.route("/upload_booklist", methods=["GET", "POST"])
@@ -783,3 +784,45 @@ def delete_class():
 
     flash(f"Deleted class {class_}")
     return redirect(url_for("view_all_users"))
+
+
+@app.route("/upload_namelist")
+def upload_namelist():
+    return render_template("upload_student_details.html")
+
+
+@app.route("/upload_namelist", methods=["POST"])
+def upload():
+    uploaded_file = request.files["file"]
+    filename = uploaded_file.filename
+    file_ext = os.path.splitext(filename)[1]
+    if file_ext not in app.config["UPLOAD_EXTENSIONS"]:
+        abort(400)
+    if filename != "":
+        filepath = os.path.join(
+            app.root_path,
+            app.config["UPLOAD_PATH"],
+            secure_filename(filename),
+        )
+        uploaded_file.save(filepath)
+
+        results = read_namelist_from_upload(filepath)
+        for result in results:
+            user = User.query.filter_by(username=result["usn"]).first()
+            if not user:
+                u = User(
+                    class_section=result["class_section"],
+                    username=result["usn"],
+                    name=result["name"],
+                    is_teacher=False,
+                )
+                db.session.add(u)
+            else:
+                user.class_section = result["class_section"]
+                user.username = result["usn"]
+                user.name = result["name"]
+                db.session.add(user)
+            db.session.commit()
+        flash("Added to database successfully.")
+        return redirect(url_for("view_all_users"))
+    return redirect(url_for("upload_namelist"))

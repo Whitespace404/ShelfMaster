@@ -1,4 +1,3 @@
-
 POSSIBLE REPORTS
 in `view_entity.html` show some stats about book such as number of reads,
 average number of reads taken to complete
@@ -29,12 +28,10 @@ add rollnumber to database for user
 how to delete users, delete books
 renew borrowed book
 
-firebase?
 database backup
 fine calculation when librarian is absent?
 
 export every table as xlsx option
-log admin actions in descending order
 group navbar items based on action type
 notifications for pending returns
 search option for due books, fines

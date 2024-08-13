@@ -13,3 +13,4 @@ instance/
 .env
 credentials.json
 token.json
+uploads/

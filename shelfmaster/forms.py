@@ -1,4 +1,5 @@
 from flask_wtf import FlaskForm
+from flask_wtf.file import FileField, FileRequired, FileAllowed
 from wtforms import (
     StringField,
     SubmitField,
@@ -16,7 +17,7 @@ class LoginForm(FlaskForm):
     with app.app_context():
         try:
             admins = Admin().query.filter_by().all()
-        except:  # todo remove open except
+        except:  # TODO remove open except
             admins = []
         admins_usernames = [a.username for a in admins]
 

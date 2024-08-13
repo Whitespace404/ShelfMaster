@@ -5,6 +5,8 @@ from flask_sqlalchemy import SQLAlchemy
 app = Flask(__name__)
 app.config["SECRET_KEY"] = "cx8z315xS3V6HxsP1msE6diwAHGCqHRDY1lyGoBvuguX2"
 app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///main.db"
+app.config["UPLOAD_EXTENSIONS"] = [".xls", ".xlsx"]
+app.config["UPLOAD_PATH"] = "uploads"
 
 db = SQLAlchemy(app)
 login_manager = LoginManager()
