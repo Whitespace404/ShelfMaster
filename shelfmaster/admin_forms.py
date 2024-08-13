@@ -33,10 +33,11 @@ class AddBookForm(FlaskForm):
     place_of_publication = StringField(
         "Place of Publication", validators=[Length(max=64)]
     )
-    isbn = IntegerField("ISBN")
+    isbn = StringField("ISBN")
     vendor = StringField("Vendor", validators=[Length(max=32)])
     bill_number = StringField("Bill number", validators=[Length(max=32)])
-    amount = IntegerField("Amount")
+    bill_date = StringField("Bill date", validators=[Length(max=32)])
+    amount = StringField("Amount")
     remarks = TextAreaField("Remarks", validators=[Length(max=120)])
 
     language_choices = ["English", "Hindi", "Kannada", "Sanskrit"]
@@ -62,10 +63,10 @@ class AddUserForm(FlaskForm):
 
 class CatalogForm(FlaskForm):
     options = [
+        ("accession_number", "Accession Number"),
+        ("call_number", "Call Number"),
         ("author", "Author"),
         ("title", "Title"),
-        ("call_number", "Call Number"),
-        ("accession_number", "Accession Number"),
     ]
 
     criteria = SelectField("Search criteria", choices=options)
@@ -95,5 +96,3 @@ class FineReceivedForm(FlaskForm):
 class AddHolidayForm(FlaskForm):
     date = DateField("Holiday")
     submit = SubmitField("Add Holiday")
-
-

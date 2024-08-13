@@ -4,7 +4,7 @@
   <div class="form">
     <form action="" method="POST" class="entity-form">
       <fieldset>
-        <legend>Add an Entity</legend>
+        <legend>Edit Book</legend>
 
         {{ form.hidden_tag() }}
 
@@ -189,13 +189,7 @@
             {% endif %}
           </div>
         </div>
-        <div class="submit-btn">
-          {{ form.submit }}
-          <a href="{{ url_for('upload_booklist') }}" id="submit">
-            Upload xlsx
-          </a>
-        </div>
-
+        <div class="submit-btn">{{ form.submit }}</div>
       </fieldset>
     </form>
   </div>

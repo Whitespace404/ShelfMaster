@@ -22,10 +22,10 @@ ERRORS
 holidays does not work
 Tarishka 4A does not have a USN; was not added to db
 fine calculation is incorrect
+transaction log shows some empty values
 pagination breaks url where filter present
 
 add rollnumber to database for user
-how to delete users, delete books
 renew borrowed book
 
 database backup

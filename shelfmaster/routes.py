@@ -44,7 +44,10 @@ from shelfmaster.utilities import (
     calculate_overdue_days,
     time_ago,
 )
-from shelfmaster.utilities_master import read_namelist_from_upload, read_booklist
+from shelfmaster.utilities_master import (
+    read_namelist_from_upload,
+    read_booklist_from_upload,
+)
 from shelfmaster.const import ROLE_PERMS
 
 
@@ -57,6 +60,12 @@ def home():
         borrowers = Entity.query.filter_by(is_borrowed=True).count()
         tlog = TransactionLog.query.order_by(TransactionLog.id.desc()).limit(6).all()
         rlog = ReturnLog.query.order_by(ReturnLog.id.desc()).limit(6).all()
+        today = datetime.combine(date.today(), datetime.max.time())
+        pending_returns_count = (
+            User.query.join(Entity, User.borrowed_entities)
+            .filter(Entity.is_borrowed == True, Entity.due_date <= today)
+            .count()
+        )
         return render_template(
             "admin_tools.html",
             title="Admin Tools",
@@ -67,6 +76,7 @@ def home():
             tlog=tlog,
             rlog=rlog,
             time_ago=time_ago,
+            pending_returns_count=pending_returns_count,
         )
     year = date.today().year
     return render_template("home.html", title="Home", year=year)
@@ -214,7 +224,7 @@ def confirm_return(accession_number):
 
         db.session.commit()
 
-        flash(f"Book was returned successfully.")
+        flash("Book was returned successfully.")
         return redirect(url_for("home"))
 
     return render_template(
@@ -350,7 +360,9 @@ def view_books():
     page = request.args.get("page", default=1, type=int)
     borrowed_only = request.args.get("borrowed_only")
     if not borrowed_only:
-        books = Entity.query.paginate(page=page, per_page=40)
+        books = Entity.query.filter(Entity.remarks == None).paginate(
+            page=page, per_page=40
+        )
     else:
         books = Entity.query.filter(Entity.is_borrowed == True).paginate(
             page=page, per_page=40
@@ -411,7 +423,6 @@ def admin_login():
     return render_template("admin_login.html", form=form, title="Admin Login")
 
 
-# TODO multistep form here in order to add various types of objects
 @app.route("/add_entity", methods=["GET", "POST"])
 @super_admin_required
 def add_entity():
@@ -430,6 +441,7 @@ def add_entity():
             isbn=form.isbn.data,
             vendor=form.vendor.data,
             bill_number=form.bill_number.data,
+            bill_date=form.bill_date.data,
             amount=form.amount.data,
             remarks=form.remarks.data,
             language=form.language.data,
@@ -684,52 +696,34 @@ def view_suggestions():
     )
 
 
-# @app.route("/upload_namelist", methods=["GET", "POST"])
-# def upload_namelist():
-# results = read_namelist()
-# if request.method == "POST":
-#     for result in results:
-#         u = User(
-#             class_section=result[0],
-#             username=result[1],
-#             name=result[2],
-#             is_teacher=False,
-#         )
-#         db.session.add(u)
-#         db.session.commit()
-#     flash("Added to database successfully.")
-#     return redirect(url_for("home"))
-# return render_template("confirm_results.html", results=results)
+# @app.route("/upload_booklist", methods=["GET", "POST"])
+# def upload_booklist():
+#     results = read_booklist()
+#     if request.method == "POST":
+#         for result in results:
+#             e = Entity(
+#                 type="Book",
+#                 accession_number=result["accession_number"],
+#                 author=result["author"],
+#                 title=result["title"],
+#                 call_number=result["call_number"],
+#                 publisher=result["publisher"],
+#                 isbn=result["isbn"],
 
-
-@app.route("/upload_booklist", methods=["GET", "POST"])
-def upload_booklist():
-    results = read_booklist()
-    if request.method == "POST":
-        for result in results:
-            e = Entity(
-                type="Book",
-                accession_number=result["accession_number"],
-                author=result["author"],
-                title=result["title"],
-                call_number=result["call_number"],
-                publisher=result["publisher"],
-                isbn=result["isbn"],
-
-                # If D- prefixed books, comment the following lines
-                # vendor=result["vendor"],
-                # bill_number=result["bill_number"],
-                # bill_date=result["bill_date"],
-                # price=result["price"],
-                # remarks=result["remarks"],
-                # language=result["language"],
-                # place_of_publication=result["place_of_publication"],
-            )
-            db.session.add(e)
-            db.session.commit()
-        flash("Added to database successfully.")
-        return redirect(url_for("home"))
-    return render_template("confirm_bookresults.html", results=results)
+#                 # If D- prefixed books, comment the following lines
+#                 # vendor=result["vendor"],
+#                 # bill_number=result["bill_number"],
+#                 # bill_date=result["bill_date"],
+#                 # price=result["price"],
+#                 # remarks=result["remarks"],
+#                 # language=result["language"],
+#                 # place_of_publication=result["place_of_publication"],
+#             )
+#             db.session.add(e)
+#             db.session.commit()
+#         flash("Added to database successfully.")
+#         return redirect(url_for("home"))
+#     return render_template("confirm_bookresults.html", results=results)
 
 
 @app.route("/view_defaulters")
@@ -792,7 +786,7 @@ def upload_namelist():
 
 
 @app.route("/upload_namelist", methods=["POST"])
-def upload():
+def name_upload():
     uploaded_file = request.files["file"]
     filename = uploaded_file.filename
     file_ext = os.path.splitext(filename)[1]
@@ -825,4 +819,142 @@ def upload():
             db.session.commit()
         flash("Added to database successfully.")
         return redirect(url_for("view_all_users"))
+    return redirect(url_for("upload_namelist"))
+
+
+@app.route("/edit_user/<usn>/", methods=["GET", "POST"])
+def edit_user(usn):
+    user = User.query.filter_by(username=usn).first()
+    form = AddUserForm()
+
+    if form.validate_on_submit():
+        if form.username.data != usn:
+            assert User.query.filter_by(username=form.username.data).first() is None
+            user.username = (
+                form.username.data
+            )  # TODO raise form error here if USN is not unique
+        user.name = form.name.data
+        user.is_teacher = True if form.is_teacher.data == "Teacher" else False
+        user.class_section = form.class_section.data
+
+        db.session.add(user)
+        db.session.commit()
+
+        flash("User details updated.")
+        return redirect(url_for("view_all_users"))
+
+    form.username.data = user.username
+    form.name.data = user.name
+    form.is_teacher.data = user.is_teacher
+    form.class_section.data = user.class_section
+
+    return render_template("edit_user.html", form=form)
+
+
+@app.route("/delete_user/<usn>")
+def delete_user(usn):
+    user = User.query.filter_by(username=usn).first()
+    db.session.delete(user)
+    db.session.commit()
+    flash(f"{user.username} - {user.name} deleted successfully")
+    return redirect(url_for("view_all_users"))
+
+
+@app.route("/edit_book/<accession_number>", methods=["GET", "POST"])
+def edit_book(accession_number):
+    form = AddBookForm()
+    entity = Entity.query.filter_by(accession_number=accession_number).first()
+    if form.validate_on_submit():
+        if form.accession_number.data != accession_number:
+            assert (
+                Entity.query.filter_by(
+                    accession_number=form.accession_number.data
+                ).first()
+                is None
+            )
+            entity.accession_number = form.accession_number.data
+            # TODO raise form error here if USN is not unique
+
+        entity.title = form.title.data
+        entity.author = form.author.data
+        entity.accession_number = form.accession_number.data
+        entity.call_number = form.call_number.data
+        entity.publisher = form.publisher.data
+        entity.isbn = form.isbn.data
+        entity.vendor = form.vendor.data
+        entity.bill_number = form.bill_number.data
+        entity.bill_date = form.bill_date.data
+        entity.price = form.amount.data
+        entity.remarks = form.remarks.data
+        entity.language = form.language.data
+
+        db.session.add(entity)
+        db.session.commit()
+
+        flash("Book details updated.")
+        return redirect(url_for("view_entity", ac_number=entity.accession_number))
+
+    form.title.data = entity.title
+    form.author.data = entity.author
+    form.accession_number.data = entity.accession_number
+    form.call_number.data = entity.call_number
+    form.publisher.data = entity.publisher
+    form.isbn.data = entity.isbn
+    form.vendor.data = entity.vendor
+    form.bill_number.data = entity.bill_number
+    form.bill_date.data = entity.bill_date
+    form.amount.data = entity.price
+    form.remarks.data = entity.remarks
+    form.language.data = entity.language
+
+    return render_template("edit_book.html", form=form)
+
+
+@app.route("/upload_booklist")
+def upload_booklist():
+    return render_template("upload_book_details.html")
+
+
+@app.route("/upload_booklist", methods=["POST"])
+def book_upload():
+    uploaded_file = request.files["file"]
+    filename = uploaded_file.filename
+    file_ext = os.path.splitext(filename)[1]
+    if file_ext not in app.config["UPLOAD_EXTENSIONS"]:
+        abort(400)
+    if filename != "":
+        filepath = os.path.join(
+            app.root_path,
+            app.config["UPLOAD_PATH"],
+            secure_filename(filename),
+        )
+        uploaded_file.save(filepath)
+
+        results = read_booklist_from_upload(filepath)
+        for result in results:
+            book = Entity.query.filter_by(
+                accession_number=result["accession_number"]
+            ).first()
+
+            if book:
+                abort(413)  # accession number has to be unique
+
+            entity = Entity(
+                accession_number=result["accession_number"],
+                author=result["author"],
+                title=result["title"],
+                call_number=result["call_number"],
+                publisher=result["publisher"],
+                isbn=result["isbn"],
+                vendor=result["vendor"],
+                bill_number=result["bill_number"],
+                bill_date=result["bill_date"],
+                price=result["price"],
+                remarks=result["remarks"],
+                language=result["language"],
+            )
+            db.session.add(entity)
+            db.session.commit()
+        flash("Added to database successfully.")
+        return redirect(url_for("view_books"))
     return redirect(url_for("upload_namelist"))

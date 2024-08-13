@@ -58,12 +58,20 @@
               </tbody>
             </table>
           </div>
-          {% if not user.borrowed_entities %}
-          {% set link = url_for('borrow', usn=user.username) %}
-          <div class="btn-container">
-            <a href="{{ link }}" id="borrow-btn" class="issue-btn">Issue book for this user</a>
+          <div class="btn-panel">
+            {% if not user.borrowed_entities %}
+            {% set link = url_for('borrow', usn=user.username) %}
+            <div class="btn-container">
+              <a href="{{ link }}" id="borrow-btn" class="issue-btn">Issue book</a>
+            </div>  
+            {% endif %}
+            <div class="btn-container">
+              <a href="{{ url_for('edit_user', usn=user.username) }}" id="borrow-btn" class="issue-btn">Edit User</a>
+            </div>  
+            <div class="btn-container">
+              <a href="{{ url_for('delete_user', usn=user.username) }}" id="borrow-btn" class="danger-btn issue-btn">Delete User</a>
+            </div>  
           </div>
-          {% endif %}
         </div>
       </div>
     </div>

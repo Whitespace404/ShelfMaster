@@ -33,10 +33,12 @@ def is_weekend(day):
 
 
 def business_days_count(start_date, end_date, holidays):
+    if start_date == end_date:
+        return None
     days_count = 0
     current_date = start_date
 
-    while current_date <= end_date:
+    while current_date < end_date:
         if not is_weekend(current_date) and current_date not in holidays:
             days_count += 1
         current_date += timedelta(days=1)
