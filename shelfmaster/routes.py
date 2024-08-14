@@ -2,7 +2,7 @@ from datetime import datetime, timedelta, date
 from random import randint, choice
 import os
 
-from flask import render_template, redirect, request, flash, url_for, abort
+from flask import render_template, redirect, request, flash, url_for, abort, Markup
 from flask_login import current_user, login_required, login_user, logout_user
 from sqlalchemy import func, desc
 from werkzeug.utils import secure_filename
@@ -137,9 +137,7 @@ def borrow():
             )
             return redirect(url_for("borrow"))
         else:
-            form.usn.errors.append(
-                "You have already borrowed a book. -linebreak- Return it and try again. "
-            )
+            flash(Markup(f"Book {u.borrowed_entities[0]} is still pending for return. "))
     users = User.query.all()
     return render_template("borrow.html", form=form, title="Borrow A Book", users=users)
 
@@ -225,7 +223,7 @@ def confirm_return(accession_number):
         db.session.commit()
 
         flash("Book was returned successfully.")
-        return redirect(url_for("home"))
+        return redirect(url_for("return_"))
 
     return render_template(
         "confirm_return.html",
@@ -424,7 +422,6 @@ def admin_login():
 
 
 @app.route("/add_entity", methods=["GET", "POST"])
-@super_admin_required
 def add_entity():
     form = AddBookForm()
     if form.validate_on_submit():

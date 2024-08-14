@@ -16,7 +16,6 @@ show the book that you search for to confirm before borrowing
 use .errored-input class for every errored input in form.
 
 create permalink for invoice, and redirect to that in email
-edit user attributes, edit book attributes
 
 ERRORS
 holidays does not work
@@ -27,7 +26,6 @@ pagination breaks url where filter present
 
 add rollnumber to database for user
 renew borrowed book
-
 database backup
 fine calculation when librarian is absent?
 
@@ -36,3 +34,5 @@ group navbar items based on action type
 notifications for pending returns
 search option for due books, fines
 search fines by USN 
+colour coding in students list (borrowers)
+show full return log
