@@ -764,6 +764,7 @@ input#file-upload-button {
 #upload:hover {
     text-decoration: underline;
 }
+
 .notification-num {
     font-size: 12px;
     vertical-align: middle;
