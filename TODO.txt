@@ -33,6 +33,6 @@ export every table as xlsx option
 group navbar items based on action type
 notifications for pending returns
 search option for due books, fines
-search fines by USN 
+search fines by USN
 colour coding in students list (borrowers)
 show full return log

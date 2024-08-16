@@ -693,36 +693,6 @@ def view_suggestions():
     )
 
 
-# @app.route("/upload_booklist", methods=["GET", "POST"])
-# def upload_booklist():
-#     results = read_booklist()
-#     if request.method == "POST":
-#         for result in results:
-#             e = Entity(
-#                 type="Book",
-#                 accession_number=result["accession_number"],
-#                 author=result["author"],
-#                 title=result["title"],
-#                 call_number=result["call_number"],
-#                 publisher=result["publisher"],
-#                 isbn=result["isbn"],
-
-#                 # If D- prefixed books, comment the following lines
-#                 # vendor=result["vendor"],
-#                 # bill_number=result["bill_number"],
-#                 # bill_date=result["bill_date"],
-#                 # price=result["price"],
-#                 # remarks=result["remarks"],
-#                 # language=result["language"],
-#                 # place_of_publication=result["place_of_publication"],
-#             )
-#             db.session.add(e)
-#             db.session.commit()
-#         flash("Added to database successfully.")
-#         return redirect(url_for("home"))
-#     return render_template("confirm_bookresults.html", results=results)
-
-
 @app.route("/view_defaulters")
 def view_defaulters():
     today = datetime.combine(date.today(), datetime.max.time())
@@ -853,7 +823,7 @@ def delete_user(usn):
     user = User.query.filter_by(username=usn).first()
     db.session.delete(user)
     db.session.commit()
-    flash(f"{user.username} - {user.name} deleted successfully")
+    flash(f"{user.username} - {user.name} deleted from database successfully")
     return redirect(url_for("view_all_users"))
 
 
