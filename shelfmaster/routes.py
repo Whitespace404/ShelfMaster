@@ -686,6 +686,7 @@ def suggest_a_book():
 
 
 @app.route("/view_suggestions")
+@login_required
 def view_suggestions():
     suggestions = Suggestions.query.all()
     return render_template(
@@ -694,6 +695,7 @@ def view_suggestions():
 
 
 @app.route("/view_defaulters")
+@login_required
 def view_defaulters():
     today = datetime.combine(date.today(), datetime.max.time())
     logs = User.query.join(Entity, User.borrowed_entities).filter(
@@ -708,6 +710,7 @@ def privacy_policy():
 
 
 @app.route("/report_damage", methods=["GET", "POST"])
+@login_required
 def report_damage():
     form = ReportDamageForm()
     if request.method == "GET":
@@ -735,6 +738,7 @@ def report_damage():
 
 
 @app.route("/delete_class")
+@login_required
 def delete_class():
     class_ = request.args.get("class")
     users = User.query.filter_by(class_section=class_).all()
@@ -748,11 +752,13 @@ def delete_class():
 
 
 @app.route("/upload_namelist")
+@login_required
 def upload_namelist():
     return render_template("upload_student_details.html")
 
 
 @app.route("/upload_namelist", methods=["POST"])
+@login_required
 def name_upload():
     uploaded_file = request.files["file"]
     filename = uploaded_file.filename
@@ -790,6 +796,7 @@ def name_upload():
 
 
 @app.route("/edit_user/<usn>/", methods=["GET", "POST"])
+@login_required
 def edit_user(usn):
     user = User.query.filter_by(username=usn).first()
     form = AddUserForm()
@@ -818,6 +825,7 @@ def edit_user(usn):
     return render_template("edit_user.html", form=form)
 
 
+@login_required
 @app.route("/delete_user/<usn>")
 def delete_user(usn):
     user = User.query.filter_by(username=usn).first()
@@ -828,6 +836,7 @@ def delete_user(usn):
 
 
 @app.route("/edit_book/<accession_number>", methods=["GET", "POST"])
+@login_required
 def edit_book(accession_number):
     form = AddBookForm()
     entity = Entity.query.filter_by(accession_number=accession_number).first()
@@ -878,11 +887,13 @@ def edit_book(accession_number):
 
 
 @app.route("/upload_booklist")
+@login_required
 def upload_booklist():
     return render_template("upload_book_details.html")
 
 
 @app.route("/upload_booklist", methods=["POST"])
+@login_required
 def book_upload():
     uploaded_file = request.files["file"]
     filename = uploaded_file.filename
