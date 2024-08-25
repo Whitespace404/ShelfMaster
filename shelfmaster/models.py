@@ -7,8 +7,7 @@ from shelfmaster import db, login_manager
 
 class User(db.Model):
     id = sa.Column(sa.Integer, primary_key=True, unique=True)
-    # rollno = sa.Column(sa.Integer)
-    # in the refactor also remove unneccassary columns from book
+    rollno = sa.Column(sa.Integer)
     username = sa.Column(sa.String(20), nullable=False, unique=True)
     name = sa.Column(sa.String(32))
     is_teacher = sa.Column(sa.Boolean)
@@ -97,12 +96,8 @@ class Entity(db.Model):
     bill_number = sa.Column(sa.String(31))
     bill_date = sa.Column(sa.String(10))
     price = sa.Column(sa.String(10))
-    rack_number = sa.Column(sa.String(7))
-    shelf_number = sa.Column(sa.String(7))
     remarks = sa.Column(sa.String(120))
     language = sa.Column(sa.String(31))
-
-    place_of_publication = sa.Column(sa.String(64))
 
     is_borrowed = sa.Column(sa.Boolean, default=False)
     borrowed_date = sa.Column(sa.DateTime)
