@@ -4,7 +4,7 @@
 
   <datalist id="namelist">
     {% for user in users %}
-      <option value="{{ user.username }}">{{ user.name }} {{ user.class_section }}</option>
+      <option value="{{ user.username }}">#{{ user.rollno }} {{ user.name }} {{ user.class_section }}</option>
     {% endfor %}
   </datalist>
 

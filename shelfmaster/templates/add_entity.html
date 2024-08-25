@@ -111,17 +111,6 @@
             {% endif %}
           </div>
           <div class="entity-grid-item">
-            {{ form.place_of_publication.label }}
-            {% if form.place_of_publication.errors %}
-              {{ form.place_of_publication(autocomplete = 'off') }}
-              {% for error in form.place_of_publication.errors %}
-                <span class="form-error">{{ error }}</span>
-              {% endfor %}
-            {% else %}
-              {{ form.place_of_publication(autocomplete = 'off') }}
-            {% endif %}
-          </div>
-          <div class="entity-grid-item">
             {{ form.isbn.label }}
             {% if form.isbn.errors %}
               {{ form.isbn(autocomplete = 'off') }}

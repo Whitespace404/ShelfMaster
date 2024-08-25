@@ -434,7 +434,6 @@ def add_entity():
             accession_number=form.accession_number.data,
             call_number=form.call_number.data,
             publisher=form.publisher.data,
-            place_of_publication=form.place_of_publication.data,
             isbn=form.isbn.data,
             vendor=form.vendor.data,
             bill_number=form.bill_number.data,
@@ -706,7 +705,7 @@ def view_defaulters():
 
 @app.route("/privacy_policy")
 def privacy_policy():
-    return render_template("privacy_policy.html")
+    return render_template("privacy_policy.html", title="Privacy Policy")
 
 
 @app.route("/report_damage", methods=["GET", "POST"])
@@ -781,6 +780,7 @@ def name_upload():
                     class_section=result["class_section"],
                     username=result["usn"],
                     name=result["name"],
+                    rollno=result["roll_number"],
                     is_teacher=False,
                 )
                 db.session.add(u)
