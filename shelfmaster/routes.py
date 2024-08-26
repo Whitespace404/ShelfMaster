@@ -54,7 +54,7 @@ from shelfmaster.const import ROLE_PERMS
 @app.route("/")
 def home():
     if current_user.is_authenticated:
-        books = Entity.query.filter_by(type="Book").count()
+        books = Entity.query.filter_by().count()
         transactions = TransactionLog.query.count()
         users = User.query.count()
         borrowers = Entity.query.filter_by(is_borrowed=True).count()
