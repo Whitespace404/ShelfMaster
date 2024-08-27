@@ -127,7 +127,7 @@ def borrow():
             return render_template("borrow.html", form=form, title="Borrow A Book")
         if u.is_teacher:
             borrow_book(u, entity)
-            flash(f"{entity.type} borrowed successfully.")
+            flash(f"Book borrowed successfully.")
             return redirect(url_for("borrow"))
         elif len(u.borrowed_entities) == 0:
             # if entity.call_number
@@ -918,6 +918,7 @@ def book_upload():
                 abort(413)  # accession number has to be unique
 
             entity = Entity(
+                type="Book",
                 accession_number=result["accession_number"],
                 author=result["author"],
                 title=result["title"],
