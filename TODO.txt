@@ -36,3 +36,5 @@ search option for due books, fines
 search fines by USN
 colour coding in students list (borrowers)
 show full return log
+
+D131, D282

@@ -8,6 +8,7 @@ app.config["SECRET_KEY"] = "cx8z315xS3V6HxsP1msE6diwAHGCqHRDY1lyGoBvuguX2"
 app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///main.db"
 app.config["UPLOAD_EXTENSIONS"] = [".xls", ".xlsx"]
 app.config["UPLOAD_PATH"] = "uploads"
+app.config['MAX_CONTENT_LENGTH'] = 100 * 1024 * 1024
 
 db = SQLAlchemy(app)
 login_manager = LoginManager()

@@ -7,6 +7,7 @@ from flask_login import current_user, login_required, login_user, logout_user
 from sqlalchemy import func, desc
 from werkzeug.utils import secure_filename
 
+
 from shelfmaster import db, app
 from shelfmaster.forms import (
     LoginForm,
@@ -913,9 +914,6 @@ def book_upload():
             book = Entity.query.filter_by(
                 accession_number=result["accession_number"]
             ).first()
-
-            if book:
-                abort(413)  # accession number has to be unique
 
             entity = Entity(
                 type="Book",
