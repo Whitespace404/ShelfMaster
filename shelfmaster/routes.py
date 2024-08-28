@@ -134,7 +134,7 @@ def borrow():
             # if entity.call_number
             borrow_book(u, entity)
             flash(
-                f"{entity.type} borrowed successfully. Please return it before {entity.due_date.strftime('%d/%m/%y')}"
+                f"Book borrowed successfully. Please return it before {entity.due_date.strftime('%d/%m/%y')}"
             )
             return redirect(url_for("borrow"))
         else:
@@ -446,12 +446,12 @@ def add_entity():
         db.session.add(e)
         db.session.commit()
 
-        log_message = f"Added a {form.type.data} with Accession Number:{form.accession_number.data}"
+        log_message = f"Added a book with Accession Number:{form.accession_number.data}"
         action = AdminActionsLog(username=current_user.username, action=log_message)
         db.session.add(action)
         db.session.commit()
 
-        flash(f"{form.type.data} added successfully")
+        flash(f"Book added successfully")
         return redirect(url_for("add_entity"))
     return render_template("add_entity.html", form=form, title="Add an Entity")
 
