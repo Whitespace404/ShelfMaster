@@ -63,7 +63,7 @@ def find_dif(datetime1, datetime2):
 
 
 def calculate_overdue_days(returned_date, deadline):
-    if returned_date <= deadline:
+    if returned_date.date() <= deadline.date():
         return None
     else:
         bus_days_overdue = find_bus_days(deadline, returned_date)
