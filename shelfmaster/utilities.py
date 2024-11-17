@@ -45,7 +45,7 @@ def business_days_count(start_date, end_date, holidays):
 
 
 def find_bus_days(datetime1, datetime2):
-    HOLIDAYS = [datetime(2023, 9, 18)]
+    HOLIDAYS = query_holidays()
     bdays = business_days_count(datetime1, datetime2, HOLIDAYS)
     return bdays
 

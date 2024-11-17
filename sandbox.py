@@ -20,7 +20,7 @@ def business_days_count(start_date, end_date, holidays):
     current_date = start_date
 
     while current_date < end_date:
-        if not is_weekend(current_date) and current_date not in holidays:
+        if not is_weekend(current_date) and (current_date not in holidays):
             days_count += 1
         current_date += timedelta(days=1)
 
@@ -36,13 +36,17 @@ def calculate_overdue_days(returned_date, deadline):
 
 
 def query_holidays():
+    holidays_list = []
     with app.app_context():
-        h = Holidays.query.all()
-        return h
-
+        hols = Holidays.query.all()
+        for hol in hols:
+            if hol.holiday not in holidays_list:
+                holidays_list.append(hol.holiday)
+        return holidays_list
 
 def main():
-    print(calculate_overdue_days(datetime.now(), datetime.now() - timedelta(9)))
-
+    print(
+        calculate_overdue_days(datetime(2024, 11, 8, 0, 0), datetime(2024, 11, 5, 0, 0))
+    )
 
 main()
