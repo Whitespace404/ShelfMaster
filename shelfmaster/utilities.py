@@ -26,8 +26,6 @@ is_overdue(datetime2, datetime1)
 return number of days book is overdue by
 if its not overdue return None
 """
-
-
 def is_weekend(day):
     return day.weekday() >= 5
 
