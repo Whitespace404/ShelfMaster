@@ -46,7 +46,7 @@ def query_holidays():
 
 def main():
     print(
-        str(calculate_overdue_days(datetime(2024, 11, 12, 0, 0), datetime(2024, 11, 5, 0, 0)) * 10) + " Rs"
+        str(calculate_overdue_days(datetime(2024, 11, 6, 0, 0), datetime(2024, 11, 5, 0, 0)) * 10) + " Rs"
     )
 
 main()

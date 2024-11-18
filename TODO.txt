@@ -37,4 +37,6 @@ search fines by USN
 colour coding in students list (borrowers)
 show full return log
 
+show daily returns as well as previous day
+
 D131, D282

@@ -199,8 +199,8 @@ td>a {
 }
 
 .overdue-row {
-    background: red;
-    color: white;
+    background: rgb(156, 198, 214);
+    color: black;
 }
 
 tr>td>a {

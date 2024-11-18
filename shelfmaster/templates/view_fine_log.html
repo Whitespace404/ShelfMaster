@@ -5,7 +5,7 @@
 <div class="table-div">
   <table class="admin-logs">
     <tr>
-      <th>Sl no</th>
+      <th>ID</th>
       <th>Student name</th>
       <th>Late book</th>
       <th>Due Date</th>
@@ -29,12 +29,12 @@
       {% if log.due_date %}
       {% set ddate = log.due_date %}
       {% set duedate = log.date_returned %}
-      
-        <td>{{ ddate.strftime('%d/%m/%Y') }}</td>
-        <td>{{ duedate.strftime('%d/%m/%Y') }}</td>
+
+      <td>{{ ddate.strftime('%d/%m/%Y') }}</td>
+      <td>{{ duedate.strftime('%d/%m/%Y') }}</td>
       {% else %}
-        <td>NA</td>
-        <td>NA</td>
+      <td>NA</td>
+      <td>NA</td>
       {% endif %}
       {% if log.days_late %}
       <td>{{ log.days_late }} days late</td>

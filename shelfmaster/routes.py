@@ -612,11 +612,10 @@ def fine_received():
 
         if usn is not None:
             form.payer.data = usn
+    user = User.query.filter_by(username=form.payer.data).first()
+    fine=FinesLog.query.filter_by(is_paid=False, user=user).first()
 
     if form.validate_on_submit():
-        user = User.query.filter_by(username=form.payer.data).first()
-        fine = FinesLog.query.filter_by(is_paid=False, user=user).first()
-
         if fine.amount_currently_due == int(form.amount.data):
             fine.is_paid = True
             fine.amount_currently_due = 0
@@ -637,7 +636,7 @@ def fine_received():
 
         db.session.commit()
         return redirect(url_for("view_fine_log"))
-    return render_template("got_fine.html", form=form, title="Fine Slip")
+    return render_template("got_fine.html", form=form, title="Fine Slip", fine=fine)
 
 
 @app.route("/add_holiday", methods=["GET", "POST"])
@@ -941,5 +940,8 @@ def book_upload():
 @app.route("/waive_fine/<int:fine_id>")
 def waive_fine(fine_id):
     FinesLog.query.filter_by(id=fine_id).delete()
-    return "success"
+    db.session.commit()
+    db.session.close()
+    flash("Fine waived successfully.")
+    return redirect(url_for("view_fine_log"))
     

@@ -474,7 +474,7 @@ body>div.form>form>fieldset>label {
 }
 
 .overdue-row {
-    background: red;
+    background: rgb(214, 156, 156);
 }
 
 .clickable-row:hover {
