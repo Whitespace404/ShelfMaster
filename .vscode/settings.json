@@ -2,7 +2,7 @@
   "workbench.iconTheme": "material-icon-theme",
   "editor.fontSize": 15,
   "editor.formatOnSave": true,
-  "terminal.integrated.fontSize": 15,
+  "terminal.integrated.fontSize": 22,
   "[python]": {
     "editor.formatOnType": true,
     "editor.defaultFormatter": "ms-python.black-formatter"

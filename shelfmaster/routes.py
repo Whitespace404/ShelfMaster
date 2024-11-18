@@ -936,3 +936,10 @@ def book_upload():
         flash("Added to database successfully.")
         return redirect(url_for("view_books"))
     return redirect(url_for("upload_namelist"))
+
+
+@app.route("/waive_fine/<int:fine_id>")
+def waive_fine(fine_id):
+    FinesLog.query.filter_by(id=fine_id).delete()
+    return "success"
+    
