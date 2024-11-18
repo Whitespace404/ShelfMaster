@@ -44,6 +44,7 @@ from shelfmaster.utilities import (
     create_database,
     calculate_overdue_days,
     time_ago,
+    calculate_return_date
 )
 from shelfmaster.utilities_master import (
     read_namelist_from_upload,
@@ -117,7 +118,7 @@ def borrow():
         if entity.is_borrowed:
             if entity.user.username == form.usn.data:
                 # TODO test this: renewing book
-                entity.due_date = datetime.now() + timedelta(days=7)
+                entity.due_date = calculate_return_date(datetime.now().date())
                 db.session.commit()
                 flash(f"Return date extended to {entity.due_date.strftime('%d/%m/%y')}")
                 return redirect(url_for("home"))

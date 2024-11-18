@@ -65,7 +65,7 @@ def calculate_overdue_days(returned_date, deadline):
         return None
     else:
         bus_days_overdue = find_bus_days(deadline, returned_date)
-        return bus_days_overdue
+        return (bus_days_overdue - 1)
 
 
 def borrow_book(user, entity):
@@ -75,7 +75,7 @@ def borrow_book(user, entity):
     entity.user = user
     entity.is_borrowed = True
     entity.borrowed_date = datetime.now()
-    entity.due_date = datetime.now() + timedelta(7)
+    entity.due_date = calculate_return_date(datetime.now().date())
 
     log = TransactionLog(user=user, entity=entity)
     db.session.add(entity)
@@ -150,3 +150,28 @@ def time_ago(time=False):
     if day_diff < 365:
         return str(day_diff // 30) + " months ago"
     return str(day_diff / 365) + " years ago"
+
+
+def calculate_return_date(borrow_date):
+    holidays_list = []
+    with app.app_context():
+        hols = Holidays.query.all()
+        for hol in hols:
+            if hol.holiday not in holidays_list:
+                holidays_list.append(hol.holiday)
+
+    d_date = borrow_date + timedelta(7)
+    while (not is_weekend(d_date)) and (datetime.now().date() not in holidays_list) and d_date > datetime.now().date(): # error handle here
+        d_date = d_date - timedelta(1)
+    
+    return d_date
+
+
+def query_holidays():
+    holidays_list = []
+    with app.app_context():
+        hols = Holidays.query.all()
+        for hol in hols:
+            if hol.holiday not in holidays_list:
+                holidays_list.append(hol.holiday)
+        return holidays_list

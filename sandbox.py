@@ -32,7 +32,7 @@ def calculate_overdue_days(returned_date, deadline):
         return None
     else:
         bus_days_overdue = find_bus_days(deadline, returned_date)
-        return bus_days_overdue
+        return (bus_days_overdue - 1)
 
 
 def query_holidays():
