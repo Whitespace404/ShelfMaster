@@ -32,7 +32,10 @@ def calculate_overdue_days(returned_date, deadline):
         return None
     else:
         bus_days_overdue = find_bus_days(deadline, returned_date)
-        return (bus_days_overdue - 1)
+        if bus_days_overdue == 1:
+            return None
+        else:
+            return (bus_days_overdue - 1)
 
 
 def query_holidays():
@@ -45,8 +48,6 @@ def query_holidays():
         return holidays_list
 
 def main():
-    print(
-        str(calculate_overdue_days(datetime(2024, 11, 6, 0, 0), datetime(2024, 11, 5, 0, 0)) * 10) + " Rs"
-    )
+    print(calculate_overdue_days(datetime(2024, 11, 22, 0, 0), datetime(2024, 11, 20, 0, 0)))
 
 main()

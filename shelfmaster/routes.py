@@ -174,7 +174,7 @@ def confirm_return(accession_number):
 
     overdue_days = calculate_overdue_days(current_dt, b.due_date)
 
-    if overdue_days is None:  # then that means it was returned before time
+    if not overdue_days:  # then that means it was returned before time
         is_fine_needed = False
     else:  # that means there has to be a fine imposed
         # that is only if it is a student (teachers can borrow without a due date)

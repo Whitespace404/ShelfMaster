@@ -37,7 +37,7 @@ def business_days_count(start_date, end_date, holidays):
     current_date = start_date
 
     while current_date < end_date:
-        if not is_weekend(current_date) and current_date not in holidays:
+        if not is_weekend(current_date) and (current_date not in holidays):
             days_count += 1
         current_date += timedelta(days=1)
 
@@ -65,7 +65,10 @@ def calculate_overdue_days(returned_date, deadline):
         return None
     else:
         bus_days_overdue = find_bus_days(deadline, returned_date)
-        return (bus_days_overdue - 1)
+        if bus_days_overdue == 1:
+            return None
+        else:
+            return bus_days_overdue
 
 
 def borrow_book(user, entity):
@@ -153,19 +156,13 @@ def time_ago(time=False):
 
 
 def calculate_return_date(borrow_date):
-    holidays_list = []
-    with app.app_context():
-        hols = Holidays.query.all()
-        for hol in hols:
-            if hol.holiday not in holidays_list:
-                holidays_list.append(hol.holiday)
+    holidays_list = query_holidays()
 
     d_date = borrow_date + timedelta(7)
     while (not is_weekend(d_date)) and (datetime.now().date() not in holidays_list) and d_date > datetime.now().date(): # error handle here
         d_date = d_date - timedelta(1)
     
     return d_date
-
 
 def query_holidays():
     holidays_list = []
